@@ -1,0 +1,51 @@
+.aggregate-container {
+  min-width: 1100px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.aggregate-gender{
+  display: flex;
+  gap: 10%;
+}
+h2 {
+  text-align: center;
+}
+
+.aggregate-details {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 1.2em;
+}
+
+.form-details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.form-group {
+  flex: 0 0 48%; /* Two columns on larger screens */
+  margin-bottom: 20px;
+}
+
+.form-group h4 {
+  margin-top: 0;
+  font-size: 1.1em;
+  color: #333;
+}
+
+.form-group p {
+  margin: 5px 0;
+}
+
+@media screen and (max-width: 600px) {
+  .form-group {
+      flex: 0 0 100%; /* Full width on smaller screens */
+  }
+}

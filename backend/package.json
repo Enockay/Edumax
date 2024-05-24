@@ -1,0 +1,23 @@
+{
+  "name": "backend",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "chartjs-node-canvas": "^4.1.6",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "http-errors": "~1.6.3",
+    "jade": "^0.29.0",
+    "mongoose": "^8.4.0",
+    "morgan": "~1.9.1",
+    "nodemon": "^3.1.0",
+    "pdf-lib": "^1.17.1",
+    "rest-client": "^0.1.5"
+  }
+}

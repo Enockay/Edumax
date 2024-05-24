@@ -1,0 +1,29 @@
+POST http://localhost:3000/AdmitStudent
+Content-Type: application/json
+
+{
+  "fullName": "Enock Mumo Mwema",
+  "guardianName": "Faith Wambua",
+  "admissionNumber": "1314",
+  "kcpeIndex": "13360101001",
+  "kcpeMarks": "326",
+  "guardianTel": "0707224529",
+  "studentBirthNo": "1234567890",
+  "dateOfAdmission": "18/05/2024",
+  "gender": "male",
+  "formerSchool": "Matinyani primary",
+  "tuitionFees": "5000",
+  "uniformFees": "0",
+  "lunchFees": "2000",
+  "boardingOrDay": "Day"
+}
+
+###
+POST http://localhost:3000/generateResult
+Content-Type: application/json
+
+{
+   "stream": 4,
+   "term" : "End Of Term 3 Results",
+   "teacher" : "MR Oyier"
+}
