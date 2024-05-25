@@ -58,11 +58,6 @@ Set up environment variables:
 
 Create a .env file in the backend directory and add your MongoDB connection string and other necessary environment variables:
 
-sh
-Copy code
-MONGO_URL=mongodb+srv://myAtlasDBUser:Enockay23@myatlasclusteredu.bfx6ekr.mongodb.net/MATINYANI-MIXED
-Run the application:
-
 Start the backend server:
 
 sh
