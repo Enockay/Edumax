@@ -1,4 +1,4 @@
-import "./Dashboard.css";
+import "../css/Dashboard.css";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Body from "./Body";
@@ -22,7 +22,7 @@ const Dashboard = () => {
 
     return(
         <>
-        <div className="Header">
+        <div className="">
             <Header/>
         </div>
         <div className="Body">

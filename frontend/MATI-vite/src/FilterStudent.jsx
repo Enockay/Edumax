@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './FilterStudent.css';
+import '../css/FilterStudent.css';
 
 const FilterStudent = () => {
     const [admissionNumber, setAdmissionNumber] = useState('');

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './rankComponet.css';
+import '../css/rankComponet.css';
 
 const Results = () => {
   const [classes, setClasses] = useState(['Form 1', 'Form 2', 'Form 3', 'Form 4']);
@@ -107,7 +107,7 @@ const Results = () => {
   return (
     <div className="results-container">
       <div className='whole-class'>
-        <center><h3 className='h3'>Overall Class Results</h3></center>
+        <center><h4 className='h3'>Overall Class Results</h4></center>
         <div className='selects'>
           <div className="select-group">
             <label htmlFor="class-select">Form:</label>
@@ -142,7 +142,7 @@ const Results = () => {
         </div>
       </div>
       <div className='class-results'>
-        <center><h3 className='h3' id='class-results'>Class Results</h3></center>
+        <center><h4 className='h3' id='class-results'>Class Results</h4></center>
         <div className="selection-container">
           <div className="select-group">
             <label htmlFor="class-select">Class:</label>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './updateStudentMarks.css';
+import '../css/updateStudentMarks.css';
 
 const TeacherMarksForm = () => {
     const [streams, setStreams] = useState(['4East', '4West', '3East', '3West', '2East', '2West', '1East', '1West']);

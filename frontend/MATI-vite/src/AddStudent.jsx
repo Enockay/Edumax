@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './index.css';
+import '../css/index.css';
 
 const AddStudent = () => {
     const [formData, setFormData] = useState({
@@ -10,7 +10,6 @@ const AddStudent = () => {
                     stream : '',
                     kcpeIndex: '',
                     kcpeMarks: '',
-                    guardianTel: '',
                     studentBirthNo: '',
                     dateOfAdmission: new Date().toISOString().split('T')[0],
                     gender: '',

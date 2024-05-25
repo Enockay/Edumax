@@ -1,7 +1,6 @@
 /* PayFees.css */
 .pay-fees-container {
-    max-width: 600px;
-    margin: 0 auto;
+    max-width: fit-content;
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 10px;
@@ -23,15 +22,15 @@ h2 {
 }
 
 input[type="text"], input[type="number"], select {
-    width: 100%;
-    padding: 10px;
+    width: fit-content;
+    padding: 3px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 2px;
     box-sizing: border-box;
 }
 
 button {
-    padding: 10px 15px;
+    padding: 2px 2px;
     background-color: #007bff;
     color: white;
     border: none;

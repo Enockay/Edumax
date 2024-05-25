@@ -1,5 +1,5 @@
 .container {
-    width: 100%;
+    width: fit-content;
     padding: auto;
     background-color: white;
     border-radius: 10px;
@@ -44,6 +44,10 @@ h2 {
     display:flex;
     gap: 5%;
 }
+select,input{
+    padding: 0.5rem;
+    font-size: 0.3rem;
+}
 
 .lengends{
     background-color: whitesmoke;
@@ -53,4 +57,8 @@ h2 {
 .btn-primary{
     background-color: green;
     padding: 0.4rem;
+}
+
+.col-8{
+    display: flex;
 }

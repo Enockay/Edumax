@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './DeleteStudent.css'; // Import your custom CSS file
+import '../css/DeleteStudent.css'; // Import your custom CSS file
+
 
 const DeleteStudent = () => {
     const [selectedAdmissionNumber, setSelectedAdmissionNumber] = useState('');
@@ -8,12 +9,19 @@ const DeleteStudent = () => {
     const [stream , setStream ] = useState('');
     const [classes , setClass ] = useState(['1East','1West','2East','2West','3East','3West','4East','4West'])
     const [error, setError] = useState('');
+    const [feedback ,setFeedback ] = useState('');
+    const [isLoading ,setIsLoading] = useState(false);
 
     const fetchStudentData = async (admissionNumber) => {
         try {
+            setIsLoading(true);
             const response = await axios.get(`http://localhost:3000/students/${stream}/${admissionNumber}`);
-            setStudentData(response.data[0]);
-            console.log(response.data[0])
+            console.log(response)
+           if(response.data[0]){
+              setStudentData(response.data[0]);
+           }else{
+               setFeedback(response.data);
+           }
             setError('');
         } catch (err) {
             setStudentData('');
@@ -42,8 +50,8 @@ const DeleteStudent = () => {
         }
         setError('');
         try {
-            await axios.put(`http://localhost:3000/students/${stream}/${studentData.admissionNumber}`, studentData);
-            alert('Student data updated successfully!');
+           const response =  await axios.put(`http://localhost:3000/students/${stream}/${studentData.admissionNumber}`, studentData);
+            setFeedback(response.data)
         } catch (err) {
             setError('Failed to update student data.');
         }
@@ -56,10 +64,10 @@ const DeleteStudent = () => {
         }
         setError('');
         try {
-            await axios.delete(`http://localhost:3000/students/${stream}/${studentData.admissionNumber}`);
+          const response =   await axios.delete(`http://localhost:3000/students/${stream}/${studentData.admissionNumber}`);
             setSelectedAdmissionNumber('');
             setStudentData(null);
-            alert('Student data deleted successfully!');
+            setFeedback(response.data);
         } catch (err) {
             setError('Failed to delete student data.');
         }
@@ -69,17 +77,18 @@ const DeleteStudent = () => {
         <div className="container">
          <center><h2 className="text-center mt-4 mb-4"style={{color:'green',margin:0}}>Update Student Information</h2></center>   
             <div className="form-group-row">
+               
+                <div className="col-8">
                 <label className="col-sm-2 col-form-label">Admission Number:</label>
-                <div className="col-sm-8">
                     <input
-                        type="text"
+                        type="Number"
                         className="form-control"
                         value={selectedAdmissionNumber}
                         onChange={handleAdmissionNumberChange}
                     />
-                </div>
+                </div>    
+                <div className="col-8">
                 <label className="col-sm-2 col-form-label">Select Stream:</label>
-                <div className="col-sm-8">
                     <select value = {stream} onChange={(e)=>setStream(e.target.value)}>
                        <option className=''>--Select--</option>
                        {classes.map((className,index) => (
@@ -262,17 +271,21 @@ const DeleteStudent = () => {
                     </div>
                     </div>
                 </div>    
+                
                 <center><div className="form-buttons">
-                        <div className="col-sm-6">
-                            <button type="submit" className="btn btn-success btn-block">Update Student</button>
-                        </div>
-                        <div className="col-sm-6">
-                            <button type="button" className="btn btn-danger btn-block" onClick={handleDeleteStudent}>Delete Student</button>
-                        </div>
+                        <div className='spinner-container'>
+                             {isLoading ? <span className="spinner"></span> : 
+                             <button type="submit" disabled={isLoading} className="btn btn-success btn-block">Update Student</button> || 
+                            <button type="button" disabled={isLoading} className="btn btn-danger btn-block" onClick={handleDeleteStudent}>Delete Student</button>
+                            }
+                        
+                       </div> 
                     </div>
                     </center>  
                 </form>
+
             )}
+              <div className=''>{feedback}</div>  
         </div>
     );
 };

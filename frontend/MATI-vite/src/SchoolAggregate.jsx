@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import "./App.css";
+import "../css/App.css";
 
 const SchoolAggregate = () => {
     const [data, setData] = useState({

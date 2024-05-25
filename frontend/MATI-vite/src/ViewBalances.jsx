@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './index.css';
+import '../css/index.css';
 
 const ViewBalances = () => {
     const [stream, setStream] = useState('');

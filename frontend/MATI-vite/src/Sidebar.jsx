@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Dashboard.css';
+import '../css/Dashboard.css';
 
 const Sidebar = ({ onItemClick, collapsed }) => {
     const [selectedItem, setSelectedItem] = useState('school-aggregate'); // Default selected item

@@ -19,5 +19,8 @@
     "nodemon": "^3.1.0",
     "pdf-lib": "^1.17.1",
     "rest-client": "^0.1.5"
+  },
+  "devDependencies": {
+    "@flydotio/dockerfile": "^0.5.7"
   }
 }
