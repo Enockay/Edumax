@@ -1,4 +1,5 @@
-Edumax School Management System
+#Edumax School Management System
+
 Edumax is a comprehensive school management system designed to streamline various administrative and academic tasks. The system is built using modern web technologies and provides a robust platform for managing student information, teacher portals, and parent access to student results.
 
 Table of Contents
