@@ -16,7 +16,7 @@ const SchoolAggregate = () => {
 
     useEffect(() => {
         // Replace with your actual API endpoint
-        fetch('https://api.yourschool.com/aggregate')
+        fetch('')
             .then(response => response.json())
             .then(data => setData(data))
             .catch(error => console.error('Error fetching data:', error));

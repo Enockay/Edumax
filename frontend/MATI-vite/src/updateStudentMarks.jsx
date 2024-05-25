@@ -15,8 +15,11 @@ const TeacherMarksForm = () => {
     const [update, setUpdate] = useState('');
 
     const fetchClassList = () => {
+        const url = 'http://localhost:3000/students';
+        const uri = 'https://edumax.fly.dev/students';
+
         setIsLoading(true);
-        axios.get('http://localhost:3000/students', { params: { stream: selectedStream, unit: selectedUnit } })
+        axios.get(uri, { params: { stream: selectedStream, unit: selectedUnit } })
             .then(response => {
                 setIsLoading(false);
                 if (response.data.length === 0) {
@@ -50,7 +53,10 @@ const TeacherMarksForm = () => {
             setIsLoadingUpdate(true);
             const studentMarks = marks[student._id];
             if (studentMarks) {
-                axios.put(`http://localhost:3000/students/${student._id}/marks`, {
+                const uri = `http://localhost:3000/students/${student._id}/marks`;
+                const url = `https://edumax.fly.dev/students/${student._id}/marks`;
+
+                axios.put(url, {
                     unit: selectedUnit,
                     marks: studentMarks
                 })

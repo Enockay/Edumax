@@ -23,8 +23,11 @@ const Results = () => {
 
   const handlePrintOverallResults = async () => {
     const fileName = `${singleClass} Results.pdf`;
+    const url = `https://edumax.fly.dev/download-pdf/${encodeURIComponent(fileName)}`;
+    const uri = `http://localhost:3000/download-pdf/${encodeURIComponent(fileName)}`
+
     try {
-      const response = await fetch(`http://localhost:3000/download-pdf/${encodeURIComponent(fileName)}`);
+      const response = await fetch(url);
       if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
       const blob = await response.blob();
       const blobURL = URL.createObjectURL(blob);
@@ -57,7 +60,11 @@ const Results = () => {
       } else {
         stream = singleClass;
       }
-      const response = await fetch('http://localhost:3000/generateResult', {
+
+      const url = `https://edumax.fly.dev/generateResult`;
+       const uri = 'http://localhost:3000/generateResult';
+
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

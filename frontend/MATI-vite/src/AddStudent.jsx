@@ -32,6 +32,9 @@ const AddStudent = () => {
         return errors;
     };
 
+    const url = 'https://edumax.fly.dev/AdmitStudent';
+    const uri = 'http://localhost:3000/AdmitStudent';
+
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -47,7 +50,7 @@ const AddStudent = () => {
         if (Object.keys(validationErrors).length === 0) {
             // Send formData to backend API
             setIsLoading(true);
-            fetch('http://localhost:3000/AdmitStudent', {
+            fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

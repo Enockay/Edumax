@@ -24,6 +24,9 @@ const AdmitStudent = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [responseMessage, setResponseMessage] = useState('');
 
+    const url = 'https://edumax.fly.dev/AdmitStudent';
+    const uri = 'http://localhost:3000/AdmitStudent';
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -58,7 +61,7 @@ const AdmitStudent = () => {
             setIsLoading(true);
             setResponseMessage('');
             // Replace with your actual API endpoint
-            fetch('http://localhost:3000/AdmitStudent', {
+            fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

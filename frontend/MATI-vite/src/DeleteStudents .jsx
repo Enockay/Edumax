@@ -12,10 +12,15 @@ const DeleteStudent = () => {
     const [feedback ,setFeedback ] = useState('');
     const [isLoading ,setIsLoading] = useState(false);
 
+
     const fetchStudentData = async (admissionNumber) => {
+
+        const url = `https://edumax.fly.dev/students/${stream}/${admissionNumber}`;
+        const uri = `http://localhost:3000/students/${stream}/${admissionNumber}`;
+
         try {
             setIsLoading(true);
-            const response = await axios.get(`http://localhost:3000/students/${stream}/${admissionNumber}`);
+            const response = await axios.get(url);
             console.log(response)
            if(response.data[0]){
               setStudentData(response.data[0]);
@@ -48,9 +53,12 @@ const DeleteStudent = () => {
             setError('No student selected or student data is incomplete.');
             return;
         }
+        const url = `https://edumax.fly.dev/students/${stream}/${admissionNumber.admissionNumber}`;
+        const uri = `http://localhost:3000/students/${stream}/${admissionNumber.admissionNumber}`;
+
         setError('');
         try {
-           const response =  await axios.put(`http://localhost:3000/students/${stream}/${studentData.admissionNumber}`, studentData);
+           const response =  await axios.put(url, studentData);
             setFeedback(response.data)
         } catch (err) {
             setError('Failed to update student data.');
@@ -58,13 +66,16 @@ const DeleteStudent = () => {
     };
 
     const handleDeleteStudent = async () => {
+        const url = `https://edumax.fly.dev/students/${stream}/${admissionNumber.admissionNumber}`;
+        const uri = `http://localhost:3000/students/${stream}/${admissionNumber.admissionNumber}`;
+
         if (!studentData) {
             setError('No student selected.');
             return;
         }
         setError('');
         try {
-          const response =   await axios.delete(`http://localhost:3000/students/${stream}/${studentData.admissionNumber}`);
+          const response =   await axios.delete(url);
             setSelectedAdmissionNumber('');
             setStudentData(null);
             setFeedback(response.data);
