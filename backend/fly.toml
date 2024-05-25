@@ -3,20 +3,26 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'edumax'
-primary_region = 'jnb'
+app = "edumax"
+primary_region = "jnb"
 
 [build]
+# Add build configurations if needed, e.g., builder or buildpacks
+# builder = "..."
+
+[env]
+MONGO_URL = "mongodb+srv://myAtlasDBUser:Enockay23@myatlasclusteredu.bfx6ekr.mongodb.net/MATINYANI-MIXED"
+Db = "MATINYANI-MIXED"
 
 [http_service]
-  internal_port = 3000
-  force_https = true
-  auto_stop_machines = true
-  auto_start_machines = true
-  min_machines_running = 0
-  processes = ['app']
+internal_port = 3000
+force_https = true
+auto_stop_machines = true
+auto_start_machines = true
+min_machines_running = 0
+processes = ["app"]
 
 [[vm]]
-  memory = '1gb'
-  cpu_kind = 'shared'
-  cpus = 1
+memory = "1gb"
+cpu_kind = "shared"
+cpus = 1
