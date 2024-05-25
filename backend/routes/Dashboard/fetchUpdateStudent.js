@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
-const studentSchema = require('../public/models/admitStudentSchema'); // Adjust the path to your schema file
+const studentSchema = require('../../public/models/admitStudentSchema'); // Adjust the path to your schema file
 
 router.get('/students/:admissionNumber', async (req, res) => {
     try {

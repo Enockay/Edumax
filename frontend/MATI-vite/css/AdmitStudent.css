@@ -144,7 +144,9 @@ button {
 /* Responsive Styles */
 @media (max-width: 600px) {
     .admit-student-container {
-        padding: 10px;
+        padding: 5px;
+        width: 250px;
+        margin: 0;
     }
 
     .form-row {
@@ -167,4 +169,25 @@ button {
         display: flex;
         flex-direction: column;
     }
+    legend{
+      font-size: 10px;
+    }
+    fieldset{
+        padding: 5px;
+    }
+
+   .form-group input,
+   .form-group select,
+   input[type="text"] ,
+   input[type="tel"]{
+    padding: 5px;
+    font-size: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 80%;
+}
+.form-title{
+    font-size: 0.9rem;
+}
+
 }

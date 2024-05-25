@@ -23,8 +23,8 @@ const Header = () => {
                 <div className="left-section">
                     <img src={logo} alt="EduMax Logo" className="logo" />
                     <div className="title-section">
-                        <h3 style={{ color: 'white' }}>EduMax Hub</h3>
-                        <h6 style={{ margin: 0, fontStyle: 'italic' }}>Transforming World of Education Through Technology</h6>
+                        <h3 className="h3" style={{ color: 'white' }}>EduMax Hub</h3>
+                        <h6 className= "h6"style={{ margin: 0, fontStyle: 'italic' }}>Transforming World of Education Through Technology</h6>
                     </div>
                 </div>
                 <div className="center-section">
@@ -43,7 +43,7 @@ const Header = () => {
                     <div className="user-profile">
                         <img src={profile} alt="User Profile" className="profile-pic" />
                         <span className="username">Admin</span>
-                        <h4 className="">{formattedTime}</h4>
+                        <h4 className="time">{formattedTime}</h4>
                     </div>
                 </div>
             </div>

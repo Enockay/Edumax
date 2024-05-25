@@ -1,6 +1,6 @@
 // routes/downloadResults.js
 const express = require('express');
-const Pdf = require('../public/models/pdfSchema');  // Import the Pdf model
+const Pdf = require('../../public/models/pdfSchema');  // Import the Pdf model
 
 const downloadResults = express.Router();
 

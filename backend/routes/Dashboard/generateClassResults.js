@@ -1,6 +1,6 @@
 const express = require("express");
 const generateResults = express.Router();
-const generateResult = require('../public/javascripts/produceResults');
+const generateResult = require('../../public/javascripts/produceResults');
 
 generateResults.post('/generateResult', async (req, res) => {
     try {

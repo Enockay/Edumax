@@ -1,6 +1,6 @@
 const express = require('express')
 const updateStudentMarks = express.Router();
-const { StudentMarks } = require("../public/models/feedStudentMarks")
+const { StudentMarks } = require("../../public/models/feedStudentMarks")
 
 updateStudentMarks.put('/students/:id/marks', async (req, res) => {
     const { id } = req.params;

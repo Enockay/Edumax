@@ -3,19 +3,19 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var AdmitStudent = require("./routes/AdmitStudent")
+var AdmitStudent = require("./routes/Dashboard/AdmitStudent")
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var databaseConn = require("./public/javascripts/DatabaseConn")
 var dotenv = require("dotenv");
 dotenv.config();
 var cors = require("cors");
-var generateResult = require("./routes/generateClassResults")
-var studentMarksUpdate = require("./routes/fetchStudents");
-var updateStudentMarks = require('./routes/updateStudentMarks');
-var downloadResults = require('./routes/downloadResults');
-var updateStudentInfo = require("./routes/updateStudentInfo");
-
+var generateResult = require("./routes/Dashboard/generateClassResults")
+var studentMarksUpdate = require("./routes/Dashboard/fetchStudents");
+var updateStudentMarks = require('./routes/Dashboard/updateStudentMarks');
+var downloadResults = require('./routes/Dashboard/downloadResults');
+var updateStudentInfo = require("./routes/Dashboard/updateStudentInfo");
+var login = require('./routes/admin/login')
 var app = express();
 var uri = process.env.MONGO_URL;
 var Db = process.env.Db
@@ -42,7 +42,8 @@ app.post("/generateResult",generateResult);
 app.get('/students',studentMarksUpdate);
 app.put('/students/:id/marks',updateStudentMarks);
 app.get("/download-pdf/:fileName",downloadResults);
-app.use("/students",updateStudentInfo)
+app.use("/students",updateStudentInfo);
+app.post("/login" ,login);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

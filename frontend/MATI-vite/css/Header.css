@@ -1,9 +1,8 @@
 .heading {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: #246904;
+    background-color: #6075eb;
     color: white;
     margin: 0;
     border-radius: 0.2rem;
@@ -26,7 +25,6 @@
 }
 
 .center-section {
-    flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -69,9 +67,7 @@
     margin-right: 10px;
 }
 
-.username {
-    margin-left: 5px;
-}
+
 
 .btn{
     padding: 0.2rem;
@@ -79,4 +75,39 @@
 #input{
     padding: 0.2rem;
     width:50%;
+}
+
+@media (max-width: 600px) {
+  .center-section{
+    display: none;
+  }
+
+  .logo{
+     width: 30px;
+     height: 30px;
+  }
+  .heading{
+    padding: 0;
+    height: 4rem;
+    gap: 15%;
+  }
+  .h3{
+    font-size: 0.7rem;
+  }
+  .h6{
+    font-size: 0.4rem;
+  }
+  .profile-pic{
+    width: 30px;
+    height: 30px;
+  }
+  .right-section{
+    display: block;
+  }
+  .time{
+    display:none;
+  }
+  .username{
+    display: none;
+  }
 }

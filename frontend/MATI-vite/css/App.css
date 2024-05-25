@@ -1,8 +1,9 @@
 .aggregate-container {
-  min-width: 1100px;
-  padding: 20px;
+  max-width: 1200px;
+  padding: 5%;
   box-sizing: border-box;
 }
+
 .aggregate-gender{
   display: flex;
   gap: 10%;
@@ -39,7 +40,9 @@ h3 {
   font-size: 1.1em;
   color: #333;
 }
-
+.more-Details{
+  display: none;
+}
 .form-group p {
   margin: 5px 0;
 }
@@ -47,5 +50,34 @@ h3 {
 @media screen and (max-width: 600px) {
   .form-group {
       flex: 0 0 100%; /* Full width on smaller screens */
+  }
+
+  .aggregate-container{
+    width: 250px;
+    margin: 1%;
+  }
+  .aggregate-gender{
+    display: flex;
+    flex-direction: column;
+  }
+  .form-details{
+    display: flex;
+    flex-direction: column;
+  }
+  .h3{
+   font-size: 0.6rem;
+  }
+  .h2{
+    font-size: 0.9rem;
+  }
+  .more-Details{
+    display: block;
+    color: green;
+  }
+  .form-details{
+  display: none;
+  }
+  .aggregate-details{
+    padding: 10px;
   }
 }

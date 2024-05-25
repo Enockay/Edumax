@@ -1,7 +1,7 @@
 const express = require("express");
 const AdmitStudent = express.Router();
-const processNewStudent = require("../public/javascripts/AdmitStudentToSystem")
-const populateClasslist = require("../public/javascripts/populateClasslist");
+const processNewStudent = require("../../public/javascripts/AdmitStudentToSystem")
+const populateClasslist = require("../../public/javascripts/populateClasslist");
 
 AdmitStudent.post("/AdmitStudent", async (req, res) => {
     try {

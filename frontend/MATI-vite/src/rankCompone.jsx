@@ -17,14 +17,13 @@ const Results = () => {
 
   const [results, setResults] = useState('');
   const [notification, setNotification] = useState('');
-  const [notificationType, setNotificationType] = useState(''); // New state for notification type
+  const [notificationType, setNotificationType] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [blob, setBlob] = useState(null);
 
   const handlePrintOverallResults = async () => {
     const fileName = `${singleClass} Results.pdf`;
     const url = `https://edumax.fly.dev/download-pdf/${encodeURIComponent(fileName)}`;
-    const uri = `http://localhost:3000/download-pdf/${encodeURIComponent(fileName)}`
 
     try {
       const response = await fetch(url);
@@ -62,7 +61,6 @@ const Results = () => {
       }
 
       const url = `https://edumax.fly.dev/generateResult`;
-       const uri = 'http://localhost:3000/generateResult';
 
       const response = await fetch(url, {
         method: 'POST',
@@ -114,7 +112,7 @@ const Results = () => {
   return (
     <div className="results-container">
       <div className='whole-class'>
-        <center><h4 className='h3'>Overall Class Results</h4></center>
+        <h4 className='title'>Overall Class Results</h4>
         <div className='selects'>
           <div className="select-group">
             <label htmlFor="class-select">Form:</label>
@@ -135,21 +133,17 @@ const Results = () => {
             </select>
           </div>
         </div>
-          <div className='select-group'>
-            <label htmlFor="teacher-input" className='teacher'>Class Teacher:</label>
-            <input id="teacher-input" type='text' value={teacher} onChange={(e) => setTeacher(e.target.value)} required />
-          </div>
+        <div className='select-group'>
+          <label htmlFor="teacher-input" className='teacher'>Class Teacher:</label>
+          <input id="teacher-input" type='text' value={teacher} onChange={(e) => setTeacher(e.target.value)} required />
+        </div>
         <div className='button-results'>
-          <center>
-            <button className='button' onClick={generateResults} disabled={!singleClass || !term || !teacher}>Generate Results</button>
-          </center>
-          <center>
-            <button className='button' onClick={handlePrintOverallResults} disabled={!singleClass}>Print Results</button>
-          </center>
+          <button className='button' onClick={generateResults} disabled={!singleClass || !term || !teacher}>Generate Results</button>
+          <button className='button' onClick={handlePrintOverallResults} disabled={!singleClass}>Print Results</button>
         </div>
       </div>
       <div className='class-results'>
-        <center><h4 className='h3' id='class-results'>Class Results</h4></center>
+        <h4 className='title'>Class Results</h4>
         <div className="selection-container">
           <div className="select-group">
             <label htmlFor="class-select">Class:</label>
@@ -180,12 +174,12 @@ const Results = () => {
           </div>
         </div>
         <div className='button-results'>
-          <button className='button' onClick={generateClassResults} disabled={!selectedClass || !selectedStream||!DataTransferItem }>Generate {selectedClass} {selectedStream} Results</button>
-          <center><button className='button' onClick={handlePrintOverallResults} disabled={!results}>Print {selectedClass} {selectedStream} Results</button></center>
+          <button className='button' onClick={generateClassResults} disabled={!selectedClass || !selectedStream}>Generate {selectedClass} {selectedStream} Results</button>
+          <button className='button' onClick={handlePrintOverallResults} disabled={!results}>Print {selectedClass} {selectedStream} Results</button>
         </div>
       </div>
       <div className='notification'>
-        <center><h3 className='noti'>Server Response</h3></center>
+        <h3 className='noti'>Server Response</h3>
         <div className='spinner-container'>
           {isLoading ? <span className="spinner"></span> : <div className={`notification-message ${notificationType}`}>{notification}</div>}
         </div>

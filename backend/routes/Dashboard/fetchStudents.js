@@ -1,6 +1,6 @@
 const express = require('express');
 const studentMarksUpdate= express.Router();
-const { StudentMarks } = require('../public/models/feedStudentMarks'); // Adjust the path accordingly
+const { StudentMarks } = require('../../public/models/feedStudentMarks'); // Adjust the path accordingly
 
 studentMarksUpdate.get('/students', async (req, res) => {
     const { stream, unit } = req.query;

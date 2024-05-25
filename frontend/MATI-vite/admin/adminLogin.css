@@ -1,0 +1,96 @@
+.admin-login-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f0f4f8;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+
+  body{
+    background-color: #278eae;
+  }
+h2{
+    color: blue;
+}
+  .admin-login-container h1 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  
+  .admin-login-container h2 {
+    color: #34495e;
+    margin-bottom: 20px;
+  }
+  
+  .admin-login-form .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    color: #34495e;
+  }
+  
+  .admin-login-form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .admin-login-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+  }
+  
+  .admin-login-form .error-message {
+    color: #e74c3c;
+    margin-bottom: 10px;
+  }
+  
+  .admin-login-form .success-message {
+    color: #27ae60;
+    margin-bottom: 10px;
+  }
+  
+  .admin-login-form button {
+    width: 60%;
+    padding: 10px;
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .admin-login-form button:hover {
+    background-color: #3498db;
+  }
+  
+  .admin-login-form button[type="button"] {
+    background-color: #95a5a6;
+  }
+  
+  .admin-login-form button[type="button"]:hover {
+    background-color: #7f8c8d;
+  }
+
+  @media (max-width:600px) {
+    .admin-login-container{
+        max-width: 300px;
+        padding: 10px;
+    }
+    h2{
+        font-size: 1rem;
+        color: #34495e;
+    }
+  }
+  

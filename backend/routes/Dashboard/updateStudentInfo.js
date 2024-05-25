@@ -1,6 +1,6 @@
 const express = require('express');
 const updateStudentInfo = express.Router();
-const modelStudent = require('../public/models/admitStudentSchema');
+const modelStudent = require('../../public/models/admitStudentSchema');
 
 // Fetch student data
 updateStudentInfo.get('/:stream/:admissionNumber', async (req, res) => {
