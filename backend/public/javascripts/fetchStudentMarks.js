@@ -118,27 +118,49 @@ const calculateGradesAndPoints = (studentUnits) => {
         });
 
         // Aggregate total points based on specified rules
-        const compulsorySubjects = ['Eng', 'Kisw', 'Maths', 'Chem'];
-        const technicalSubjects = ['Geog', 'Hist', 'Busn', 'Agri', 'CRE'];
-        const scienceSubjects = ['Bio', 'Phy'];
+        const compulsorySubjects = ['Eng', 'Kisw', 'Maths'];
+        const scienceSubjects = ['Chem', 'Bio', 'Phy'];
+        const humanitiesSubjects = ['Geog', 'Hist', 'CRE'];
+        const technicalSubjects = ['Busn', 'Agri'];
 
+        // Calculate points for compulsory subjects
         const compulsoryPoints = student.units
             .filter(unit => compulsorySubjects.includes(unit.name))
             .reduce((sum, unit) => sum + unit.points, 0);
 
-        const technicalPoints = student.units
-            .filter(unit => technicalSubjects.includes(unit.name))
-            .sort((a, b) => b.points - a.points)
-            .slice(0, 2)
-            .reduce((sum, unit) => sum + unit.points, 0);
-
-        const sciencePoints = student.units
+        // Select top 2 sciences
+        const selectedSciences = student.units
             .filter(unit => scienceSubjects.includes(unit.name))
             .sort((a, b) => b.points - a.points)
-            .slice(0, 1)
-            .reduce((sum, unit) => sum + unit.points, 0);
+            .slice(0, 2);
 
-        totalPoints = compulsoryPoints + technicalPoints + sciencePoints;
+        const sciencePoints = selectedSciences.reduce((sum, unit) => sum + unit.points, 0);
+
+        // Select top humanity
+        const selectedHumanity = student.units
+            .filter(unit => humanitiesSubjects.includes(unit.name))
+            .sort((a, b) => b.points - a.points)
+            .slice(0, 1);
+
+        const humanityPoints = selectedHumanity.reduce((sum, unit) => sum + unit.points, 0);
+
+        // Select top 1 remaining science or humanity if needed to make up 2 sciences and at least 1 humanity
+        const remainingUnits = student.units
+            .filter(unit => !compulsorySubjects.includes(unit.name) && !selectedSciences.includes(unit) && !selectedHumanity.includes(unit))
+            .sort((a, b) => b.points - a.points)
+            .slice(0, 1);
+
+        const remainingPoints = remainingUnits.reduce((sum, unit) => sum + unit.points, 0);
+
+        // Calculate additional points from the remaining subjects
+        const additionalSubjects = student.units
+            .filter(unit => !compulsorySubjects.includes(unit.name) && !selectedSciences.includes(unit) && !selectedHumanity.includes(unit) && !remainingUnits.includes(unit))
+            .sort((a, b) => b.points - a.points)
+            .slice(0, 1); // Select top 1 additional subject to make up 7 subjects
+
+        const additionalPoints = additionalSubjects.reduce((sum, unit) => sum + unit.points, 0);
+
+        totalPoints = compulsoryPoints + sciencePoints + humanityPoints + remainingPoints + additionalPoints;
 
         // Assign grade based on total points
         let totalGrade = '';

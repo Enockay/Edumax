@@ -2,12 +2,21 @@
 
 .results-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  height: 100vh;
   font-family: Arial, sans-serif;
-  max-width: 800px;
-  margin: 0 auto;
+}
+
+.form-container {
+  width: 80%;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+  box-sizing: border-box;
+}
+
+.notification {
+  border: 2px rgb(12, 2, 0);
   padding: 20px;
+  box-sizing: border-box;
 }
 
 .title {
@@ -16,15 +25,20 @@
   color: #333;
 }
 
-.whole-class, .class-results, .notification {
+.whole-class, .class-results,.select-notification {
   border: 1px solid #ddd;
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;
-  width: 100%;
+  width: 90%;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-
+.select-notification{
+  margin: 2%;
+  min-width: 40%;
+  padding: 5px;
+  background-color: #e0f1d8;
+}
 .selects, .selection-container {
   display: flex;
   justify-content: space-between;
@@ -75,10 +89,6 @@
 
 .button:hover:not(:disabled) {
   background-color: #0056b3;
-}
-
-.notification {
-  text-align: center;
 }
 
 .notification-message {
