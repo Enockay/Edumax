@@ -9,6 +9,7 @@ import FeesReport from "./FeesReport";
 import DeleteStudent from "./DeleteStudents "
 import Results from './rankCompone';
 import TeacherMarksForm from './updateStudentMarks';
+import AddTeacher from './addTeacher';
 
 const Body = ({selectedItem}) => {
     switch (selectedItem) {
@@ -18,6 +19,8 @@ const Body = ({selectedItem}) => {
             return <PayFees />;
         case 'view-balances':
             return <ViewBalances />;
+        case 'Add-Teacher':
+            return <AddTeacher/>;   
         case 'show-stream':
             return <ShowStream />;
         case 'add-student':

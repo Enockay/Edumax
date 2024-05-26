@@ -24,6 +24,15 @@ const Sidebar = ({ onItemClick, collapsed }) => {
                 <li className={selectedItem === 'show-stream' ? 'active' : ''}>
                     <a href="#show-stream" onClick={() => handleClick('show-stream')}>Show Stream</a>
                 </li>
+                {/**<li className={selectedItem === 'Teachers-Marks-Form' ? 'active' : ''}>
+                    <a href="#Teachers-Marks-Form" onClick={() => handleClick('Teachers-Marks-Form')}>Update Student Marks</a>
+                </li>**/}
+                <li className={selectedItem === 'Produce-Results' ? 'active' : ''}>
+                    <a href="#Produce-Results" onClick={() => handleClick('Produce-Results')}>ResultGen Pro</a>
+                </li>
+                <li className={selectedItem === 'Add-Teacher' ? 'active' : ''}>
+                    <a href="#Add-Teacher" onClick={() => handleClick('Add-Teacher')}>Add Teacher</a>
+                </li>
                 <li className={selectedItem === 'add-student' ? 'active' : ''}>
                     <a href="#add-student" onClick={() => handleClick('add-student')}>Add Student</a>
                 </li>
@@ -39,12 +48,8 @@ const Sidebar = ({ onItemClick, collapsed }) => {
                 <li className={selectedItem === 'Fees-info' ? 'active' : ''}>
                     <a href="#Fees-info" onClick={() => handleClick('Fees-info')}>Fees Report</a>
                 </li>
-                <li className={selectedItem === 'Produce-Results' ? 'active' : ''}>
-                    <a href="#Produce-Results" onClick={() => handleClick('Produce-Results')}>School Results</a>
-                </li>
-                <li className={selectedItem === 'Teachers-Marks-Form' ? 'active' : ''}>
-                    <a href="#Teachers-Marks-Form" onClick={() => handleClick('Teachers-Marks-Form')}>Update Student Marks</a>
-                </li>
+               
+               
             </ul>
         </div>
     );
