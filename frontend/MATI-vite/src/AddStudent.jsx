@@ -71,7 +71,7 @@ const AddStudent = () => {
     };
 
     return (
-        <div className="form-container">
+        <div className='form-container'>
             <h2 style={{color : 'green',margin:0,marginBottom : '1rem'}}>Add Continuing Student</h2>
             <form className="" onSubmit={handleSubmit}>
                 <div className='add-student-form'>
@@ -80,16 +80,16 @@ const AddStudent = () => {
                     <div>
                         <label>Full Name:</label>
                         <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} />
-                        {errors.fullName && <p className="error">{errors.fullName}</p>}
+                        {errors.fullName && <p className='error'>{errors.fullName}</p>}
                     </div>
                     <div>
                         <label>Guardian Name:</label>
-                        <input type="text" name="guardianName" value={formData.guardianName} onChange={handleChange} />
+                        <input type="text" name='guardianName' value={formData.guardianName} onChange={handleChange} />
                     </div>
                     <div>
                         <label>Guardian Tel:</label>
                         <input type="text" name="guardianTel" value={formData.guardianTel} onChange={handleChange} />
-                        {errors.guardianTel && <p className="error">{errors.guardianTel}</p>}
+                        {errors.guardianTel && <p className='error'>{errors.guardianTel}</p>}
                     </div>
                     <div>
                         <label>Student Birth Date:</label>

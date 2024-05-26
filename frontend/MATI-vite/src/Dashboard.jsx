@@ -31,7 +31,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="">
+     <div className="">
         <Header />
       </div>
       <div className="Body">

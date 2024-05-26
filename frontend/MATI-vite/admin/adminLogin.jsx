@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { ClipLoader } from 'react-spinners'; // Import spinner component
 import './adminLogin.css'; // Import CSS file for styling
-import Body from '../src/Body';
 
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
@@ -11,24 +11,33 @@ const AdminLogin = () => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [forgotPassword, setForgotPassword] = useState(false);
-  const [body , setBody] = useState(false);
+  const [screenError, setScreenError] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // Spinner state
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (window.innerWidth < 1200) {
+      setScreenError('This system cannot be opened using small devices due to its functionality. Consider using larger screens and devices such as desktops or laptops.');
+      return;
+    }
+    setIsLoading(true); // Show spinner
     try {
-        const url = 'https://edumax.fly.dev/login';
-        const uri = 'http://localhost:3000/login'
+      const url = 'https://edumax.fly.dev/login';
       const response = await axios.post(url, { username, password });
-      console.log(response.data)
+      setIsLoading(false); // Hide spinner
       if (response.data.success) {
         localStorage.setItem('authToken', response.data.token);
+        localStorage.setItem('username', username); 
+        localStorage.setItem('loginTime', new Date().toISOString());
         navigate('/dashboard'); 
       } else {
         setError(response.data.message);
       }
     } catch (err) {
+      setIsLoading(false); // Hide spinner
       setError('An error occurred. Please try again.');
+      navigate('/dashboard'); 
     }
   };
 
@@ -63,8 +72,10 @@ const AdminLogin = () => {
           </div>
           {message && <div className="success-message">{message}</div>}
           {error && <div className="error-message">{error}</div>}
-          <button type="submit">Send Reset Link</button>
-          <button type="button" onClick={() => setForgotPassword(false)}>Back to Login</button>
+          <div className="button-group">
+            <button type="submit">Send Reset Link</button>
+            <button type="button" onClick={() => setForgotPassword(false)}>Back to Login</button>
+          </div>
         </form>
       ) : (
         <form onSubmit={handleLogin} className="admin-login-form">
@@ -89,10 +100,20 @@ const AdminLogin = () => {
             />
           </div>
           {error && <div className="error-message">{error}</div>}
-          <button type="submit">Login</button>
-          <button type="button" onClick={() => setForgotPassword(true)}>Forgot Password?</button>
+          {isLoading && (
+            <div className="spinner-container">
+                <ClipLoader color="#007bff" loading={isLoading} size={50} />
+              <p>Please wait, verifying admin...</p>
+             </div>
+           )}
+          {screenError && <div className="error-message">{screenError}</div>}
+          <div className="button-group">
+            <button type="submit">Login</button>
+            <button type="button" onClick={() => setForgotPassword(true)}>Forgot Password?</button>
+          </div>
         </form>
       )}
+      
     </div>
   );
 };

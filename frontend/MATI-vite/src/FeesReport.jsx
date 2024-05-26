@@ -38,10 +38,11 @@ const FeesReport = () => {
     };
 
     return (
-        <div className="fees-report-container">
-            <h2>Fees Report</h2>
-            <div className="filter-form">
-                <div className="form-group">
+        <div className="fees-report">
+            <h2 className="fees-report__title">Fees Report</h2>
+           <center><h5>Can view the fees report that was earlier updated inthe system easily</h5></center>  
+            <div className="fees-report__filter">
+                <div className="fees-report__filter-item">
                     <label>Select Form:</label>
                     <select value={form} onChange={handleFormChange}>
                         <option value="">Select Form</option>
@@ -51,11 +52,11 @@ const FeesReport = () => {
                         <option value="Form 1">Form 1</option>
                     </select>
                 </div>
-                <div className="form-group">
+                <div className="fees-report__filter-item">
                     <label>Select Date:</label>
                     <input type="date" value={date} onChange={handleDateChange} />
                 </div>
-                <div className="form-group">
+                <div className="fees-report__filter-item">
                     <label>Select Day:</label>
                     <select value={day} onChange={handleDayChange}>
                         <option value="">Select Day</option>
@@ -66,12 +67,12 @@ const FeesReport = () => {
                         <option value="Friday">Friday</option>
                     </select>
                 </div>
-                <button type="button" onClick={handleGenerateReport}>Generate Report</button>
             </div>
-            {error && <div className="error-message">{error}</div>}
+            <center> <button type="button" className="fees-report__button" onClick={handleGenerateReport}>Generate Report</button></center>
+            {error && <div className="fees-report__error">{error}</div>}
             {report.length > 0 && (
-                <div className="report-table">
-                    <table>
+                <div className="fees-report__table-container">
+                    <table className="fees-report__table">
                         <thead>
                             <tr>
                                 <th>Admission Number</th>
@@ -104,4 +105,3 @@ const FeesReport = () => {
 };
 
 export default FeesReport;
-

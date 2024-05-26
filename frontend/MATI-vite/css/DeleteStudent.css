@@ -1,64 +1,97 @@
-.container {
-    width: fit-content;
-    padding: auto;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid blue;
-}
-
-h2 {
-    color: #007bff;
-}
-
-.form-group-row{
-    display: flex;
-    gap: 2%;
-    align-items: center;
+.delete-student-container {
+    width: 800px;
     margin: 2%;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.form-group {
-    margin-bottom: 15px;
+.delete-student-title {
+    color: green;
+    margin: 0;
+    text-align: center;
 }
 
-.col-form-label {
-    font-weight: bold;
+.delete-student-form-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    align-items: flex-end;
 }
 
-.btn-block {
+.delete-student-form-group {
+    flex: 1;
+    min-width: 200px;
+    margin: 10px;
+}
+
+.delete-student-input, .delete-student-select {
     width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 
-.alert {
+.delete-student-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.delete-student-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.delete-student-error {
+    color: red;
+    margin-bottom: 20px;
+}
+
+.delete-student-update-form {
     margin-top: 20px;
 }
-.mt-4{
+
+.delete-student-fieldset {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.delete-student-legend {
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+.delete-student-buttons {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.spinner-container {
+    position: relative;
+}
+
+.delete-student-feedback {
+    margin-top: 20px;
+    color: #28a745;
+    text-align: center;
+}
+
+.delete-student-flex-container {
     display: flex;
-    gap: 3%;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-.form-buttons{
-    justify-content: center;
-    align-items: center;
-    display:flex;
-    gap: 5%;
-}
-select,input{
-    padding: 0.5rem;
-    font-size: 0.3rem;
-}
-
-.lengends{
-    background-color: whitesmoke;
-    border-radius: 0.9rem;
-    padding: 0.4rem;
-}
-.btn-primary{
-    background-color: green;
-    padding: 0.4rem;
-}
-
-.col-8{
-    display: flex;
+.delete-student-flex-item {
+    flex: 1;
+    min-width: 200px;
 }

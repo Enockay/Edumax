@@ -1,36 +1,35 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../css/DeleteStudent.css'; // Import your custom CSS file
-
+import { ClipLoader } from 'react-spinners';
+import '../css/DeleteStudent.css';
 
 const DeleteStudent = () => {
     const [selectedAdmissionNumber, setSelectedAdmissionNumber] = useState('');
-    const [studentData, setStudentData] = useState('');
-    const [stream , setStream ] = useState('');
-    const [classes , setClass ] = useState(['1East','1West','2East','2West','3East','3West','4East','4West'])
+    const [studentData, setStudentData] = useState(null);
+    const [stream, setStream] = useState('');
+    const [classes, setClass] = useState(['1East', '1West', '2East', '2West', '3East', '3West', '4East', '4West']);
     const [error, setError] = useState('');
-    const [feedback ,setFeedback ] = useState('');
-    const [isLoading ,setIsLoading] = useState(false);
-
+    const [feedback, setFeedback] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const fetchStudentData = async (admissionNumber) => {
-
         const url = `https://edumax.fly.dev/students/${stream}/${admissionNumber}`;
         const uri = `http://localhost:3000/students/${stream}/${admissionNumber}`;
 
         try {
             setIsLoading(true);
             const response = await axios.get(url);
-            console.log(response)
-           if(response.data[0]){
-              setStudentData(response.data[0]);
-           }else{
-               setFeedback(response.data);
-           }
+            if (response.data[0]) {
+                setStudentData(response.data[0]);
+            } else {
+                setFeedback(response.data);
+            }
             setError('');
         } catch (err) {
             setStudentData('');
             setError('Student not found.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -53,21 +52,22 @@ const DeleteStudent = () => {
             setError('No student selected or student data is incomplete.');
             return;
         }
-        const url = `https://edumax.fly.dev/students/${stream}/${admissionNumber.admissionNumber}`;
-        const uri = `http://localhost:3000/students/${stream}/${admissionNumber.admissionNumber}`;
+        const url = `https://edumax.fly.dev/students/${stream}/${selectedAdmissionNumber}`;
+        const uri = `http://localhost:3000/students/${stream}/${selectedAdmissionNumber}`;
 
         setError('');
         try {
-           const response =  await axios.put(url, studentData);
-            setFeedback(response.data)
+            const response = await axios.put(url, studentData);
+            setFeedback(response.data);
         } catch (err) {
             setError('Failed to update student data.');
         }
     };
 
     const handleDeleteStudent = async () => {
-        const url = `https://edumax.fly.dev/students/${stream}/${admissionNumber.admissionNumber}`;
-        const uri = `http://localhost:3000/students/${stream}/${admissionNumber.admissionNumber}`;
+       
+        const url = `https://edumax.fly.dev/students/${stream}/${selectedAdmissionNumber}`;
+        const uri = `http://localhost:3000/students/${stream}/${selectedAdmissionNumber}`;
 
         if (!studentData) {
             setError('No student selected.');
@@ -75,228 +75,214 @@ const DeleteStudent = () => {
         }
         setError('');
         try {
-          const response =   await axios.delete(url);
+            setIsLoading(true);
+            const response = await axios.delete(url);
             setSelectedAdmissionNumber('');
             setStudentData(null);
             setFeedback(response.data);
         } catch (err) {
             setError('Failed to delete student data.');
+            setIsLoading(false);
         }
     };
 
     return (
-        <div className="container">
-         <center><h2 className="text-center mt-4 mb-4"style={{color:'green',margin:0}}>Update Student Information</h2></center>   
-            <div className="form-group-row">
-               
-                <div className="col-8">
-                <label className="col-sm-2 col-form-label">Admission Number:</label>
+        <div className="delete-student-container">
+            <center><h2 className="delete-student-title">Update Student Information</h2></center>
+            <div className="delete-student-form-row">
+                <div className="delete-student-form-group">
+                    <label>Admission Number:</label>
                     <input
-                        type="Number"
-                        className="form-control"
+                        type="text"
+                        className="delete-student-input"
                         value={selectedAdmissionNumber}
                         onChange={handleAdmissionNumberChange}
                     />
-                </div>    
-                <div className="col-8">
-                <label className="col-sm-2 col-form-label">Select Stream:</label>
-                    <select value = {stream} onChange={(e)=>setStream(e.target.value)}>
-                       <option className=''>--Select--</option>
-                       {classes.map((className,index) => (
-                         <option key={index} value={className}>{className}</option>
-                       ))}
+                </div>
+                <div className="delete-student-form-group">
+                    <label>Select Stream:</label>
+                    <select value={stream} onChange={(e) => setStream(e.target.value)} className="delete-student-select">
+                        <option value="">--Select--</option>
+                        {classes.map((className, index) => (
+                            <option key={index} value={className}>{className}</option>
+                        ))}
                     </select>
                 </div>
-                <div className="col-sm-2">
-                  <center><button className="btn-primary" onClick={handleFetchStudent}disabled={!stream ||!selectedAdmissionNumber}>Fetch Student</button></center>
+                <div className="delete-student-form-group">
+                    <button className="delete-student-button" onClick={handleFetchStudent} disabled={!stream || !selectedAdmissionNumber}>
+                        {isLoading ? <ClipLoader size={50} color={"#fff"} /> : "Fetch Student"}
+                    </button>
                 </div>
             </div>
-            {error && <div className="alert alert-danger">{error}</div>}
+            {error && <div className="delete-student-error">{error}</div>}
             {studentData && (
-                <form onSubmit={handleUpdateStudent} className="">
-                    <div className='mt-4'>
-                    <div className='lengends'>
-                    <legend className="mb-3">Personal Information</legend>
-                    <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">Full Name:</label>
-                        <div className="col-sm-10">
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="fullName"
-                                value={studentData.fullName}
-                                onChange={handleFieldChange}
-                            />
+                <form onSubmit={handleUpdateStudent} className="delete-student-update-form">
+                    <fieldset className="delete-student-fieldset">
+                        <legend className="delete-student-legend">Personal Information</legend>
+                        <div className="delete-student-flex-container">
+                            <div className="delete-student-flex-item">
+                                <label>Full Name:</label>
+                                <input
+                                    type="text"
+                                    className="delete-student-input"
+                                    name="fullName"
+                                    value={studentData.fullName}
+                                    onChange={handleFieldChange}
+                                />
+                            </div>
+                            <div className="delete-student-flex-item">
+                                <label>Guardian Name:</label>
+                                <input
+                                    type="text"
+                                    className="delete-student-input"
+                                    name="guardianName"
+                                    value={studentData.guardianName}
+                                    onChange={handleFieldChange}
+                                />
+                            </div>
+                            <div className="delete-student-flex-item">
+                                <label>Guardian Tel:</label>
+                                <input
+                                    type="text"
+                                    className="delete-student-input"
+                                    name="guardianTel"
+                                    value={studentData.guardianTel}
+                                    onChange={handleFieldChange}
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">Guardian Name:</label>
-                        <div className="col-sm-10">
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="guardianName"
-                                value={studentData.guardianName}
-                                onChange={handleFieldChange}
-                            />
+                    </fieldset>
+                    <fieldset className="delete-student-fieldset">
+                        <legend className="delete-student-legend">Academic Information</legend>
+                        <div className="delete-student-flex-container">
+                            <div className="delete-student-flex-item">
+                                <label>K.C.P.E Index:</label>
+                                <input
+                                    type="text"
+                                    className="delete-student-input"
+                                    name="kcpeIndex"
+                                    value={studentData.kcpeIndex}
+                                    onChange={handleFieldChange}
+                                />
+                            </div>
+                            <div className="delete-student-flex-item">
+                                <label>K.C.P.E Marks:</label>
+                                <input
+                                    type="text"
+                                    className="delete-student-input"
+                                    name="kcpeMarks"
+                                    value={studentData.kcpeMarks}
+                                    onChange={handleFieldChange}
+                                />
+                            </div>
+                            <div className="delete-student-flex-item">
+                                <label>Former School:</label>
+                                <input
+                                    type="text"
+                                    className="delete-student-input"
+                                    name="formerSchool"
+                                    value={studentData.formerSchool}
+                                    onChange={handleFieldChange}
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">Guardian Tel:</label>
-                        <div className="col-sm-10">
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="guardianTel"
-                                value={studentData.guardianTel}
-                                onChange={handleFieldChange}
-                            />
+                    </fieldset>
+                    <fieldset className="delete-student-fieldset">
+                        <legend className="delete-student-legend">Other Information</legend>
+                        <div className="delete-student-flex-container">
+                            <div className="delete-student-flex-item">
+                                <label>Student Birth Date:</label>
+                                <input
+                                    type="date"
+                                    className="delete-student-input"
+                                    name="studentBirthNo"
+                                    value={studentData.studentBirthNo}
+                                    onChange={handleFieldChange}
+                                />
+                            </div>
+                            <div className="delete-student-flex-item">
+                                <label>Date of Admission:</label>
+                                <input
+                                    type="date"
+                                    className="delete-student-input"
+                                    name="dateOfAdmission"
+                                    value={studentData.dateOfAdmission}
+                                    onChange={handleFieldChange}
+                                />
+                            </div>
+                            <div className="delete-student-flex-item">
+                                <label>Gender:</label>
+                                <select
+                                    className="delete-student-input"
+                                    name="gender"
+                                    value={studentData.gender}
+                                    onChange={handleFieldChange}
+                                >
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div className="delete-student-flex-item">
+                                <label>Boarding or Day:</label>
+                                <input
+                                    type="text"
+                                    className="delete-student-input"
+                                    name="boardingOrDay"
+                                    value={studentData.boardingOrDay}
+                                    onChange={handleFieldChange}
+                                />
+                            </div>
                         </div>
-                    </div>
-                 </div>   
-              <div className='lengends'>
-                    <legend className="mb-3 mt-4">Academic Information</legend>
-                    <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">K.C.P.E Index:</label>
-                        <div className="col-sm-10">
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="kcpeIndex"
-                                value={studentData.kcpeIndex}
-                                onChange={handleFieldChange}
-                            />
+                    </fieldset>
+                    <fieldset className="delete-student-fieldset">
+                        <legend className="delete-student-legend">Fees Details</legend>
+                        <div className="delete-student-flex-container">
+                            <div className="delete-student-flex-item">
+                                <label>Tuition Fees:</label>
+                                <input
+                                    type="text"
+                                    className="delete-student-input"
+                                    name="tuitionFees"
+                                    value={studentData.tuitionFees}
+                                    onChange={handleFieldChange}
+                                />
+                            </div>
+                            <div className="delete-student-flex-item">
+                                <label>Uniform Fees:</label>
+                                <input
+                                    type="text"
+                                    className="delete-student-input"
+                                    name="uniformFees"
+                                    value={studentData.uniformFees}
+                                    onChange={handleFieldChange}
+                                />
+                            </div>
+                            <div className="delete-student-flex-item">
+                                <label>Lunch Fees:</label>
+                                <input
+                                    type="text"
+                                    className="delete-student-input"
+                                    name="lunchFees"
+                                    value={studentData.lunchFees}
+                                    onChange={handleFieldChange}
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">K.C.P.E Marks:</label>
-                        <div className="col-sm-10">
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="kcpeMarks"
-                                value={studentData.kcpeMarks}
-                                onChange={handleFieldChange}
-                            />
-                        </div>
-                    </div>
-                    <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">Former School:</label>
-                        <div className="col-sm-10">
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="formerSchool"
-                                value={studentData.formerSchool}
-                                onChange={handleFieldChange}
-                            />
-                        </div>
-                    </div>
-                    </div>  
-                   <div className='lengends'>
-                    <legend className="mb-3 mt-4">Other Information</legend>
-                    <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">Student Birth Date:</label>
-                        <div className="col-sm-4">
-                            <input
-                                type="date"
-                                className="form-control"
-                                name="studentBirthNo"
-                                value={studentData.studentBirthNo}
-                                onChange={handleFieldChange}
-                            />
-                        </div>
-                        <label className="col-sm-2 col-form-label">Date of Admission:</label>
-                        <div className="col-sm-4">
-                            <input
-                                type="date"
-                                className="form-control"
-                                name="dateOfAdmission"
-                                value={studentData.dateOfAdmission}
-                                onChange={handleFieldChange}
-                            />
-                        </div>
-                    </div>
-                    <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">Gender:</label>
-                        <div className="col-sm-4">
-                            <select
-                                className="form-control"
-                                name="gender"
-                                value={studentData.gender}
-                                onChange={handleFieldChange}
-                            >
-                                <option value="">Select Gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
-                        </div>
-                        <label className="col-sm-2 col-form-label">Boarding or Day:</label>
-                        <div className="col-sm-4">
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="boardingOrDay"
-                                value={studentData.boardingOrDay}
-                                onChange={handleFieldChange}
-                            />
-                        </div>
-                    </div>
-                    </div>
-
-                    <div className='lengends'>
-                    <legend className="mb-3 mt-4">Fees Details</legend> 
-                    <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">Tuition Fees:</label>
-                        <div className="col-sm-4">
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="tuitionFees"
-                                value={studentData.tuitionFees}
-                                onChange={handleFieldChange}
-                            />
-                        </div>
-                        <label className="col-sm-2 col-form-label">Uniform Fees:</label>
-                        <div className="col-sm-4">
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="uniformFees"
-                                value={studentData.uniformFees}
-                                onChange={handleFieldChange}
-                            />
-                        </div>
-                    </div>
-                    <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">Lunch Fees:</label>
-                        <div className="col-sm-4">
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="lunchFees"
-                                value={studentData.lunchFees}
-                                onChange={handleFieldChange}
-                            />
-                        </div>
-                    </div>
-                    </div>
-                </div>    
-                
-                <center><div className="form-buttons">
-                        <div className='spinner-container'>
-                             {isLoading ? <span className="spinner"></span> : 
-                             <button type="submit" disabled={isLoading} className="btn btn-success btn-block">Update Student</button> || 
-                            <button type="button" disabled={isLoading} className="btn btn-danger btn-block" onClick={handleDeleteStudent}>Delete Student</button>
+                    </fieldset>
+                    <div className="delete-student-buttons">
+                        <div className="spinner-container">
+                            {isLoading ? <ClipLoader size={50} color={"#000"} /> :
+                                <>
+                                    <button type="submit" disabled={isLoading} className="btn btn-success btn-block">Update Student</button>
+                                    <button type="button" disabled={isLoading} className="btn btn-danger btn-block" onClick={handleDeleteStudent}>Delete Student</button>
+                                </>
                             }
-                        
-                       </div> 
+                        </div>
                     </div>
-                    </center>  
                 </form>
-
             )}
-              <div className=''>{feedback}</div>  
+            <div className='delete-student-feedback'>{feedback}</div>
         </div>
     );
 };

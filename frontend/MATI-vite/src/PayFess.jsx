@@ -53,18 +53,18 @@ const PayFees = () => {
 
     return (
         <div className="pay-fees-container">
-            <h2>Pay Student Fees</h2>
+            <h2>Update Student Fees</h2>
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
+                <div className="form-payFees">
                     <label>Admission Number:</label>
-                    <div className="input-group">
+                    <div className="input-payFees">
                         <input type="text" value={admissionNumber} onChange={handleAdmissionNumberChange} />
                         <button type="button" onClick={fetchStudentData}>Show Balance</button>
                     </div>
                 </div>
                 {student && (
-                    <div className="pay-fees-details">
-                        <div className="student-details">
+                    <div className="pay-fees-d">
+                        <div className="student-d">
                             <h3>{student.fullName}</h3>
                             <p>Tuition Fees: ${student.fees.tuition}</p>
                             <p>Uniform Fees: ${student.fees.uniform}</p>
@@ -72,8 +72,8 @@ const PayFees = () => {
                             <p>Total Fees: ${student.fees.total}</p>
                             <p>Balance: ${balance}</p>
                         </div>
-                        <div className="payment-details">
-                            <div className="form-group">
+                        <div className="payment-d">
+                            <div className="form-g">
                                 <label>Select Levi:</label>
                                 <select value={levi} onChange={handleLeviChange}>
                                     <option value="">Select Levi</option>
@@ -82,7 +82,7 @@ const PayFees = () => {
                                     <option value="lunch">Lunch</option>
                                 </select>
                             </div>
-                            <div className="form-group">
+                            <div className="form-g">
                                 <label>Amount Paid:</label>
                                 <input type="number" value={amountPaid} onChange={handleAmountPaidChange} />
                             </div>
@@ -93,7 +93,7 @@ const PayFees = () => {
             </form>
             {responseMessage && <div className="response-message">{responseMessage}</div>}
             {updatedStudent && (
-                <div className="updated-student">
+                <div className="updated-s">
                     <h3>Updated Student Details</h3>
                     <p>Name: {updatedStudent.fullName}</p>
                     <p>Balance: ${updatedStudent.fees.balance}</p>

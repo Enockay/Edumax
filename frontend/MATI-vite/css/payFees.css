@@ -12,11 +12,11 @@ h2 {
     margin-bottom: 20px;
 }
 
-.form-group {
+.form-payFees {
     margin-bottom: 15px;
 }
 
-.input-group {
+.input-payFees {
     display: flex;
     gap: 10px;
 }
@@ -43,14 +43,14 @@ button:hover {
     background-color: #0056b3;
 }
 
-.pay-fees-details {
+.pay-fees-d{
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
     margin-top: 20px;
 }
 
-.student-details, .payment-details {
+.student-d, .payment-d{
     padding: 20px;
     background-color: #ffffff;
     border: 1px solid #ddd;
@@ -67,7 +67,7 @@ button:hover {
     text-align: center;
 }
 
-.updated-student {
+.updated-s {
     margin-top: 20px;
     padding: 20px;
     background-color: #ffffff;

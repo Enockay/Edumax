@@ -23,18 +23,18 @@ const SchoolAggregate = () => {
     }, []);
 
     return (
-        <div className='aggregate-container'>
+        <div className="aggregate-container">
+            <center><h2 className="h2">The School Aggregate</h2></center>
             <div className="aggregate-details">
-            <center><h2 className='h2'>The School Aggregate</h2></center>     
-            <div className='aggregate-gender'>
-                <h3>Total Males: {data.totalMales}</h3>
-                <h3>Total Females: {data.totalFemales}</h3>
-            </div>
+                <div className="aggregate-gender">
+                    <h3>Total Males: {data.totalMales}</h3>
+                    <h3>Total Females: {data.totalFemales}</h3>
+                </div>
                 <h3>Total Students: {data.totalStudents}</h3>
-                <div className='more-Details'>More On wide Screen</div>
-                <div className="form-details">
+                <div className="more-d">More On Wide Screen</div>
+                <div className="form-d">
                     {Object.keys(data.forms).map(form => (
-                        <div key={form} className="form-group">
+                        <div key={form} className="form">
                             <h4>{form.toUpperCase()}</h4>
                             <p>East: {data.forms[form].east}</p>
                             <p>West: {data.forms[form].west}</p>
@@ -47,4 +47,3 @@ const SchoolAggregate = () => {
 };
 
 export default SchoolAggregate;
-

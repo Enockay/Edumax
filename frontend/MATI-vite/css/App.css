@@ -1,83 +1,68 @@
+/* App.css */
 .aggregate-container {
-  max-width: 1200px;
-  padding: 5%;
-  box-sizing: border-box;
-}
-
-.aggregate-gender{
   display: flex;
-  gap: 10%;
-}
-h2 {
-  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
 
 .aggregate-details {
-  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 900px;
+  background-color: #f8f9fa;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h3 {
-  margin-top: 0;
-  font-size: 1.2em;
-}
-
-.form-details {
+.aggregate-gender {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
-}
-
-.form-group {
-  flex: 0 0 48%; /* Two columns on larger screens */
+  width: 100%;
   margin-bottom: 20px;
 }
 
-.form-group h4 {
-  margin-top: 0;
-  font-size: 1.1em;
-  color: #333;
+.aggregate-gender h3 {
+  margin: 0 20px;
 }
-.more-Details{
-  display: none;
+
+.more-d {
+  margin-bottom: 20px;
+  font-style: italic;
+  color: gray;
 }
+
+.form-d {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.form {
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.form h4 {
+  margin-bottom: 10px;
+}
+
 .form-group p {
   margin: 5px 0;
 }
 
-@media screen and (max-width: 600px) {
-  .form-group {
-      flex: 0 0 100%; /* Full width on smaller screens */
+@media (max-width: 768px) {
+  .aggregate-gender {
+      flex-direction: column;
+      align-items: center;
   }
 
-  .aggregate-container{
-    width: 250px;
-    margin: 1%;
-  }
-  .aggregate-gender{
-    display: flex;
-    flex-direction: column;
-  }
-  .form-details{
-    display: flex;
-    flex-direction: column;
-  }
-  .h3{
-   font-size: 0.6rem;
-  }
-  .h2{
-    font-size: 0.9rem;
-  }
-  .more-Details{
-    display: block;
-    color: green;
-  }
-  .form-details{
-  display: none;
-  }
-  .aggregate-details{
-    padding: 10px;
+  .aggregate-gender h3 {
+      margin: 10px 0;
   }
 }

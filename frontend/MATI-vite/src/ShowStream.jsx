@@ -48,7 +48,7 @@ const ShowStream = () => {
         <div className="show-stream-container">
             <h2>Show Stream Fee Balance</h2>
             <div className="search-form">
-                <div className="form-group">
+                <div className="form-balance">
                     <label>Select Form:</label>
                     <select value={selectedForm} onChange={handleFormChange}>
                         <option value="">Select Form</option>
@@ -58,7 +58,7 @@ const ShowStream = () => {
                         <option value="Form 1">Form 1</option>
                     </select>
                 </div>
-                <div className="form-group">
+                <div className="form-balance">
                     <label>Select Stream:</label>
                     <select value={selectedStream} onChange={handleStreamChange}>
                         <option value="">Select Stream</option>

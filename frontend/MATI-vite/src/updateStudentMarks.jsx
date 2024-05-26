@@ -176,7 +176,7 @@ const TeacherMarksForm = () => {
                     ))}
                 </select>
             </div>
-            <div className="form-group">
+            <div className="form">
                 <label>Select Unit:</label>
                 <select value={selectedUnit} onChange={(e) => setSelectedUnit(e.target.value)}>
                     <option value="">--Select Unit--</option>
