@@ -1,0 +1,39 @@
+body{
+    margin: 0;
+    padding: auto;
+}
+
+.heading{
+    height: 5rem;
+    background-color: #4728d4;
+}
+
+.main{
+    display: flex;
+    min-height: 80vh;
+}
+
+.main-content{
+    display: flex;
+}
+.part-one{
+}
+
+
+.sidebar{
+    width: 15%;
+    padding: 10px;
+    background-color: #0450241e;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)
+}
+
+.footer-dashboard{
+    height: 4rem;
+    background-color: darkslategray;
+}
+@media (max-width:600px) {
+    .sidebar{
+        width: 25%;
+    }
+}
