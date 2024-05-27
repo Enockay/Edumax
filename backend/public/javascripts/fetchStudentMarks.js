@@ -117,7 +117,7 @@ const calculateGradesAndPoints = (studentUnits) => {
             };
         });
 
-        // Aggregate total points based on specified rules
+        // Subject categories
         const compulsorySubjects = ['Eng', 'Kisw', 'Maths'];
         const scienceSubjects = ['Chem', 'Bio', 'Phy'];
         const humanitiesSubjects = ['Geog', 'Hist', 'CRE'];
@@ -128,39 +128,79 @@ const calculateGradesAndPoints = (studentUnits) => {
             .filter(unit => compulsorySubjects.includes(unit.name))
             .reduce((sum, unit) => sum + unit.points, 0);
 
-        // Select top 2 sciences
+        // Select top 3 sciences
         const selectedSciences = student.units
             .filter(unit => scienceSubjects.includes(unit.name))
             .sort((a, b) => b.points - a.points)
-            .slice(0, 2);
+            .slice(0, 3);
 
         const sciencePoints = selectedSciences.reduce((sum, unit) => sum + unit.points, 0);
 
-        // Select top humanity
-        const selectedHumanity = student.units
+        // Select top humanity (ensure at least one humanity is included)
+        let selectedHumanity = student.units
             .filter(unit => humanitiesSubjects.includes(unit.name))
             .sort((a, b) => b.points - a.points)
             .slice(0, 1);
 
+        if (selectedHumanity.length === 0) {
+            // Ensure at least one humanity is included, even if it has zero points
+            selectedHumanity = student.units
+                .filter(unit => humanitiesSubjects.includes(unit.name))
+                .sort((a, b) => a.name.localeCompare(b.name)) // Arbitrary order if none present
+                .slice(0, 1);
+        }
+
         const humanityPoints = selectedHumanity.reduce((sum, unit) => sum + unit.points, 0);
 
-        // Select top 1 remaining science or humanity if needed to make up 2 sciences and at least 1 humanity
-        const remainingUnits = student.units
-            .filter(unit => !compulsorySubjects.includes(unit.name) && !selectedSciences.includes(unit) && !selectedHumanity.includes(unit))
-            .sort((a, b) => b.points - a.points)
+        // Calculate points for remaining units to follow 3-3-1-0, 3-2-1-1, or 3-2-2-0 pattern
+        const remainingUnits = student.units.filter(unit => !compulsorySubjects.includes(unit.name) && !selectedSciences.includes(unit) && !selectedHumanity.includes(unit));
+
+        remainingUnits.sort((a, b) => b.points - a.points);
+
+        // Select up to 1 additional technical subject to make up 3-3-1-0 pattern
+        let remainingPoints = 0;
+        const selectedTechnicals = remainingUnits
+            .filter(unit => technicalSubjects.includes(unit.name))
             .slice(0, 1);
 
-        const remainingPoints = remainingUnits.reduce((sum, unit) => sum + unit.points, 0);
+        if (selectedTechnicals.length > 0) {
+            remainingPoints += selectedTechnicals.reduce((sum, unit) => sum + unit.points, 0);
+            remainingUnits.splice(remainingUnits.indexOf(selectedTechnicals[0]), 1);
+        }
 
-        // Calculate additional points from the remaining subjects
-        const additionalSubjects = student.units
-            .filter(unit => !compulsorySubjects.includes(unit.name) && !selectedSciences.includes(unit) && !selectedHumanity.includes(unit) && !remainingUnits.includes(unit))
-            .sort((a, b) => b.points - a.points)
-            .slice(0, 1); // Select top 1 additional subject to make up 7 subjects
+        // If 3-3-1-0 pattern is not satisfied, consider remaining units for 3-2-1-1 or 3-2-2-0 patterns
+        if (selectedSciences.length < 3) {
+            const additionalSciences = remainingUnits
+                .filter(unit => scienceSubjects.includes(unit.name))
+                .slice(0, 3 - selectedSciences.length);
 
-        const additionalPoints = additionalSubjects.reduce((sum, unit) => sum + unit.points, 0);
+            if (additionalSciences.length > 0) {
+                remainingPoints += additionalSciences.reduce((sum, unit) => sum + unit.points, 0);
+                additionalSciences.forEach(unit => {
+                    remainingUnits.splice(remainingUnits.indexOf(unit), 1);
+                });
+            }
+        }
 
-        totalPoints = compulsoryPoints + sciencePoints + humanityPoints + remainingPoints + additionalPoints;
+        if (selectedHumanity.length < 2) {
+            const additionalHumanities = remainingUnits
+                .filter(unit => humanitiesSubjects.includes(unit.name))
+                .slice(0, 2 - selectedHumanity.length);
+
+            if (additionalHumanities.length > 0) {
+                remainingPoints += additionalHumanities.reduce((sum, unit) => sum + unit.points, 0);
+                additionalHumanities.forEach(unit => {
+                    remainingUnits.splice(remainingUnits.indexOf(unit), 1);
+                });
+            }
+        }
+
+        // Select up to 1 remaining subject to make up 7 subjects in total
+        if (selectedSciences.length + selectedHumanity.length + selectedTechnicals.length < 7) {
+            remainingPoints += remainingUnits.slice(0, 1).reduce((sum, unit) => sum + unit.points, 0);
+        }
+
+        totalPoints = compulsoryPoints + sciencePoints + humanityPoints + remainingPoints;
 
         // Assign grade based on total points
         let totalGrade = '';

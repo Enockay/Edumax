@@ -113,7 +113,13 @@ const AdminLogin = () => {
           </div>
         </form>
       )}
-      
+      <footer className='footer' style={{marginTop:"20px"}}>
+        <div >
+          <center>
+            <a href='https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox?compose=DmwnWtMmVNSlrNvwFZsxGBDxxrXDpQdXcjZJMRcJNjFgrFLPStGSHrKKFgmxwNlDjQtHmgqzRkRG'style={{fontSize:"0.8rem"}}>System Developed by Blackie-Networks</a>
+          </center>
+        </div>
+      </footer>
     </div>
   );
 };

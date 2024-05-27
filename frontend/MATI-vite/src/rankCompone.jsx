@@ -140,7 +140,7 @@ const Results = () => {
         */}   
           <div className='button-results'>
             <button className='button' onClick={generateResults} disabled={!singleClass || !term}>Generate Results</button>
-            <button className='button' onClick={handlePrintOverallResults} disabled={!results}>Print Results</button>
+            <button className='button' onClick={handlePrintOverallResults} disabled={!singleClass}>Print Results</button>
           </div>
         </div>
         <div className='class-results'>
