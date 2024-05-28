@@ -129,6 +129,23 @@ body{
     color: white;
 }
 
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+  }
+  
+  .sidebar ul li a span {
+    margin-left: 10px;
+  }
+  
+  .sidebar.collapsed ul li a span {
+    display: none;
+  }
+  
+  .sidebar.collapsed ul li a {
+    justify-content: center;
+  }
+  
 @media (max-width : 1024px) {
     .sidebar{
         width: 80px;

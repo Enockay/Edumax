@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Auth';
 import './login.css';
+import tp from "../assets/teachers.webp";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -9,9 +10,19 @@ const LoginPage = () => {
     const [loading, setLoading] = useState(false);
     const [credentials, setCredentials] = useState({
         username: '',
-        email: '',
         password: ''
     });
+
+    // Function to set authentication status in local storage
+    const setAuthStatus = (status) => {
+        localStorage.setItem('isLoggedIn', status);
+    };
+
+    // Function to get authentication status from local storage
+    const getAuthStatus = () => {
+        return localStorage.getItem('isLoggedIn') === 'true';
+    };
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -29,6 +40,7 @@ const LoginPage = () => {
         setTimeout(() => {
             login();
             setLoading(false);
+            setAuthStatus(true); // Set authentication status in local storage upon successful login
             navigate('/dashboard');
         }, 2000); // Simulate an API call delay
     };
@@ -36,9 +48,10 @@ const LoginPage = () => {
     return (
         <div className="login-container">
             <div className='login-form'>
-                <center><h3>MATINYANI MIXED STAFF</h3></center> 
-                <div className="">
-                    <h2 style={{color:"blue"}}>Teachers Portal</h2>
+            <center> <img src={tp} alt="logo" className='login-icon'></img>
+               <h6 style={{margin:0,marginBottom : "7%"}}>MATINYANI MIXED STAFF</h6></center> 
+               <hr style={{marginBottom:"15%"}} ></hr>
+                <div className="" style={{marginBottom:"10%"}} >
                     <form onSubmit={handleLogin}>
                         <div className="form-group">
                             <label htmlFor="username">Username:</label>
@@ -51,18 +64,7 @@ const LoginPage = () => {
                                 required 
                             />
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="email">Email:</label>
-                            <input 
-                                type="email" 
-                                id="email" 
-                                name="email" 
-                                value={credentials.email} 
-                                onChange={handleChange} 
-                                required 
-                            />
-                        </div>
-                        <div className="form-group">
+                        <div className="form-group" style={{marginBottom:"15%"}}>
                             <label htmlFor="password">Password:</label>
                             <input 
                                 type="password" 
@@ -79,6 +81,8 @@ const LoginPage = () => {
                     </form>
                     {loading && <div className="spinner">Loading...</div>}
                 </div>
+                      <center><p style={{marginBottom:"15%",cursor:"pointer"}}>Forgot Your Password ?</p></center>
+                <hr></hr>
                 <footer className='footer' style={{marginTop:"20px"}}>
                     <div>
                         <center>

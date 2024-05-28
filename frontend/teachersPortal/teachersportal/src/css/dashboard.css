@@ -3,11 +3,11 @@ body{
     padding: auto;
 }
 
-.heading{
-    height: 5rem;
-    background-color: #4728d4;
+.footer-left{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
 .main{
     display: flex;
     min-height: 80vh;
@@ -15,6 +15,7 @@ body{
 
 .main-content{
     display: flex;
+    padding: 10px;
 }
 .part-one{
 }
@@ -36,4 +37,8 @@ body{
     .sidebar{
         width: 25%;
     }
+    .main-content{
+        width: 90%;
+    }
+    
 }

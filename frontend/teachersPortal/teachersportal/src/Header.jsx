@@ -1,11 +1,16 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "./css/Header.css";
-import teacher from './assets/teachers.webp'
+import teacher from './assets/teachers.webp';
 import profile from './assets/profile.png';
 
 const Header = () => {
   const [menu, setMenu] = useState('');
   const [menuItems] = useState(["Marks", "Units", "Students", "Classes"]);
+
+  const handleLogout = () => {
+    // Implement your logout logic here
+    console.log("Logout clicked");
+  };
 
   return (
     <div className="header">
@@ -28,8 +33,16 @@ const Header = () => {
         <button className="search-button">Search</button>
       </div>
       <div className="teacher-info">
-        <img src={profile} alt="profile" className="profile-photo" />
-        <span className="teacher-name">Mr. John Doe</span>
+        <div className="dropdown">
+          <button className="profile-button">
+            <img src={profile} alt="profile" className="profile-photo" />
+            <span className="teacher-name">Mr. John Doe</span>
+          </button>
+          <div className="dropdown-content">
+            <a href="#">Profile</a>
+            <a href="#" onClick={handleLogout}>Logout</a>
+          </div>
+        </div>
       </div>
     </div>
   );

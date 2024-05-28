@@ -9,14 +9,20 @@
 }
 
 .login-form {
-    background-color: #fff;
-    padding: 10px;
+    background-color: #054e80;
+    padding: 20px;
+    color: white;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     max-width: 400px;
+    height: fit-content;
+    border : 1px solid blue;
 }
-
+.login-icon{
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+}
 .login-form h2 {
     text-align: center;
     margin-bottom: 20px;
