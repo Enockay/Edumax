@@ -16,6 +16,7 @@ body{
 .main-content{
     display: flex;
     padding: 10px;
+    width: 80%;
 }
 .part-one{
 }

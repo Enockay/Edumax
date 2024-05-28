@@ -3,6 +3,8 @@ import "./css/dashboard.css";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import MainDashboard from "./sidbarComponets/Dashbord";
+import Classes from "./sidbarComponets/Classes";
+import Assignment from "./sidbarComponets/Assigment";
 
 const Dashboard = () => {
     const [selectedItem, setSelectedItem] = useState("");
@@ -16,7 +18,10 @@ const Dashboard = () => {
         switch(selectedItem){
             case "Dashboard":
                 return <MainDashboard />;
-            // Add cases for other items as needed
+            case "Classes" :
+                return <Classes/>
+            case "Assignments":
+                return <Assignment/>
             default:
                 return <MainDashboard/>
         }

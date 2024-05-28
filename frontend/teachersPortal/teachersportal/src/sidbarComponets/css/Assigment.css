@@ -1,0 +1,71 @@
+.assignment-container {
+    padding: 20px;
+    display: flex;
+    gap: 5%;
+}
+
+.assignment-form-card,
+.assignment-list-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px;
+    width: 100%;
+    min-width: 60%;
+    max-width: 500px;
+    min-height: 40%;
+    height: fit-content;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.assignment-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.assignment-form input,
+.assignment-form select,
+.assignment-form textarea,
+.assignment-form button {
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.assignment-form button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.assignments-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.assignment-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 600px) {
+    .assignment-card,
+    .assignment-form-card,
+    .assignment-list-card {
+        width: 100%;
+        margin: 10px 0;
+    }
+    .assignment-container{
+        flex-direction: column;
+    }
+}
