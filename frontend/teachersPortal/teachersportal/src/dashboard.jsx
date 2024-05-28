@@ -18,7 +18,7 @@ const Dashboard = () => {
                 return <MainDashboard />;
             // Add cases for other items as needed
             default:
-                return null;
+                return <MainDashboard/>
         }
     };
 
