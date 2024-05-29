@@ -1,0 +1,109 @@
+.update-marks-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.form-update {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+.form-control {
+    flex: 1 1 45%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.form-control label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-control select {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.button {
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    align-self: center;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.notification,
+.update-message {
+    margin-top: 10px;
+    text-align: center;
+    color: red;
+    font-weight: bold;
+}
+
+.marks-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.marks-table th, 
+.marks-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.marks-table th {
+    background-color: #f2f2f2;
+}
+
+.marks-table input {
+    width: 60px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    .form-control {
+        flex: 1 1 100%;
+    }
+
+    .marks-table th, 
+    .marks-table td {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .marks-table input {
+        width: 40px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px;
+    }
+}

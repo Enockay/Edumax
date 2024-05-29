@@ -7,6 +7,7 @@ import Classes from "./sidbarComponets/Classes";
 import Assignment from "./sidbarComponets/Assigment";
 import FeedMarks from "./sidbarComponets/FeedMarks";
 import AssUnits from "./sidbarComponets/AssUnits";
+import UpdateStudentMarks from "./sidbarComponets/UpdateMarks";
 
 const Dashboard = () => {
     const [selectedItem, setSelectedItem] = useState("");
@@ -28,6 +29,8 @@ const Dashboard = () => {
                 return <FeedMarks/>
             case "Assigned-Units":
                 return <AssUnits/>
+                case "Update Student Marks":
+                return <UpdateStudentMarks/>
             default:
                 return <MainDashboard/>
         }

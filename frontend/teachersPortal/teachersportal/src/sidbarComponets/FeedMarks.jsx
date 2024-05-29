@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './css/FeedMarks.css';
 
@@ -21,31 +21,58 @@ const FeedMarks = () => {
     const [update, setUpdate] = useState('');
 
     const fetchClassList = () => {
-        const url = 'http://localhost:3000/students';
-        const uri = 'https://edumax.fly.dev/students';
+        const uri = 'https://edumax.fly.dev/students/';
 
         setIsLoading(true);
         setUpdate('')
         axios.get(uri, {
             params: {
-                stream: selectedStream
+                stream: selectedStream,
+                unit: selectedUnit
             }
         })
-            .then(response => {
-                setIsLoading(false);
-                if (response.data.length === 0) {
-                    setNotification(`No data found for ${selectedStream}`);
-                    setStudents([]);
-                } else {
-                    const sortedStudents = response.data.sort((a, b) => a.studentAdmission - b.studentAdmission);
-                    setStudents(sortedStudents);
-                    setNotification('');
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching students:', error);
-                setIsLoading(false);
-            });
+        .then(response => {
+            setIsLoading(false);
+            if (response.data.length === 0) {
+                setNotification(`No data found for ${selectedStream} - ${selectedUnit}`);
+                setStudents([]);
+            } else {
+                const sortedStudents = response.data.sort((a, b) => a.studentAdmission - b.studentAdmission);
+                setStudents(sortedStudents);
+                setNotification('');
+                //fetchMarks(sortedStudents);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching students:', error);
+            setIsLoading(false);
+            setNotification('Error check On your internet')
+        });
+    };
+
+    const fetchMarks = (students) => {
+        const uri = 'https://edumax.fly.dev/marks';
+        axios.get(uri, {
+            params: {
+                stream: selectedStream,
+                unit: selectedUnit,
+                term: selectedTerm,
+                examType: selectedExamType,
+                year: selectedYear
+            }
+        })
+        .then(response => {
+            if (response.data.length > 0) {
+                const marksData = {};
+                response.data.forEach(mark => {
+                    marksData[mark.studentId] = mark.marks;
+                });
+                setMarks(marksData);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching marks:', error);
+        });
     };
 
     const handleMarkChange = (studentId, paper, value) => {
@@ -59,34 +86,45 @@ const FeedMarks = () => {
     };
 
     const handleSubmit = () => {
-        students.forEach(student => {
-            setIsLoadingUpdate(true);
-            const studentMarks = marks[student._id];
-            if (studentMarks) {
-                const uri = `http://localhost:3000/students/${student._id}/marks`;
-                const url = `https://edumax.fly.dev/students/${student._id}/marks`;
-
-                axios.put(url, {
-                    unit: selectedUnit,
-                    term: selectedTerm,
-                    examType: selectedExamType,
-                    year: selectedYear,
-                    marks: studentMarks
-                })
-                    .then(response => {
-                        setIsLoadingUpdate(false);
-                        setUpdate(response.data);
-                        console.log('Marks updated:', response.data);
-                        setStudents([])
-                    })
-                    .catch(error => {
-                        console.error('Error updating marks:', error);
-                        setIsLoadingUpdate(false);
-                    });
+        const updates = students.map(student => ({
+            id: student._id,
+            unit: selectedUnit, // This should match one of the keys in the units object
+            examType: selectedExamType,
+            year: selectedYear,
+            marks: {
+                P1: marks[student._id].P1,
+                P2: marks[student._id].P2,
+                P3: marks[student._id].P3
             }
-        });
+        }));
+    
+        setIsLoadingUpdate(true);
+    
+        axios.put('https://edumax.fly.dev/students/marks', updates)
+            .then(response => {
+                setIsLoadingUpdate(false);
+                setUpdate(response.data);
+                console.log('Marks updated:', response.data);
+    
+                if (response.data && response.data.result) {
+                    console.log('Bulk Write Result:', response.data.result);
+                }
+    
+                if (response.data && response.data.updatedStudents) {
+                    console.log('Updated Students:', response.data.updatedStudents);
+                }
+    
+                setStudents([]);
+            })
+            .catch(error => {
+                console.error('Error updating marks:', error);
+                setIsLoadingUpdate(false);
+            });
     };
-
+    
+    
+    
+    
     const renderPaperFields = (student) => {
         if (['3East', '3West', '4East', '4West'].includes(selectedStream)) {
             if (['Chem', 'Bio', 'Phy', 'Eng', 'Kisw'].includes(selectedUnit)) {
@@ -180,100 +218,122 @@ const FeedMarks = () => {
     };
 
     return (
-        <div className="container">
-            <h2 className="title">Update Student Marks</h2>
-            <div className="stream-selection">
-                <div className="form-group stream-group">
-                    <label className="label-stream">Select Stream:</label>
-                    <select className="select-stream" value={selectedStream} onChange={(e) => setSelectedStream(e.target.value)}>
-                        <option value="">--Select Stream--</option>
-                        {streams.map(stream => (
-                            <option key={stream} value={stream}>{stream}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className="form-group unit-group">
-                    <label className="label-unit">Select Unit:</label>
-                    <select className="select-unit" value={selectedUnit} onChange={(e) => setSelectedUnit(e.target.value)}>
-                        <option value="">--Select Unit--</option>
-                        {units.map(unit => (
-                            <option key={unit} value={unit}>{unit}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className="form-group year-group">
-                    <label className="label-year">Select Year:</label>
-                    <select className="select-year" value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
-                        <option value="">--Select Year--</option>
-                        {years.map(year => (
-                            <option key={year} value={year}>{year}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className="spinner-container">
-                    <center> {isLoading ? <span className="spinner"></span> :
-                        <button className="fetch-button" onClick={fetchClassList} disabled={isLoading || !selectedStream || !selectedUnit}>Fetch Class List</button>}
-                    </center>
+        <div className='marks-main'>
+            <div className='marks-header'>
+                <h3 className='title'>Feeding marks</h3>
+                <div className='form'>
+                    <div className='form-control'>
+                        <label>Stream</label>
+                        <select
+                            value={selectedStream}
+                            onChange={(e) => setSelectedStream(e.target.value)}
+                        >
+                            <option value="">Select Stream</option>
+                            {streams.map((stream) => (
+                                <option key={stream} value={stream}>
+                                    {stream}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className='form-control'>
+                        <label>Subject</label>
+                        <select
+                            value={selectedUnit}
+                            onChange={(e) => setSelectedUnit(e.target.value)}
+                        >
+                            <option value="">Select Subject</option>
+                            {units.map((unit) => (
+                                <option key={unit} value={unit}>
+                                    {unit}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                   
+                    <button className='btn' onClick={fetchClassList}>
+                        {isLoading ? 'Loading...' : 'Fetch Students'}
+                    </button>
                 </div>
             </div>
-            <center className="notification">{notification}</center>
+
+            {notification && <p className='notification'>{notification}</p>}
 
             {students.length > 0 && (
                 <>
-                    <div className="details-selection">
-
-                        <div className="form-group term-group">
-                            <label className="label-term">Select Term:</label>
-                            <select className="select-term" value={selectedTerm} required onChange={(e) => setSelectedTerm(e.target.value)}>
-                                <option value="">--Select Term--</option>
-                                {terms.map(term => (
-                                    <option key={term} value={term}>{term}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="form-group exam-group">
-                            <label className="label-exam">Select Exam Type:</label>
-                            <select className="select-exam" value={selectedExamType} required onChange={(e) => setSelectedExamType(e.target.value)}>
-                                <option value="">--Select Exam Type--</option>
-                                {examTypes.map(examType => (
-                                    <option key={examType} value={examType}>{examType}</option>
-                                ))}
-                            </select>
-                        </div>
-
-
-                        <div className="students-table">
-                            <center><h3 className="table-title">Students in {selectedStream} - {selectedUnit}</h3></center>
-                            <table className="marks-table">
-                                <thead>
-                                    <tr>
-                                        <th className='th th-admission'>Admission</th>
-                                        <th className='th th-name'>Name</th>
-                                        {renderTableHeaders()}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {students.map(student => (
-                                        <tr key={student._id}>
-                                            <td className="td-admission">{student.studentAdmission}</td>
-                                            <td className="td-name">{student.studentName}</td>
-                                            {renderPaperFields(student)}
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                            <div className='spinner-container'>
-                                {isLoadingUpdate ? <span className="spinner" style={{fontSize:"2rem"}}></span> :
-                                    <button onClick={handleSubmit} className='update-button' disabled={isLoadingUpdate||!selectedExamType||!selectedTerm}>Update Marks</button>}
-                            </div>
-                          
-                        </div>
+                <div className='items-form'>
+                 <div className='form-control'>
+                        <label>Term</label>
+                        <select
+                            value={selectedTerm}
+                            onChange={(e) => setSelectedTerm(e.target.value)}
+                        >
+                            <option value="">Select Term</option>
+                            {terms.map((term) => (
+                                <option key={term} value={term}>
+                                    {term}
+                                </option>
+                            ))}
+                        </select>
                     </div>
+                    <div className='form-control'>
+                        <label>Exam Type</label>
+                        <select
+                            value={selectedExamType}
+                            onChange={(e) => setSelectedExamType(e.target.value)}
+                        >
+                            <option value="">Select Exam Type</option>
+                            {examTypes.map((type) => (
+                                <option key={type} value={type}>
+                                    {type}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className='form-control'>
+                        <label>Year</label>
+                        <select
+                            value={selectedYear}
+                            onChange={(e) => setSelectedYear(e.target.value)}
+                        >
+                            <option value="">Select Year</option>
+                            {years.map((year) => (
+                                <option key={year} value={year}>
+                                    {year}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    </div>   
+                    <table>
+                        <thead>
+                            <tr>
+                                <th className='th'>#</th>
+                                <th className='th'>Adm</th>
+                                <th className='th'>Name</th>
+                                {renderTableHeaders()}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {students.map((student, index) => (
+                                <tr key={student._id}>
+                                    <td className='td'>{index + 1}</td>
+                                    <td className='td'>{student.studentAdmission}</td>
+                                    <td className='td'>{student.studentName}</td>
+                                    {renderPaperFields(student)}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <center><button className='btn' onClick={handleSubmit}>
+                         {isLoadingUpdate ? 'Updating...' : 'Submit Marks'}
+                    </button>
+                    </center>    
+                    {update && <p className='update-message'>{update}</p>}
                 </>
             )}
-              <center className="update-notification">{update}</center>
-        </div>
 
+        </div>
     );
 };
 

@@ -13,7 +13,7 @@ const Header = () => {
   };
 
   return (
-    <div className="header">
+    <div className="heading">
       <div className="logo">
         <img src={teacher} alt="logo" className="logo-image" />
         <p className="portal-title">TEACHERS PORTAL</p>

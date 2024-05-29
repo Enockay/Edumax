@@ -15,6 +15,7 @@ var studentMarksUpdate = require("./routes/Dashboard/fetchStudents");
 var updateStudentMarks = require('./routes/Dashboard/updateStudentMarks');
 var downloadResults = require('./routes/Dashboard/downloadResults');
 var updateStudentInfo = require("./routes/Dashboard/updateStudentInfo");
+var updateStudent = require("./routes/Dashboard/fetchUpdStd")
 var login = require('./routes/admin/login')
 var app = express();
 var uri = process.env.MONGO_URL;
@@ -39,11 +40,13 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.post("/AdmitStudent",AdmitStudent);
 app.post("/generateResult",generateResult);
-app.get('/students',studentMarksUpdate);
-app.put('/students/:id/marks',updateStudentMarks);
+app.get('/students/',studentMarksUpdate);
+app.put('/students/marks',updateStudentMarks);
 app.get("/download-pdf/:fileName",downloadResults);
 app.use("/students",updateStudentInfo);
 app.post("/login" ,login);
+app.use('/api', updateStudent); // All routes in updateStudent will be prefixed with /api
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
