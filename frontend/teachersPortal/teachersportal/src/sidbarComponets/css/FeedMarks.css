@@ -1,0 +1,121 @@
+.container {
+    padding: 20px;
+    width: 1200px;
+    margin: 0 auto;
+}
+
+.title {
+    color: blue;
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.stream-selection, .details-selection {
+    padding: auto;
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 0.5rem;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px gray;
+}
+
+.stream-group, .unit-group, .term-group, .exam-group, .year-group {
+    flex: 1 1 calc(25% - 10px);
+    margin: 5px;
+}
+
+.label-stream, .label-unit, .label-term, .label-exam, .label-year {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.select-stream, .select-unit, .select-term, .select-exam, .select-year {
+    width: fit-content;
+    padding: 10px;
+    border-radius: 0.3rem;
+    font-size: 1rem;
+}
+
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.fetch-button, .update-button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    background-color: blue;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.fetch-button:disabled, .update-button:disabled {
+    background-color: grey;
+}
+
+.notification, .update-notification {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1rem;
+}
+
+.students-table {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.marks-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.th, .td-admission, .td-name, .input {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.th {
+    background-color: #f2f2f2;
+}
+
+.input {
+    width: 100%;
+    padding: 5px;
+    font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+    .form-group {
+        flex: 1 1 100%;
+        margin: 5px 0;
+    }
+   .container{
+    padding: 5px;
+    max-width: 1200px;
+   }
+    .label-stream, .label-unit, .label-term, .label-exam, .label-year, .select-stream, .select-unit, .select-term, .select-exam, .select-year {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    .th, .td-admission, .td-name, .input {
+        font-size: 0.8rem;
+        padding: 6px;
+    }
+
+    .fetch-button, .update-button {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+    .stream-selection, .details-selection{
+        justify-content: center;
+        align-items: center;
+    }
+}

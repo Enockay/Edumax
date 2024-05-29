@@ -5,6 +5,8 @@ import Sidebar from "./Sidebar";
 import MainDashboard from "./sidbarComponets/Dashbord";
 import Classes from "./sidbarComponets/Classes";
 import Assignment from "./sidbarComponets/Assigment";
+import FeedMarks from "./sidbarComponets/FeedMarks";
+import AssUnits from "./sidbarComponets/AssUnits";
 
 const Dashboard = () => {
     const [selectedItem, setSelectedItem] = useState("");
@@ -22,6 +24,10 @@ const Dashboard = () => {
                 return <Classes/>
             case "Assignments":
                 return <Assignment/>
+            case "Feed-Student-Marks":
+                return <FeedMarks/>
+            case "Assigned-Units":
+                return <AssUnits/>
             default:
                 return <MainDashboard/>
         }
