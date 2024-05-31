@@ -88,6 +88,8 @@ const UpdateStudentMarks = () => {
             .then(response => {
                 setIsLoadingUpdate(false);
                 setUpdateMessage('Marks updated successfully!');
+                setStudents([]);
+                setMarks({});
                 console.log('Marks updated:', response.data);
             })
             .catch(error => {
