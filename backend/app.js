@@ -38,6 +38,23 @@ app.use(session({
   cookie: { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production' }
 }));
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://etim.vercel.app',
+  'https://teachersportal.vercel.app'
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  optionsSuccessStatus: 200 // For legacy browser support
+};
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -47,7 +64,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors());
+app.use(cors(corsOptions))
 
 // Routes
 app.use('/', indexRouter);
@@ -73,6 +90,7 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
+  res.locals.title = err.title;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page

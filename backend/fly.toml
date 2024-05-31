@@ -13,6 +13,8 @@ primary_region = "jnb"
 [env]
 MONGO_URL = "mongodb+srv://myAtlasDBUser:Enockay23@myatlasclusteredu.bfx6ekr.mongodb.net/MATINYANI-MIXED"
 Db = "MATINYANI-MIXED"
+JWT_SECRET = "aOpJFUXdhe4Nt5i5RAKzbuStAPCLK5joDSqqUlfdtZg="
+SECRET_KEY = "8ac4080ecc023792526188a9b670203b7910c82a7c4d8f801e716ca57096e4695861e47d030365b62ca86c8da94969d77446dce415fae47a1f359bda9ab852e9"
 
 [http_service]
 internal_port = 3000

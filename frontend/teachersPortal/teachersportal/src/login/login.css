@@ -69,19 +69,20 @@ button:disabled {
     cursor: not-allowed;
 }
 
-.spinner {
+.spining {
     margin-top: 15px;
     text-align: center;
 }
 
-.spinner::after {
+.spinning::after {
     content: "";
     display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid rgba(0, 0, 0, 0.3);
+    width: 35px;
+    height: 35px;
+    border: 3px solid  #054e80;
     border-radius: 50%;
-    border-top-color: #000;
+    border-top-color: #f8f1f1;
+    border-bottom-color: #f8f1f1;
     animation: spin 1s ease-in-out infinite;
 }
 

@@ -99,7 +99,9 @@ const LoginPage = () => {
                                 {loading ? 'Logging in...' : 'Login'}
                             </button>
                         </form>
-                        {loading && <div className="spinner">Loading...</div>}
+                     <center>
+                     {loading && <div className="spinning"></div>}
+                        </center>   
                      <center>
                      {notification && <p style={{ color: "red", fontSize: "0.9rem" }}>{notification}</p>} 
                         </center>  
