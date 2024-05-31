@@ -19,35 +19,40 @@ const FeedMarks = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
     const [update, setUpdate] = useState('');
-    const [alert ,setAlert]  = useState('');
+    const [alert, setAlert] = useState('');
 
     const fetchClassList = () => {
+        if (!selectedStream || !selectedUnit) {
+            setNotification('Stream and Subject fields cannot be empty');
+            return;
+        }
+
         const uri = 'https://edumax.fly.dev/students/';
         setIsLoading(true);
-        setUpdate('')
+        setUpdate('');
         axios.get(uri, {
             params: {
                 stream: selectedStream,
                 unit: selectedUnit
             }
-        },)
-        .then(response => {
-            setIsLoading(false);
-            if (response.data.length === 0) {
-                setNotification(`No data found for ${selectedStream} - ${selectedUnit}`);
-                setStudents([]);
-            } else {
-                const sortedStudents = response.data.sort((a, b) => a.studentAdmission - b.studentAdmission);
-                setStudents(sortedStudents);
-                setNotification('');
-                //fetchMarks(sortedStudents);
-            }
         })
-        .catch(error => {
-            console.error('Error fetching students:', error);
-            setIsLoading(false);
-            setNotification('Error check On your internet')
-        });
+            .then(response => {
+                setIsLoading(false);
+                if (response.data.length === 0) {
+                    setNotification(`No data found for ${selectedStream} - ${selectedUnit}`);
+                    setStudents([]);
+                } else {
+                    const sortedStudents = response.data.sort((a, b) => a.studentAdmission - b.studentAdmission);
+                    setStudents(sortedStudents);
+                    setNotification('');
+                    // fetchMarks(sortedStudents);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching students:', error);
+                setIsLoading(false);
+                setNotification('Error: Check your internet connection');
+            });
     };
 
     const fetchMarks = (students) => {
@@ -61,22 +66,21 @@ const FeedMarks = () => {
                 year: selectedYear
             }
         })
-        .then(response => {
-            if (response.data.length > 0) {
-                const marksData = {};
-                response.data.forEach(mark => {
-                    marksData[mark.studentId] = mark.marks;
-                });
-                setMarks(marksData);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching marks:', error);
-        });
+            .then(response => {
+                if (response.data.length > 0) {
+                    const marksData = {};
+                    response.data.forEach(mark => {
+                        marksData[mark.studentId] = mark.marks;
+                    });
+                    setMarks(marksData);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching marks:', error);
+            });
     };
 
     const handleMarkChange = (studentId, paper, value) => {
-       
         setMarks({
             ...marks,
             [studentId]: {
@@ -87,47 +91,52 @@ const FeedMarks = () => {
     };
 
     const handleSubmit = () => {
+        if (!selectedTerm || !selectedExamType || !selectedYear) {
+            setAlert('Term, Exam Type, and Year fields must be filled');
+            return;
+        }
+
         const updates = students.map(student => ({
             id: student._id,
             unit: selectedUnit, // This should match one of the keys in the units object
             examType: selectedExamType,
             year: selectedYear,
             marks: {
-                P1: marks[student._id].P1,
-                P2: marks[student._id].P2,
-                P3: marks[student._id].P3
+                P1: marks[student._id]?.P1,
+                P2: marks[student._id]?.P2,
+                P3: marks[student._id]?.P3
             }
         }));
-    
+
         setIsLoadingUpdate(true);
-    
-        axios.put('https://edumax.fly.dev/students/marks', updates,{
-            withCredentials: true
-        },)
+
+        axios.put('https://edumax.fly.dev/students/marks', updates)
             .then(response => {
                 setIsLoadingUpdate(false);
                 setUpdate(response.data);
                 console.log('Marks updated:', response.data);
-    
+
                 if (response.data && response.data.result) {
                     console.log('Bulk Write Result:', response.data.result);
                 }
-    
+
                 if (response.data && response.data.updatedStudents) {
                     console.log('Updated Students:', response.data.updatedStudents);
                 }
-    
+
                 setStudents([]);
             })
             .catch(error => {
                 console.error('Error updating marks:', error);
+                if (error.response && error.response.status === 403) {
+                    setAlert('CORS issue: Check your server CORS configuration');
+                } else {
+                    setAlert('Error updating marks');
+                }
                 setIsLoadingUpdate(false);
             });
     };
-    
-    
-    
-    
+
     const renderPaperFields = (student) => {
         if (['3East', '3West', '4East', '4West'].includes(selectedStream)) {
             if (['Chem', 'Bio', 'Phy', 'Eng', 'Kisw'].includes(selectedUnit)) {
@@ -307,8 +316,8 @@ const FeedMarks = () => {
                             ))}
                         </select>
                     </div>
-                    {alert && <p className='notification'>{alert}</p>}
-                    </div>   
+                    </div>  
+                    {alert && <p className='notification'>{alert}</p>} 
                     <table>
                         <thead>
                             <tr>
