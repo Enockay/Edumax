@@ -79,18 +79,34 @@ button:disabled {
     display: inline-block;
     width: 35px;
     height: 35px;
-    border: 3px solid  #054e80;
+    border: 3px solid #054e80;
     border-radius: 50%;
     border-top-color: #f8f1f1;
     border-bottom-color: #f8f1f1;
-    animation: spin 1s ease-in-out infinite;
+    animation: spin 1s ease-in-out infinite, decrease 2s ease-in-out infinite;
 }
 
 @keyframes spin {
-    to {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
         transform: rotate(360deg);
     }
 }
+
+@keyframes decrease {
+    0%, 50%, 100% {
+        width: 35px;
+        height: 35px;
+    }
+    25%, 75% {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+
 
 .footer {
     margin-top: 20px;

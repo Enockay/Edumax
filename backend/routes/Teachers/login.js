@@ -4,6 +4,7 @@ const teacherLoginModel = require('../../public/models/teacherslogin');
 const teacher = express.Router();
 const bcrypt = require('bcryptjs');
 
+
 teacher.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const key = 'aOpJFUXdhe4Nt5i5RAKzbuStAPCLK5joDSqqUlfdtZg=';
@@ -14,16 +15,12 @@ teacher.post('/login', async (req, res) => {
             return res.status(300).json({ message: 'Invalid credentials' });
         }
 
-        // Store user profile in session
-        req.session.user = {
-            id: user._id,
-            username: user.username,
-            name: user.name,
-            email: user.email,
-            gender: user.gender
-        };
+        // Extract user profile information
+        const { _id, name, email, gender } = user;
 
-        const token = jwt.sign({ id: user._id }, key, { expiresIn: '1h' });
+        // Create JWT token with user profile information
+        const token = jwt.sign({ id: _id, name, email, gender }, key, { expiresIn: '1h' });
+
         res.status(200).json({ token });
     } catch (error) {
         res.status(400).json({ message: error.message });
