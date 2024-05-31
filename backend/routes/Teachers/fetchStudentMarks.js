@@ -1,8 +1,9 @@
 const express = require('express');
 const fetchMarks = express.Router();
 const { StudentMarks } = require("../../public/models/feedStudentMarks");
+const ensureAuthenticated = require("./Auth");
 
-fetchMarks.get('/students/marks/get', async (req, res) => {
+fetchMarks.get('/students/marks/get',async (req, res) => {
     const { stream, unit, term, examType, year } = req.query;
 
     try {

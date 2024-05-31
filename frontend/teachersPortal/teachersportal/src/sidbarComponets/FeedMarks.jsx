@@ -19,10 +19,10 @@ const FeedMarks = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
     const [update, setUpdate] = useState('');
+    const [alert ,setAlert]  = useState('');
 
     const fetchClassList = () => {
         const uri = 'https://edumax.fly.dev/students/';
-
         setIsLoading(true);
         setUpdate('')
         axios.get(uri, {
@@ -30,7 +30,7 @@ const FeedMarks = () => {
                 stream: selectedStream,
                 unit: selectedUnit
             }
-        })
+        },)
         .then(response => {
             setIsLoading(false);
             if (response.data.length === 0) {
@@ -76,6 +76,7 @@ const FeedMarks = () => {
     };
 
     const handleMarkChange = (studentId, paper, value) => {
+       
         setMarks({
             ...marks,
             [studentId]: {
@@ -100,7 +101,9 @@ const FeedMarks = () => {
     
         setIsLoadingUpdate(true);
     
-        axios.put('https://edumax.fly.dev/students/marks', updates)
+        axios.put('https://edumax.fly.dev/students/marks', updates,{
+            withCredentials: true
+        },)
             .then(response => {
                 setIsLoadingUpdate(false);
                 setUpdate(response.data);
@@ -304,6 +307,7 @@ const FeedMarks = () => {
                             ))}
                         </select>
                     </div>
+                    {alert && <p className='notification'>{alert}</p>}
                     </div>   
                     <table>
                         <thead>

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Auth';
 import './login.css';
 import tp from "../assets/teachers.webp";
+import RegisterPage from './Register';
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -12,17 +13,12 @@ const LoginPage = () => {
         username: '',
         password: ''
     });
+    const [notification, setNotification] = useState('');
+    const [showRegister, setShowRegister] = useState(false);
 
-    // Function to set authentication status in local storage
     const setAuthStatus = (status) => {
         localStorage.setItem('isLoggedIn', status);
     };
-
-    // Function to get authentication status from local storage
-    const getAuthStatus = () => {
-        return localStorage.getItem('isLoggedIn') === 'true';
-    };
-
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -32,67 +28,100 @@ const LoginPage = () => {
         });
     };
 
-    const handleLogin = (event) => {
+    const handleLogin = async (event) => {
         event.preventDefault();
         setLoading(true);
 
-        // Simulate login logic
-        setTimeout(() => {
-            login();
+        try {
+            const response = await fetch('https://edumax.fly.dev/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(credentials)
+            });
+            const data = await response.json();
             setLoading(false);
-            setAuthStatus(true); // Set authentication status in local storage upon successful login
-            navigate('/dashboard');
-        }, 2000); // Simulate an API call delay
+            if (response.ok) {
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('username',credentials.username)
+                setAuthStatus(true);
+                navigate('/dashboard');
+            } else {
+                setNotification(data.message || "Username not found in the system");
+            }
+        } catch (error) {
+            setLoading(false);
+            setNotification("Error occurred while logging in");
+        }
+    };
+
+    const toggleRegister = () => {
+        setShowRegister(!showRegister);
     };
 
     return (
-        <div className="login-container">
-            <div className='login-form'>
-            <center> <img src={tp} alt="logo" className='login-icon'></img>
-               <h6 style={{margin:0,marginBottom : "7%"}}>MATINYANI MIXED STAFF</h6></center> 
-               <hr style={{marginBottom:"15%"}} ></hr>
-                <div className="" style={{marginBottom:"10%"}} >
-                    <form onSubmit={handleLogin}>
-                        <div className="form-group">
-                            <label htmlFor="username">Username:</label>
-                            <input 
-                                type="text" 
-                                id="username" 
-                                name="username" 
-                                value={credentials.username} 
-                                onChange={handleChange} 
-                                required 
-                            />
-                        </div>
-                        <div className="form-group" style={{marginBottom:"15%"}}>
-                            <label htmlFor="password">Password:</label>
-                            <input 
-                                type="password" 
-                                id="password" 
-                                name="password" 
-                                value={credentials.password} 
-                                onChange={handleChange} 
-                                required 
-                            />
-                        </div>
-                        <button type="submit" disabled={loading}>
-                            {loading ? 'Logging in...' : 'Login'}
-                        </button>
-                    </form>
-                    {loading && <div className="spinner">Loading...</div>}
-                </div>
-                      <center><p style={{marginBottom:"15%",cursor:"pointer"}}>Forgot Your Password ?</p></center>
-                <hr></hr>
-                <footer className='footer' style={{marginTop:"20px"}}>
-                    <div>
-                        <center>
-                            <a href='https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox?compose=DmwnWtMmVNSlrNvwFZsxGBDxxrXDpQdXcjZJMRcJNjFgrFLPStGSHrKKFgmxwNlDjQtHmgqzRkRG' style={{fontSize:"0.9rem",color:"white"}}>
-                                Systems Developed by Blackie-Networks
-                            </a>
-                        </center>
+        <div className="register-container">
+            {showRegister ? (
+                <RegisterPage onClose={toggleRegister} />
+            ) : (
+                <div className='login-form'>
+                    <center><img src={tp} alt="logo" className='login-icon' />
+                    <h6 style={{ margin: 0, marginBottom: "7%" }}>MATINYANI MIXED STAFF</h6>
+                    </center>
+                   
+                    <hr style={{ marginBottom: "15%" }} />
+                    <div className="" style={{ marginBottom: "10%" }}>
+                        <form onSubmit={handleLogin} className='login-form-item'>
+                            <div className="login-form-group">
+                                <label htmlFor="username">Username:</label>
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    value={credentials.username}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className="login-form-group" style={{ marginBottom: "15%" }}>
+                                <label htmlFor="password">Password:</label>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    value={credentials.password}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <button type="submit" disabled={loading} className='button'>
+                                {loading ? 'Logging in...' : 'Login'}
+                            </button>
+                        </form>
+                        {loading && <div className="spinner">Loading...</div>}
+                     <center>
+                     {notification && <p style={{ color: "red", fontSize: "0.9rem" }}>{notification}</p>} 
+                        </center>  
                     </div>
-                </footer>
-            </div>
+                    <center>
+                        <p style={{ marginBottom: "7%", cursor: "pointer" }} onClick={toggleRegister}>
+                            Register
+                        </p>
+                        <p style={{ marginBottom: "10%", cursor: "pointer" }}>Forgot Your Password ?</p>
+                    </center>
+                    <hr />
+                    <footer className='footer' style={{ marginTop: "20px" }}>
+                        <div>
+                            <center>
+                                <a href='https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox?compose=DmwnWtMmVNSlrNvwFZsxGBDxxrXDpQdXcjZJMRcJNjFgrFLPStGSHrKKFgmxwNlDjQtHmgqzRkRG' style={{ fontSize: "0.9rem", color: "white" }}>
+                                    Systems Developed by Blackie-Networks
+                                </a>
+                            </center>
+                        </div>
+                    </footer>
+                </div>
+            )}
         </div>
     );
 };

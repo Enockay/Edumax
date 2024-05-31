@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from './Auth.jsx';
 
 const ProtectedRoute = ({ element }) => {
-    const { isAuthenticated } = useAuth();
+    const isAuthenticated = localStorage.getItem('token') ? true : false;
     return isAuthenticated ? element : <Navigate to="/" />;
 };
 

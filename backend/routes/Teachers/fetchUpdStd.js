@@ -1,6 +1,6 @@
 const express = require('express');
 const { StudentMarks } = require('../../public/models/feedStudentMarks'); // Adjust the path accordingly
-
+const ensureAuthenticated = require("./Auth");
 const updateStudent = express.Router();
 
 // Fetch Marks Endpoint

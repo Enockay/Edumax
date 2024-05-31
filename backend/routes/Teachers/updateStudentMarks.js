@@ -1,6 +1,7 @@
 const express = require('express');
 const updateStudentMarks = express.Router();
 const { StudentMarks } = require("../../public/models/feedStudentMarks");
+const ensureAuthenticated = require('./Auth');
 
 updateStudentMarks.put('/students/marks', async (req, res) => {
     const updates = req.body;

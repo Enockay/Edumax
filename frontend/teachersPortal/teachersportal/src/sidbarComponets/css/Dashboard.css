@@ -1,50 +1,106 @@
-/* Dashboard.css */
-
 .dashboard {
-    padding: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.dashboard-heading {
+  color: rgb(224, 131, 131);
+  text-decoration: underline;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.card {
+  flex: 1 1 30%;
+  margin: 15px;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-title {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: #0f1bc5;
+  text-align: center;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.card-content {
+  font-size: 1em;
+  color: #555;
+}
+
+.card-item {
+  margin: 10px 0;
+}
+
+.card-value {
+  color: green;
+  font-weight: bold;
+}
+
+.units-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.units-table th,
+.units-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.units-table th {
+  background-color: #f2f2f2;
+}
+
+.no-units {
+  text-align: center;
+  color: red;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border-left-color: #09f;
+  animation: spin 1s ease infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
-  
-  .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+  100% {
+    transform: rotate(360deg);
   }
-  
-  .card {
-    flex: 1;
-    background-color: #f0f0f0;
-    padding: 10px;
-    min-height: 170px;
-    width: 300px;
-    border-radius: 8px;
-    border: 1px solid rgb(245, 239, 239);
-    margin: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .card h2 {
-    margin-bottom: 10px;
-  }
-  .h2{
-    font-size: 0.9rem;
-    color: rgb(0, 38, 255);
-  }
-  
-  @media (max-width: 768px) {
-    .card-container {
-      flex-direction: column;
-      align-items: stretch;
-    }
-  
-    .card {
-      margin: 10px 0;
-      width: 95%;
-      min-height: 170px;
-      padding: 5px;
-    }
-    .dashboard{
-        width: 100%;
-        padding: 5px;
-    }
-  }
-  
+}
