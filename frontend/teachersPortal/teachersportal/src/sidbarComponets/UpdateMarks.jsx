@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import './css/UpdMarks.css';
 
@@ -23,8 +23,8 @@ const UpdateStudentMarks = () => {
     const fetchStudentsAndMarks = () => {
         setIsLoading(true);
         setMarks({});
-        setStudents([])
-        const uri = "https://edumax.fly.dev/api/stdent/UpdMark"
+        setStudents([]);
+        const uri = "https://edumax.fly.dev/api/stdent/UpdMark";
         axios.get(uri, {
             params: {
                 year: selectedYear,
@@ -36,24 +36,25 @@ const UpdateStudentMarks = () => {
         .then(response => {
             setIsLoading(false);
             const data = response.data;
-           if(response.status == 202){
-            setNotification(data)
-           }else if(response.status == 200){
-            setStudents(data)
-            setNotification('');
-            setUpdateMessage('');
-            const marksData = {};
-            response.data.forEach(student => {
-                marksData[student._id] = student.marks;
-            });
-            setMarks(marksData);
-           }else if (response.status == 201){
-            setNotification("No Data yet in the database")
-           }else{
-             setNotification(data)
-           }
-            
-            
+            if(response.status === 202){
+                setNotification(data);
+            }else if(response.status === 200){
+                // Sort students based on admission number in ascending order
+                const sortedData = data.sort((a, b) => a.studentAdmission.localeCompare(b.studentAdmission));
+
+                setStudents(sortedData);
+                setNotification('');
+                setUpdateMessage('');
+                const marksData = {};
+                sortedData.forEach(student => {
+                    marksData[student._id] = student.marks;
+                });
+                setMarks(marksData);
+            }else if (response.status === 201){
+                setNotification("No Data yet in the database");
+            }else{
+                setNotification(data);
+            }
         })
         .catch(error => {
             setIsLoading(false);
@@ -82,7 +83,7 @@ const UpdateStudentMarks = () => {
         }));
 
         setIsLoadingUpdate(true);
-       const uri = "https://edumax.fly.dev/api/stdent/putMark";
+        const uri = "https://edumax.fly.dev/api/stdent/putMark";
         axios.put(uri, updates)
             .then(response => {
                 setIsLoadingUpdate(false);
@@ -94,6 +95,98 @@ const UpdateStudentMarks = () => {
                 setUpdateMessage('Error updating marks, please try again.');
                 console.error('Error updating marks:', error);
             });
+    };
+
+    const renderPaperFields = (student) => {
+        if (['3East', '3West', '4East', '4West'].includes(selectedStream)) {
+            if (['Chem', 'Bio', 'Phy', 'Eng', 'Kisw'].includes(selectedUnit)) {
+                return (
+                    <>
+                        <td>
+                            <input
+                                className='input input-p1'
+                                type="number"
+                                value={marks[student._id]?.P1 || ''}
+                                onChange={(e) => handleMarkChange(student._id, 'P1', e.target.value)}
+                            />
+                        </td>
+                        <td>
+                            <input
+                                className='input input-p2'
+                                type="number"
+                                value={marks[student._id]?.P2 || ''}
+                                onChange={(e) => handleMarkChange(student._id, 'P2', e.target.value)}
+                            />
+                        </td>
+                        <td>
+                            <input
+                                className='input input-p3'
+                                type="number"
+                                value={marks[student._id]?.P3 || ''}
+                                onChange={(e) => handleMarkChange(student._id, 'P3', e.target.value)}
+                            />
+                        </td>
+                    </>
+                );
+            } else {
+                return (
+                    <>
+                        <td>
+                            <input
+                                className='input input-p1'
+                                type="number"
+                                value={marks[student._id]?.P1 || ''}
+                                onChange={(e) => handleMarkChange(student._id, 'P1', e.target.value)}
+                            />
+                        </td>
+                        <td>
+                            <input
+                                className='input input-p2'
+                                type="number"
+                                value={marks[student._id]?.P2 || ''}
+                                onChange={(e) => handleMarkChange(student._id, 'P2', e.target.value)}
+                            />
+                        </td>
+                    </>
+                );
+            }
+        } else if (['2East', '2West', '1East', '1West'].includes(selectedStream)) {
+            return (
+                <td>
+                    <input
+                        className='input input-p1'
+                        type="number"
+                        value={marks[student._id]?.P1 || ''}
+                        onChange={(e) => handleMarkChange(student._id, 'P1', e.target.value)}
+                    />
+                </td>
+            );
+        }
+        return null;
+    };
+
+    const renderTableHeaders = () => {
+        if (['3East', '3West', '4East', '4West'].includes(selectedStream)) {
+            if (['Chem', 'Bio', 'Phy', 'Eng', 'Kisw'].includes(selectedUnit)) {
+                return (
+                    <>
+                        <th className='th th-p1'>P1</th>
+                        <th className='th th-p2'>P2</th>
+                        <th className='th th-p3'>P3</th>
+                    </>
+                );
+            } else {
+                return (
+                    <>
+                        <th className='th th-p1'>P1</th>
+                        <th className='th th-p2'>P2</th>
+                    </>
+                );
+            }
+        } else if (['2East', '2West', '1East', '1West'].includes(selectedStream)) {
+            return <th className='th th-p1'>P1</th>;
+        }
+        return null;
     };
 
     return (
@@ -159,9 +252,7 @@ const UpdateStudentMarks = () => {
                                 <th>#</th>
                                 <th>Admission No</th>
                                 <th>Name</th>
-                                <th>P1</th>
-                                <th>P2</th>
-                                <th>P3</th>
+                                {renderTableHeaders()}
                             </tr>
                         </thead>
                         <tbody>
@@ -170,35 +261,16 @@ const UpdateStudentMarks = () => {
                                     <td>{index + 1}</td>
                                     <td>{student.studentAdmission}</td>
                                     <td>{student.studentName}</td>
-                                    <td>
-                                        <input
-                                            type="number"
-                                            value={marks[student._id]?.P1 || ''}
-                                            onChange={(e) => handleMarkChange(student._id, 'P1', e.target.value)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="number"
-                                            value={marks[student._id]?.P2 || ''}
-                                            onChange={(e) => handleMarkChange(student._id, 'P2', e.target.value)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="number"
-                                            value={marks[student._id]?.P3 || ''}
-                                            onChange={(e) => handleMarkChange(student._id, 'P3', e.target.value)}
-                                        />
-                                    </td>
+                                    {renderPaperFields(student)}
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-                <center>  <button className="btn" onClick={handleSubmit}>
-                        {isLoadingUpdate ? 'Updating...' : 'Update Marks'}
-                    </button>
-                 </center>    
+                    <center>  
+                        <button className="btn" onClick={handleSubmit}>
+                            {isLoadingUpdate ? 'Updating...' : 'Update Marks'}
+                        </button>
+                    </center>
                     {updateMessage && <p className="notification">{updateMessage}</p>}
                 </>
             )}

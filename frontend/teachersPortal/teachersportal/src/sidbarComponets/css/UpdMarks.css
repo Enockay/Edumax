@@ -73,6 +73,7 @@ h3 {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
+    width: fit-content;
 }
 
 .marks-table th {
@@ -95,12 +96,12 @@ h3 {
 
     .marks-table th, 
     .marks-table td {
-        font-size: 12px;
-        padding: 6px;
+        font-size: 0.5rem;
+        padding: 0.1rem;
     }
 
     .marks-table input {
-        width: 40px;
+        width: 1.3rem;
     }
 
     .btn {
