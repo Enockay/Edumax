@@ -4,10 +4,11 @@ import '../css/rankComponet.css';
 
 const Results = () => {
   const [classes, setClasses] = useState(['Form 1', 'Form 2', 'Form 3', 'Form 4']);
-  const [termExam, setTermExam] = useState(['End Of Term1 Exam', 'Mid-Term Exam', 'End Of Term2 Exam', 'End Of Third Term Exam']);
+  const [termExam, setTermExam] = useState(['Term 1', 'Term 2', 'Term 3']);
   const [streams, setStreams] = useState(['East', 'West']);
   const [years, setYears] = useState(['2021', '2022', '2023', '2024']);
-
+  const [examTypes] = useState(['CAT', 'Midterm', 'Endterm', 'TestExam']);
+  const [exams ,setExams] = useState('');
   const [teacher, setTeacher] = useState('');
   const [singleClass, setSingleClass] = useState('');
   const [term, setTerm] = useState('');
@@ -60,13 +61,13 @@ const Results = () => {
       }
 
       const url = `https://edumax.fly.dev/generateResult`;
-
+      const Teacher = "Mr."
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ stream, term, teacher })
+        body: JSON.stringify({ stream, term, Teacher,year,exams })
       });
 
       if (!response.ok) {
@@ -90,7 +91,7 @@ const Results = () => {
     setNotification(`Generating ${selectedClass} ${selectedStream} Results and Individual Report in Progress..`);
     setNotificationType('info');
     try {
-      const response = await axios.get(`/api/students`, {
+      const response = await axios.get(`https://edumax.fly.dev/api/students`, {
         params: { class: selectedClass, stream: selectedStream, year, term }
       });
       setResults(response.data);
@@ -110,7 +111,7 @@ const Results = () => {
 
   return (
     <div className="results-container">
-      <div className="form-container">
+      <div className="rank-form-container">
         <div className='whole-class'>
           <h4 className='title'>Overall Class Results</h4>
           <div className='selects'>
@@ -132,12 +133,30 @@ const Results = () => {
                 ))}
               </select>
             </div>
+            <div className="select-group">
+              <label htmlFor="term-select">year:</label>
+              <select id="term-select" value={year} onChange={(e) => setYear(e.target.value)} required>
+                <option value="">--Select Period--</option>
+                {years.map((termName, index) => (
+                  <option key={index} value={termName}>{termName}</option>
+                ))}
+              </select>
+            </div>
+            <div className="select-group">
+              <label htmlFor="term-select">Exam type:</label>
+              <select id="term-select" value={exams} onChange={(e) => setExams(e.target.value)} required>
+                <option value="">--Select Period--</option>
+                {examTypes.map((termName, index) => (
+                  <option key={index} value={termName}>{termName}</option>
+                ))}
+              </select>
+            </div> 
           </div>
-       {/** <div className='select-group'>
+          {/** <div className='select-group'>
             <label htmlFor="teacher-input" className='teacher'>Class Teacher:</label>
             <input id="teacher-input" type='text' value={teacher} onChange={(e) => setTeacher(e.target.value)} required />
-          </div>
-        */}   
+             </div>
+           */}   
           <div className='button-results'>
             <button className='button' onClick={generateResults} disabled={!singleClass || !term}>Generate Results</button>
             <button className='button' onClick={handlePrintOverallResults} disabled={!singleClass}>Print Results</button>

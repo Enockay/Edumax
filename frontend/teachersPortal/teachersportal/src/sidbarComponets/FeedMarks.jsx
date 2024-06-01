@@ -21,6 +21,20 @@ const FeedMarks = () => {
     const [update, setUpdate] = useState('');
     const [alert, setAlert] = useState('');
 
+    const subjectMapping = {
+        'Eng': 'English',
+        'Kisw': 'Kiswahili',
+        'Maths': 'Mathematics',
+        'Chem': 'Chemistry',
+        'Bio': 'Biology',
+        'Phy': 'Physics',
+        'Agri': 'Agriculture',
+        'Busn': 'Business',
+        'Hist': 'History',
+        'Geo': 'Geography',
+        'Cre': 'CRE'
+    };
+
     const fetchClassList = () => {
         if (!selectedStream || !selectedUnit) {
             setNotification('Stream and Subject fields cannot be empty');
@@ -45,7 +59,7 @@ const FeedMarks = () => {
                     const sortedStudents = response.data.sort((a, b) => a.studentAdmission - b.studentAdmission);
                     setStudents(sortedStudents);
                     setNotification('');
-                    // fetchMarks(sortedStudents);
+                    fetchMarks(sortedStudents);
                 }
             })
             .catch(error => {
@@ -96,15 +110,18 @@ const FeedMarks = () => {
             return;
         }
 
+        const fullUnitName = subjectMapping[selectedUnit];
+
         const updates = students.map(student => ({
             id: student._id,
-            unit: selectedUnit, // This should match one of the keys in the units object
+            unit: fullUnitName,
             examType: selectedExamType,
             year: selectedYear,
+            term: selectedTerm,
             marks: {
-                P1: marks[student._id]?.P1,
-                P2: marks[student._id]?.P2,
-                P3: marks[student._id]?.P3
+                P1: marks[student._id]?.P1 || null,
+                P2: marks[student._id]?.P2 || null,
+                P3: marks[student._id]?.P3 || null
             }
         }));
 
@@ -113,7 +130,7 @@ const FeedMarks = () => {
         axios.put('https://edumax.fly.dev/students/marks', updates)
             .then(response => {
                 setIsLoadingUpdate(false);
-                setUpdate(response.data);
+                setUpdate(response.data.message);
                 console.log('Marks updated:', response.data);
 
                 if (response.data && response.data.result) {
@@ -125,6 +142,12 @@ const FeedMarks = () => {
                 }
 
                 setStudents([]);
+                setMarks({});
+                setSelectedStream('');
+                setSelectedUnit('');
+                setSelectedTerm('');
+                setSelectedExamType('');
+                setSelectedYear('');
             })
             .catch(error => {
                 console.error('Error updating marks:', error);
@@ -138,8 +161,9 @@ const FeedMarks = () => {
     };
 
     const renderPaperFields = (student) => {
+        const fullUnitName = subjectMapping[selectedUnit];
         if (['3East', '3West', '4East', '4West'].includes(selectedStream)) {
-            if (['Chem', 'Bio', 'Phy', 'Eng', 'Kisw'].includes(selectedUnit)) {
+            if (['Chemistry', 'Biology', 'Physics', 'English', 'Kiswahili'].includes(fullUnitName)) {
                 return (
                     <>
                         <td>
@@ -206,8 +230,9 @@ const FeedMarks = () => {
     };
 
     const renderTableHeaders = () => {
+        const fullUnitName = subjectMapping[selectedUnit];
         if (['3East', '3West', '4East', '4West'].includes(selectedStream)) {
-            if (['Chem', 'Bio', 'Phy', 'Eng', 'Kisw'].includes(selectedUnit)) {
+            if (['Chemistry', 'Biology', 'Physics', 'English', 'Kiswahili'].includes(fullUnitName)) {
                 return (
                     <>
                         <th className='th th-p1'>P1</th>
@@ -262,7 +287,6 @@ const FeedMarks = () => {
                             ))}
                         </select>
                     </div>
-                   
                     <button className='btn' onClick={fetchClassList}>
                         {isLoading ? 'Loading...' : 'Fetch Students'}
                     </button>
@@ -273,51 +297,51 @@ const FeedMarks = () => {
 
             {students.length > 0 && (
                 <>
-                <div className='items-form'>
-                 <div className='form-control'>
-                        <label>Term</label>
-                        <select
-                            value={selectedTerm}
-                            onChange={(e) => setSelectedTerm(e.target.value)}
-                        >
-                            <option value="">Select Term</option>
-                            {terms.map((term) => (
-                                <option key={term} value={term}>
-                                    {term}
-                                </option>
-                            ))}
-                        </select>
+                    <div className='items-form'>
+                        <div className='form-control'>
+                            <label>Term</label>
+                            <select
+                                value={selectedTerm}
+                                onChange={(e) => setSelectedTerm(e.target.value)}
+                            >
+                                <option value="">Select Term</option>
+                                {terms.map((term) => (
+                                    <option key={term} value={term}>
+                                        {term}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className='form-control'>
+                            <label>Exam Type</label>
+                            <select
+                                value={selectedExamType}
+                                onChange={(e) => setSelectedExamType(e.target.value)}
+                            >
+                                <option value="">Select Exam Type</option>
+                                {examTypes.map((type) => (
+                                    <option key={type} value={type}>
+                                        {type}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className='form-control'>
+                            <label>Year</label>
+                            <select
+                                value={selectedYear}
+                                onChange={(e) => setSelectedYear(e.target.value)}
+                            >
+                                <option value="">Select Year</option>
+                                {years.map((year) => (
+                                    <option key={year} value={year}>
+                                        {year}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
-                    <div className='form-control'>
-                        <label>Exam Type</label>
-                        <select
-                            value={selectedExamType}
-                            onChange={(e) => setSelectedExamType(e.target.value)}
-                        >
-                            <option value="">Select Exam Type</option>
-                            {examTypes.map((type) => (
-                                <option key={type} value={type}>
-                                    {type}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className='form-control'>
-                        <label>Year</label>
-                        <select
-                            value={selectedYear}
-                            onChange={(e) => setSelectedYear(e.target.value)}
-                        >
-                            <option value="">Select Year</option>
-                            {years.map((year) => (
-                                <option key={year} value={year}>
-                                    {year}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    </div>  
-                    {alert && <p className='notification'>{alert}</p>} 
+                    {alert && <p className='notification'>{alert}</p>}
                     <table>
                         <thead>
                             <tr>
@@ -338,14 +362,14 @@ const FeedMarks = () => {
                             ))}
                         </tbody>
                     </table>
-                    <center><button className='btn' onClick={handleSubmit}>
-                         {isLoadingUpdate ? 'Updating...' : 'Submit Marks'}
-                    </button>
-                    </center>    
+                    <center>
+                        <button className='btn' onClick={handleSubmit}>
+                            {isLoadingUpdate ? 'Updating...' : 'Submit Marks'}
+                        </button>
+                    </center>
                     {update && <p className='update-message'>{update}</p>}
                 </>
             )}
-
         </div>
     );
 };

@@ -5,27 +5,24 @@ const ensureAuthenticated = require('./Auth');
 
 updateStudentMarks.put('/students/marks', async (req, res) => {
     const updates = req.body;
-
+    console.log(req.body);
     const session = await StudentMarks.startSession();
     session.startTransaction();
 
     try {
-        // First, handle updates where year and examType match
         const bulkOps = updates.map(update => {
-            const { id, unit, examType, year, marks } = update;
-
+            const { id, unit, examType, year, term, marks } = update;
             return {
                 updateOne: {
-                    filter: { 
-                        _id: id, 
-                        [`units.${unit}.exams.year`]: year,
-                        [`units.${unit}.exams.examType`]: examType
-                    },
+                    filter: { _id: id, 'years.year': year, 'years.exams.term': term, 'years.exams.examType': examType },
                     update: {
-                        $set: { 
-                            [`units.${unit}.exams.$.marks`]: marks
-                        }
+                        $set: { 'years.$[yearElem].exams.$[examElem].units.$[unitElem].marks': marks }
                     },
+                    arrayFilters: [
+                        { 'yearElem.year': year },
+                        { 'examElem.term': term, 'examElem.examType': examType },
+                        { 'unitElem.subject': unit }
+                    ],
                     upsert: false
                 }
             };
@@ -33,29 +30,61 @@ updateStudentMarks.put('/students/marks', async (req, res) => {
 
         const result = await StudentMarks.bulkWrite(bulkOps, { session });
 
-        // Handle cases where year and examType do not match
         const newExamUpdates = [];
         for (const update of updates) {
-            const { id, unit, examType, year, marks } = update;
-            
+            const { id, unit, examType, year, term, marks } = update;
+
             const existingStudent = await StudentMarks.findById(id).session(session);
             if (existingStudent) {
-                const unitData = existingStudent.units[unit];
-                if (unitData) {
-                    const examExists = unitData.exams.some(exam => exam.year === year && exam.examType === examType);
+                const yearData = existingStudent.years.find(y => y.year === year);
+                if (yearData) {
+                    const examExists = yearData.exams.some(exam => exam.term === term && exam.examType === examType);
                     if (!examExists) {
                         newExamUpdates.push({
                             updateOne: {
-                                filter: { _id: id },
+                                filter: { _id: id, 'years.year': year },
                                 update: {
                                     $push: {
-                                        [`units.${unit}.exams`]: { year, examType, marks }
+                                        'years.$[yearElem].exams': { term, examType, units: [{ subject: unit, marks }] }
                                     }
                                 },
+                                arrayFilters: [{ 'yearElem.year': year }],
                                 upsert: false
                             }
                         });
+                    } else {
+                        const examData = yearData.exams.find(exam => exam.term === term && exam.examType === examType);
+                        const unitExists = examData.units.some(u => u.subject === unit);
+                        if (!unitExists) {
+                            newExamUpdates.push({
+                                updateOne: {
+                                    filter: { _id: id, 'years.year': year, 'years.exams.term': term, 'years.exams.examType': examType },
+                                    update: {
+                                        $push: {
+                                            'years.$[yearElem].exams.$[examElem].units': { subject: unit, marks }
+                                        }
+                                    },
+                                    arrayFilters: [
+                                        { 'yearElem.year': year },
+                                        { 'examElem.term': term, 'examElem.examType': examType }
+                                    ],
+                                    upsert: false
+                                }
+                            });
+                        }
                     }
+                } else {
+                    newExamUpdates.push({
+                        updateOne: {
+                            filter: { _id: id },
+                            update: {
+                                $push: {
+                                    years: { year, exams: [{ term, examType, units: [{ subject: unit, marks }] }] }
+                                }
+                            },
+                            upsert: false
+                        }
+                    });
                 }
             }
         }

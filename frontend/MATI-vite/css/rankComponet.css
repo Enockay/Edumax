@@ -4,12 +4,12 @@
   display: flex;
   height: 100vh;
   font-family: Arial, sans-serif;
+  gap: 7%;
 }
 
-.form-container {
-  width: 80%;
+.rank-form-container {
+  width: 100%;
   padding: 10px;
-  border-right: 1px solid #ddd;
   box-sizing: border-box;
 }
 
@@ -30,14 +30,15 @@
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;
-  width: 90%;
+  width: 100%;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 .select-notification{
   margin: 2%;
-  min-width: 40%;
+  min-width: 30%;
+  height: 440px;
   padding: 5px;
-  background-color: #e0f1d8;
+  box-shadow: 0 0 10px white;
 }
 .selects, .selection-container {
   display: flex;

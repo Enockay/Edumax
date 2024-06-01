@@ -6,41 +6,39 @@ const marksSchema = new mongoose.Schema({
   P3: { type: Number, required: false }
 });
 
-const examSchema = new mongoose.Schema({
-  year: { type: String, required: true },
-  examType: { type: String, required: true },
-  marks: { type: marksSchema, required: true }
-});
-
 const unitSchema = new mongoose.Schema({
   subject: { type: String, required: true },
-  exams: [examSchema]
+  marks: { type: marksSchema, required: true },
+  totalMarks : { type : Number, required : true},
+  points : { type : String ,required : false},
+  grade : { type : String , required : false},
 });
 
-const feedStudentMarksSchema = new mongoose.Schema({
-  studentAdmission: { type: String, required: true },
-  studentName: { type: String, required: true },
-  units: {
-    Eng: { type: unitSchema, required: false },
-    Kisw: { type: unitSchema, required: false },
-    Maths: { type: unitSchema, required: false },
-    Chem: { type: unitSchema, required: false },
-    Bio: { type: unitSchema, required: false },
-    Phy: { type: unitSchema, required: false },
-    Agri: { type: unitSchema, required: false },
-    Busn: { type: unitSchema, required: false },
-    Hist: { type: unitSchema, required: false },
-    Geo: { type: unitSchema, required: false },
-    Cre: { type: unitSchema, required: false }
-  },
-  gender: { type: String, required: true },
-  stream: { type: String, required: true },
+const examSchema = new mongoose.Schema({
+  term: { type: String, required: true },
+  examType: { type: String, required: true },
+  units: [unitSchema] ,
+  totalPoints :{ type: String, required: false },
   totalGrade: { type: String, required: false },
   classRank: { type: String, required: false },
   overallRank: { type: String, required: false }
 });
 
-const StudentMarks = mongoose.model('StudentMarks', feedStudentMarksSchema);
-const ProducedResults = mongoose.model('ProducedResults', feedStudentMarksSchema);
+const yearSchema = new mongoose.Schema({
+  year: { type: String, required: true },
+  exams: [examSchema]  // Array of exams for each year
+});
+
+const studentMarksSchema = new mongoose.Schema({
+  studentAdmission: { type: String, required: true },
+  studentName: { type: String, required: true },
+  years: [yearSchema],  // Array of years
+  gender: { type: String, required: true },
+  stream: { type: String, required: true },
+  
+});
+
+const StudentMarks = mongoose.model('StudentMarks', studentMarksSchema);
+const ProducedResults = mongoose.model('ProducedResults', studentMarksSchema);
 
 module.exports = { StudentMarks, ProducedResults };
