@@ -20,17 +20,32 @@ const UpdateStudentMarks = () => {
     const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
     const [updateMessage, setUpdateMessage] = useState('');
 
+    const subjectMapping = {
+        'Eng': 'English',
+        'Kisw': 'Kiswahili',
+        'Maths': 'Mathematics',
+        'Chem': 'Chemistry',
+        'Bio': 'Biology',
+        'Phy': 'Physics',
+        'Agri': 'Agriculture',
+        'Busn': 'Business',
+        'Hist': 'History',
+        'Geo': 'Geography',
+        'Cre': 'CRE'
+    };
+    const fullUnitName = subjectMapping[selectedUnit];
+
     const fetchStudentsAndMarks = () => {
         setIsLoading(true);
         setMarks({});
         setStudents([]);
-        const uri = "https://edumax.fly.dev/api/stdent/UpdMark";
+        const uri = "https://edumax.fly.dev/api/student/UpdMark";
         axios.get(uri, {
             params: {
                 year: selectedYear,
                 examType: selectedExamType,
                 stream: selectedStream,
-                subject: selectedUnit
+                subject: fullUnitName
             }
         })
         .then(response => {
@@ -76,14 +91,14 @@ const UpdateStudentMarks = () => {
     const handleSubmit = () => {
         const updates = students.map(student => ({
             id: student._id,
-            unit: selectedUnit,
+            unit: fullUnitName,
             examType: selectedExamType,
             year: selectedYear,
             marks: marks[student._id]
         }));
 
         setIsLoadingUpdate(true);
-        const uri = "https://edumax.fly.dev/api/stdent/putMark";
+        const uri = "https://edumax.fly.dev/api/student/putMark";
         axios.put(uri, updates)
             .then(response => {
                 setIsLoadingUpdate(false);

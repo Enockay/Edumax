@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./css/Assigment.css";
+import {jwtDecode}  from "jwt-decode";
 
 const Assignment = () => {
     const [assignments, setAssignments] = useState([]);
@@ -7,57 +8,100 @@ const Assignment = () => {
     const [className, setClassName] = useState("");
     const [subject, setSubject] = useState("");
     const [assignmentText, setAssignmentText] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [teacherName, setTeacherName] = useState("");
+    const [error, setError] = useState(null);
+    const [assError , setAssError] = useState('');
 
     useEffect(() => {
-        fetchAssignments();
+        const decodeTeacherName = async () => {
+            const token = localStorage.getItem("token");
+            if (token) {
+                const decodedToken = await  jwtDecode(token);
+                const name = decodedToken.name
+                fetchAssignments(decodedToken.name);
+                setTeacherName(name);
+               
+                return name;
+            }
+        };
+        const name = decodeTeacherName();
+       
     }, []);
-
-    const fetchAssignments = async () => {
+    
+    const fetchAssignments = async (name) => {
         try {
-            const response = await fetch("/api/assignments"); // Change to your API endpoint
+            const response = await fetch(`https://edumax.fly.dev/ass/api/assignments/${name}`);
+            if (!response.ok) {
+                throw new Error(`Error fetching assignments: ${response.statusText}`);
+            }
             const data = await response.json();
-            setAssignments(data);
+            if(data.length > 0){
+                setAssignments(data)
+            }else{
+                setAssError("No assignment Saved Yet")
+            }
         } catch (error) {
-            console.error("Error fetching assignments:", error);
+            console.error(error);
+            setLoading(false);
+            setError(error.message);
         }
     };
 
     const handleSubmit = async (e) => {
+        setLoading(true);
         e.preventDefault();
         const newAssignment = {
             week,
             className,
             subject,
-            assignmentText
+            assignmentText,
+            teacherName
         };
         try {
-            const response = await fetch("/api/assignments", {
+            const response = await fetch(`https://edumax.fly.dev/ass/api/assignments/${teacherName}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(newAssignment)
             });
-            if (response.ok) {
-                const addedAssignment = await response.json();
-                setAssignments([...assignments, addedAssignment]);
-                // Reset form
-                setWeek(1);
-                setClassName("");
-                setSubject("");
-                setAssignmentText("");
-            } else {
-                console.error("Error adding assignment");
+            if (!response.ok) {
+                throw new Error(`Error adding assignment: ${response.statusText}`);
             }
+            const addedAssignment = await response.json();
+            setAssignments([...assignments, addedAssignment]);
+            setWeek(1);
+            setClassName("");
+            setSubject("");
+            setAssignmentText("");
+            setLoading(false);
         } catch (error) {
-            console.error("Error adding assignment:", error);
+            console.error(error);
+            setError(error.message);
+        }
+    };
+
+    const handleCleanup = async () => {
+        try {
+            const response = await fetch(`https://edumax.fly.dev/ass/api/assignments/cleanup/${teacherName}`, {
+                method: "DELETE"
+            });
+            if (!response.ok) {
+                throw new Error(`Error cleaning up assignments: ${response.statusText}`);
+            }
+            setAssignments([]);
+            console.log("All assignments have been cleaned up.");
+        } catch (error) {
+            console.error(error);
+            setError(error.message);
         }
     };
 
     return (
         <div className="assignment-container">
             <div className="assignment-form-card">
-                <form className="assignment-form" onSubmit={handleSubmit}>
+                <form className="assignment-form">
                     <select value={week} onChange={(e) => setWeek(e.target.value)}>
                         {Array.from({ length: 10 }, (_, i) => (
                             <option key={i} value={i + 1}>
@@ -85,11 +129,16 @@ const Assignment = () => {
                         onChange={(e) => setAssignmentText(e.target.value)}
                         required
                     ></textarea>
-                    <button type="submit">Save Assignment</button>
+                    <button type="submit" onClick={handleSubmit}>Save Assignment</button>
+                    <center>
+                        {loading && <div className="spinning"></div>}
+                    </center>
+                    {error && <div className="error">{error}</div>}
                 </form>
             </div>
             <div className="assignment-list-card">
-                <h2 style={{margin:0,fontSize:"0.9rem",color:"blue"}}>Past Assignments</h2>
+                <h2 style={{ margin: 0, fontSize: "0.9rem", color: "blue" }}>Past Assignments</h2>
+               
                 <div className="assignments-list">
                     {assignments.map((assignment, index) => (
                         <div key={index} className="assignment-card">
@@ -97,9 +146,12 @@ const Assignment = () => {
                             <p><strong>Class:</strong> {assignment.className}</p>
                             <p><strong>Subject:</strong> {assignment.subject}</p>
                             <p><strong>Assignment:</strong> {assignment.assignmentText}</p>
+                         <center><button onClick={handleCleanup}>Clean Up All Assignments</button> </center>  
                         </div>
+                        
                     ))}
                 </div>
+                {assError && <div >{assError}</div>}
             </div>
         </div>
     );

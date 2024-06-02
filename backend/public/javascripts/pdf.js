@@ -260,7 +260,7 @@ const generateClassListForm = async (stream, term, teacher, gradedStudents, unit
             student.rank,
             student.studentAdmission,
             student.studentName,
-            student.gender === "Male" ? "M" : "F",
+            student.gender ,
             student.stream
         ].concat(
             Object.keys(unitMeans).map(unit => {
