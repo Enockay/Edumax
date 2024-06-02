@@ -4,7 +4,7 @@ const ensureAuthenticated = require("./Auth");
 const updateStudent = express.Router();
 
 // Fetch Marks Endpoint
-updateStudent.get('/stdent/UpdMark', async (req, res) => {
+updateStudent.get('/student/UpdMark', async (req, res) => {
   const { year, examType, stream, subject } = req.query;
 
   if (!year || !examType || !stream || !subject) {
@@ -42,7 +42,7 @@ updateStudent.get('/stdent/UpdMark', async (req, res) => {
 });
 
 // Update Marks Endpoint
-updateStudent.put('/stdent/putMark', async (req, res) => {
+updateStudent.put('/student/putMark', async (req, res) => {
   try {
     const updates = req.body;
 
@@ -51,10 +51,10 @@ updateStudent.put('/stdent/putMark', async (req, res) => {
 
       return {
         updateOne: {
-          filter: { _id: id, [`units.${unit}.exams.year`]: year, [`units.${unit}.exams.examType`]: examType },
+          filter: { _id: id, [`years[0].year`]: year, [`years[0].year[0].exams.examType`]: examType },
           update: {
             $set: {
-              [`units.${unit}.exams.$.marks`]: marks
+              [`units.${unit}.$.marks`]: marks
             }
           },
           upsert: true
