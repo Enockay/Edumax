@@ -19,7 +19,7 @@ const AddTeacher = () => {
 
   const fetchTeachers = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/staff/fetch');
+      const response = await axios.get('https://edumax.fly.dev/staff/fetch');
       setTeachers(response.data);
     } catch (err) {
       setError('Network Error While fetching teachers');
@@ -35,7 +35,7 @@ const AddTeacher = () => {
 
     setIsLoading(true); // Show spinner
     try {
-      const response = await axios.post('http://localhost:3000/staff/post', newTeacher);
+      const response = await axios.post('https://edumax.fly.dev/staff/post', newTeacher);
       setFeedback('Teacher added successfully.');
       setTeachers([...teachers, response.data]);
       setTeacherName('');
@@ -55,7 +55,7 @@ const AddTeacher = () => {
 
     setIsDeleting(true);
     try {
-      await axios.delete(`http://localhost:3000/staff/${id}`);
+      await axios.delete(`https://edumax.fly.dev/staff/${id}`);
       setTeachers(teachers.filter(teacher => teacher._id !== id));
       setFeedback('Teacher deleted successfully.');
     } catch (err) {
