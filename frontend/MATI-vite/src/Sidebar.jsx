@@ -176,7 +176,7 @@ const Sidebar = ({ onItemClick, collapsed }) => {
                 </a>
               </li>
               <li className={selectedItem === 'account-settings' ? 'active' : ''}>
-                <a href="#account-settings" onClick={() => handleClick('account-settings')}>
+                <a href="#settings" onClick={() => handleClick('settings')}>
                   <FontAwesomeIcon icon={faCog} />
                   <span>Account Settings</span>
                 </a>

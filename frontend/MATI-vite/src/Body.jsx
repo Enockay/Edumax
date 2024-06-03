@@ -13,6 +13,7 @@ import AddTeacher from './addTeacher';
 import PromotionForm from './promoteStudent';
 import GradeAlgorithm from './Algorithms';
 import AssUnits from './AssigUnits';
+import GeneralSettings from './settings';
 
 const Body = ({selectedItem}) => {
     switch (selectedItem) {
@@ -46,6 +47,9 @@ const Body = ({selectedItem}) => {
             return <GradeAlgorithm/>
         case 'Assign-units' :
            return <AssUnits/>
+        case 'settings' : 
+           return <GeneralSettings/>
+
         default:
             return <SchoolAggregate/>;
     }

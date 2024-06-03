@@ -30,7 +30,7 @@ var ensureAuthenticated = require("./routes/Teachers/Auth");
 var app = express();
 var uri = process.env.MONGO_URL;
 var key = process.env.SECRET_KEY;
-
+var schoolAggregate = require("./routes/Dashboard/schoolAgregate");
 databaseConn(uri);
 
 app.use(session({
@@ -86,7 +86,7 @@ app.use('/api/auth', teacherlogin);
 app.get('/profile/:id', profile);
 app.use("/staff",staff)
 app.use('/api/promotion', promotionRoutes);
-
+app.get("/api/aggregate",schoolAggregate)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
