@@ -10,6 +10,9 @@ import DeleteStudent from "./DeleteStudents "
 import Results from './rankCompone';
 import TeacherMarksForm from './updateStudentMarks';
 import AddTeacher from './addTeacher';
+import PromotionForm from './promoteStudent';
+import GradeAlgorithm from './Algorithms';
+import AssUnits from './AssigUnits';
 
 const Body = ({selectedItem}) => {
     switch (selectedItem) {
@@ -29,14 +32,20 @@ const Body = ({selectedItem}) => {
             return <FilterStudent />;
         case 'school-aggregate':
             return <SchoolAggregate />;
-        case 'delete-students':
+        case 'update-student':
             return <DeleteStudent/>;
         case 'Fees-info':
             return <FeesReport/>
-        case 'Produce-Results':
+        case 'produce-results':
             return <Results/>
         case 'Teachers-Marks-Form':
             return <TeacherMarksForm/>
+        case 'promote-stream':
+            return <PromotionForm/>
+        case 'algorithm':
+            return <GradeAlgorithm/>
+        case 'Assign-units' :
+           return <AssUnits/>
         default:
             return <SchoolAggregate/>;
     }

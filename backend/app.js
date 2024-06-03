@@ -24,6 +24,8 @@ var teacherAss = require("./routes/Teachers/classesRoute");
 var teacherlogin = require("./routes/Teachers/login");
 var profile = require("./routes/Teachers/getProfile");
 var assign = require("./routes/Teachers/assignmet");
+var staff = require("./routes/Dashboard/staffs");
+var promotionRoutes = require("./routes/Dashboard/promoteStudents")
 var ensureAuthenticated = require("./routes/Teachers/Auth");
 var app = express();
 var uri = process.env.MONGO_URL;
@@ -82,7 +84,8 @@ app.use('/ass',assign);
 app.use("/classes", teacherAss);
 app.use('/api/auth', teacherlogin);
 app.get('/profile/:id', profile);
-
+app.use("/staff",staff)
+app.use('/api/promotion', promotionRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -57,66 +57,73 @@ const AdminLogin = () => {
 
   return (
     <div className="admin-login-container">
-      <h2>Edumax Admin Login</h2>
+      <center><p className="admin-login-title">Edumax Admin Login</p></center>
       {forgotPassword ? (
-        <form onSubmit={handleForgotPassword} className="admin-login-form">
+        <form onSubmit={handleForgotPassword} className="admin-forgot-password-form">
           <div className="form-group">
-            <label htmlFor="email">Email:</label>
+            <label htmlFor="email" className="form-label">Email:</label>
             <input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="form-input"
             />
           </div>
           {message && <div className="success-message">{message}</div>}
           {error && <div className="error-message">{error}</div>}
           <div className="button-group">
-            <button type="submit">Send Reset Link</button>
-            <button type="button" onClick={() => setForgotPassword(false)}>Back to Login</button>
+            <button type="submit" className="submit-button">Send Reset Link</button>
+            <button type="button" onClick={() => setForgotPassword(false)} className="secondary-button">Back to Login</button>
           </div>
         </form>
       ) : (
         <form onSubmit={handleLogin} className="admin-login-form">
-          <div className="form-group">
-            <label htmlFor="username">Username:</label>
+          <div className="admin-form-group">
+            <label htmlFor="username" className="form-label">Username:</label>
             <input
               type="text"
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
+              className="form-input"
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="password">Password:</label>
+          <div className="admin-form-group">
+            <label htmlFor="password" className="form-label">Password:</label>
             <input
               type="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className="form-input"
             />
           </div>
+          <hr></hr>
           {error && <div className="error-message">{error}</div>}
           {isLoading && (
             <div className="spinner-container">
-                <ClipLoader color="#007bff" loading={isLoading} size={50} />
-              <p>Please wait, verifying admin...</p>
-             </div>
-           )}
+              <ClipLoader color="#007bff" loading={isLoading} size={50} />
+              <p className="spinner-text">Please wait, verifying admin...</p>
+            </div>
+          )}
           {screenError && <div className="error-message">{screenError}</div>}
           <div className="button-group">
-            <button type="submit">Login</button>
-            <button type="button" onClick={() => setForgotPassword(true)}>Forgot Password?</button>
+            <button type="submit" className="submit-button">Login</button>
+          </div>
+          <div className="forgot-password-link">
+            <a href="#" onClick={() => setForgotPassword(true)}>Forgot Password?</a>
           </div>
         </form>
       )}
-      <footer className='footer' style={{marginTop:"20px"}}>
-        <div >
+      <hr></hr>
+      <footer className="admin-login-footer">
+        <div>
           <center>
-            <a href='https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox?compose=DmwnWtMmVNSlrNvwFZsxGBDxxrXDpQdXcjZJMRcJNjFgrFLPStGSHrKKFgmxwNlDjQtHmgqzRkRG'style={{fontSize:"0.8rem"}}>System Developed by Blackie-Networks</a>
+            <a href='https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox?compose=DmwnWtMmVNSlrNvwFZsxGBDxxrXDpQdXcjZJMRcJNjFgrFLPStGSHrKKFgmxwNlDjQtHmgqzRkRG' className="footer-link">System Developed by Blackie-Networks</a>
           </center>
         </div>
       </footer>

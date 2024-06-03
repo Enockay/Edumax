@@ -5,8 +5,6 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Body from "./Body";
 import Footer from "./Footer";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const Dashboard = () => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -25,30 +23,22 @@ const Dashboard = () => {
     setSelectedItem(item);
   };
 
-  const toggleSidebar = () => {
-    setCollapsed(!collapsed);
-  };
-
+  
   return (
-    <>
-     <div className="">
-        <Header />
+    <div className="dashboard">
+      <div className="header">
+         <Header/>
       </div>
-      <div className="Body">
-        <div className="Sidebar">
-          <button className="toggle-button" onClick={toggleSidebar}>
-            <FontAwesomeIcon icon={collapsed ? faBars : faTimes} />
-          </button>
-          <Sidebar onItemClick={handleItemOnClick} collapsed={collapsed} />
-        </div>
-        <div className="body">
-          <Body selectedItem={selectedItem} />
-        </div>
+      <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
+        <Sidebar onItemClick={handleItemOnClick} collapsed={collapsed} />
       </div>
-      <div className="Footer">
+      <div className="main">
+        <Body selectedItem={selectedItem} />
+      </div>
+      <div className="footer">
         <Footer />
       </div>
-    </>
+    </div>
   );
 };
 

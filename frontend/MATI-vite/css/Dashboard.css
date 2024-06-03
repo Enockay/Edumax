@@ -1,140 +1,71 @@
-
-body{
+body {
     margin: 0;
-    padding: 0  
-    
-}
-
-.Body{
-    display: flex;
-    min-height:80vh;
-    background-color: hsl(0, 0%, 100%);
-    transition: margin-left 0.3s ease;
-}
-
-.body{
-    display: flex;
-    justify-content: center;
-    padding: 5px;
-}
-.Header{
-    padding: 0.5rem;
-    height: 5rem;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+  }
+  
+  .dashboard {
+    display: grid;
+    grid-template-areas: 
+      "header header"
+      "sidebar main"
+      "footer footer";
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: 60px 1fr 50px;
+    min-height: 100vh;
+  }
+  
+  .header {
+    grid-area: header;
     background-color: #5367db;
-    border-radius: 0.3rem;
-}
-
-.Footer{
-    background-color: #333333;
-    color: #ffffff;
-    padding: 10px 0;
-    text-align: center;
-   
-}
-
-.Sidebar{
-    height: 100%;
-    background-color: #7fdee9;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    transition: width 0.3s ease;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+  }
+  
+  .header .toggle-btn {
+    cursor: pointer;
+    font-size: 1.5rem;
+  }
+  
+  .sidebar {
+    grid-area: sidebar;
+    background-color: #7be6bd;
     color: #34495e;
-}
-
-.sidebar {
+    padding: 0.2rem;
     transition: width 0.3s ease;
-    color: #0c73da;
-    
-}
-
-.sidebar.collapsed {
-    width: 50px;
-}
-
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-}
-
-.sidebar li {
-    padding: 0.3rem;
-}
-
-.sidebar li a {
-    text-decoration: none;
-    color: #000;
-}
-
-
-.sidebar.collapsed + .Body {
-    margin-left: 60px; 
-}
-
-
-.sidebar ul {
+  }
+  
+  .sidebar.collapsed {
+    width: 60px;
+  }
+  
+  .sidebar ul {
     list-style: none;
     padding: 0;
     margin: 0;
-}
-
-.sidebar ul li {
-    margin: 10% 0;
-}
-
-.sidebar ul li a {
+  }
+  
+  .sidebar li {
+    margin: 1rem 0;
+  }
+  
+  .sidebar li a {
     text-decoration: none;
-    color: rgb(28, 53, 109);
-    font-size: 15px;
+    color: #1c356d;
+    font-size: 0.9rem;
     font-weight: 600;
     display: block;
-    padding: 5px;
+    padding: 0.5rem;
     border-radius: 4px;
-    transition: background-color 0.3s;
-}
-
-.sidebar ul li a:hover {
-    background-color: #34495e;
-}
-
-
-.footer-content p {
-    margin: 5px 0;
-    font-size: 14px;
-}
-
-.sidebar ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.sidebar li {
-    margin: 10px 0;
-}
-
-.sidebar li a {
-    text-decoration: none;
-    color: black;
-    display: block;
-    padding: 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.sidebar li.active a {
-    background-color: #007bff;
-    color: white;
-}
-
-.sidebar li a:hover {
-    background-color: #0056b3;
-    color: white;
-}
-
-.sidebar ul li a {
     display: flex;
     align-items: center;
   }
   
-  .sidebar ul li a span {
+  .sidebar li a span {
     margin-left: 10px;
   }
   
@@ -146,8 +77,62 @@ body{
     justify-content: center;
   }
   
-@media (max-width : 1024px) {
-    .sidebar{
-        width: 80px;
-    }
+  .sidebar li.active a {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .sidebar li a:hover {
+    background-color: #0056b3;
+    color: white;
+  }
+  
+  .sidebar li a .caret-icon {
+    margin-left: auto;
+  }
+  .dropdown {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #7fdee9;
 }
+
+.dropdown li {
+    margin: 0;
+}
+
+.dropdown li a {
+    padding: 10px 10px 5px 20px; /* Indent dropdown items */
+    font-size: 0.75rem;
+    background-color: #9be1eb;
+}
+
+.dropdown li a:hover {
+    background-color: #34495e;
+    color: white;
+}
+
+  .main {
+    grid-area: main;
+    padding: 0.6rem;
+    background-color: #ffffff;
+  }
+  
+  .footer {
+    grid-area: footer;
+    background-color: aliceblue;
+    color: #06046b;
+    text-align: center;
+    padding: 0.5rem;
+  }
+  
+  @media (max-width: 1024px) {
+    .sidebar {
+      width: 80px;
+    }
+  
+    .sidebar.collapsed {
+      width: 60px;
+    }
+  }
+  

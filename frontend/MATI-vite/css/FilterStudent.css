@@ -15,11 +15,10 @@ h2 {
     color: #333;
 }
 
-.search-form {
+.upd-search-form {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 20px;
+    justify-content: space-evenly;
     margin-bottom: 20px;
 }
 

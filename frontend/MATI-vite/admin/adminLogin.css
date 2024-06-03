@@ -1,51 +1,54 @@
 .admin-login-container {
-  max-width: 400px;
+  max-width: 350px;
   margin: 10% auto;
   padding: 20px;
-  background-color: #fff;
+  color: rgb(46, 46, 46);
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 15px #dadbe9;
 }
 
-.admin-login-container h2 {
+.admin-login-title {
+  font-size: 1.3rem;
   margin-bottom: 20px;
-  text-align: center;
-  color: #333;
 }
-body{
-  background-color: #0056b3;
-}
-.admin-login-form {
+
+.admin-login-form, .admin-forgot-password-form {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
-.form-group {
+.admin-form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 15px;
+  width: 100%;
 }
 
-.form-group label {
+.form-label {
   display: block;
   margin-bottom: 5px;
   color: #333;
 }
 
-.form-group input {
-  width: 100%;
+.form-input {
+  width: 90%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
 }
-
+#password{
+  width: 64%;
+}
 .button-group {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: center;
   margin-top: 15px;
 }
 
-.button-group button {
+.submit-button {
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
@@ -54,16 +57,36 @@ body{
   color: #fff;
 }
 
-.button-group button:hover {
+.submit-button:hover {
   background-color: #0056b3;
 }
 
-.button-group button[type="button"] {
+.secondary-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
   background-color: #6c757d;
+  color: #fff;
 }
 
-.button-group button[type="button"]:hover {
+.secondary-button:hover {
   background-color: #5a6268;
+}
+
+.forgot-password-link {
+  margin-top: 25px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.forgot-password-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.forgot-password-link a:hover {
+  text-decoration: underline;
 }
 
 .error-message {
@@ -82,7 +105,15 @@ body{
   flex-direction: column;
 }
 
-.spinner-container p {
+.spinner-text {
   margin-top: 10px;
   color: #007bff;
+}
+
+.admin-login-footer {
+  margin-top: 20px;
+}
+
+.footer-link {
+  font-size: 0.8rem;
 }

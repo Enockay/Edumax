@@ -50,7 +50,7 @@ const FilterStudent = () => {
     return (
         <div className="filter-student-container">
             <h2>Filter Student</h2>
-            <div className="search-form">
+            <div className="upd-search-form">
                 <div className="form-group">
                     <label>Admission Number:</label>
                     <input type="text" value={admissionNumber} onChange={handleAdmissionNumberChange} />

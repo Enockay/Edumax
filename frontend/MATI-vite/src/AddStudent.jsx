@@ -72,7 +72,7 @@ const AddStudent = () => {
 
     return (
         <div className='form-container'>
-            <h2 style={{color : 'green',margin:0,marginBottom : '1rem'}}>Add Continuing Student</h2>
+          <center> <p style={{color : 'green',margin:0,marginBottom : '1rem',fontSize:'1.2rem'}}>Add Continuing Student</p></center> 
             <form className="" onSubmit={handleSubmit}>
                 <div className='add-student-form'>
                 <fieldset>

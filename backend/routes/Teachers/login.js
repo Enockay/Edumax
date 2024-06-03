@@ -27,29 +27,26 @@ teacher.post('/login', async (req, res) => {
     }
 });
 
-// Registration endpoint
+// Updated register route in staffs.js
 teacher.post('/register', async (req, res) => {
     const { username, password, email, name, gender } = req.body;
 
     try {
-        // Check if the user already exists
-        const existingUser = await teacherLoginModel.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: 'Email already in use' });
+        // Check if the email exists in the system
+        const existingTeacher = await teacherLoginModel.findOne({ email });
+        if (!existingTeacher) {
+            return res.status(400).json({ message: 'Email not found in the system. Please contact admin.' });
         }
 
-        // Create a new user
-        const newUser = new teacherLoginModel({
-            username,
-            password,
-            email,
-            name,
-            gender
-        });
+        // Update the existing teacher entry with the remaining details
+        existingTeacher.username = username;
+        existingTeacher.password = password;
+        existingTeacher.name = name;
+        existingTeacher.gender = gender;
 
-        // Save the user to the database
-        await newUser.save();
-        
+        // Save the updated teacher to the database
+        await existingTeacher.save();
+
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         console.error(error);

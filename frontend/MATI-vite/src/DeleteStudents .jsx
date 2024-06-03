@@ -87,6 +87,19 @@ const DeleteStudent = () => {
     };
 
     return (
+        <>
+          {/* Green flag */}
+      <div className="green-flag">
+        <div>
+        <h3>How to Use This Form</h3>
+        <p>Follow these steps to update student information:</p>
+        <ul>
+          <li>Enter the admission number && Stream in the Empty fields.</li>
+          <li>Click the 'Fetch' button to retrieve the student's information.</li>
+          <li>If no information is displayed, the student may not be registered in the system.</li>
+        </ul>
+        </div>
+      </div>
         <div className="delete-student-container">
             <center><h2 className="delete-student-title">Update Student Information</h2></center>
             <div className="delete-student-form-row">
@@ -235,41 +248,7 @@ const DeleteStudent = () => {
                             </div>
                         </div>
                     </fieldset>
-                    <fieldset className="delete-student-fieldset">
-                        <legend className="delete-student-legend">Fees Details</legend>
-                        <div className="delete-student-flex-container">
-                            <div className="delete-student-flex-item">
-                                <label>Tuition Fees:</label>
-                                <input
-                                    type="text"
-                                    className="delete-student-input"
-                                    name="tuitionFees"
-                                    value={studentData.tuitionFees}
-                                    onChange={handleFieldChange}
-                                />
-                            </div>
-                            <div className="delete-student-flex-item">
-                                <label>Uniform Fees:</label>
-                                <input
-                                    type="text"
-                                    className="delete-student-input"
-                                    name="uniformFees"
-                                    value={studentData.uniformFees}
-                                    onChange={handleFieldChange}
-                                />
-                            </div>
-                            <div className="delete-student-flex-item">
-                                <label>Lunch Fees:</label>
-                                <input
-                                    type="text"
-                                    className="delete-student-input"
-                                    name="lunchFees"
-                                    value={studentData.lunchFees}
-                                    onChange={handleFieldChange}
-                                />
-                            </div>
-                        </div>
-                    </fieldset>
+                   
                     <div className="delete-student-buttons">
                         <div className="spinner-container">
                             {isLoading ? <ClipLoader size={50} color={"#000"} /> :
@@ -284,6 +263,7 @@ const DeleteStudent = () => {
             )}
             <div className='delete-student-feedback'>{feedback}</div>
         </div>
+        </>
     );
 };
 

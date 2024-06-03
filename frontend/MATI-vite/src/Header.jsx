@@ -3,10 +3,13 @@ import { Link } from 'react-router-dom';
 import logo from '../src/assets/logo.jpeg';
 import profile from '../src/assets/profile.png';
 import "../css/Header.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const Header = () => {
   const [elapsedTime, setElapsedTime] = useState('');
   const [adminName, setAdminName] = useState('');
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     const storedAdminName = localStorage.getItem('username');
@@ -32,26 +35,26 @@ const Header = () => {
     }
   }, []);
 
+  const toggleSidebar = () => {
+    setCollapsed(!collapsed);
+  };
+
   return (
-    <div className="heading">
+    <div className="header-container">
       <div className="left-section">
         <img src={logo} alt="EduMax Logo" className="logo" />
         <div className="title-section">
-          <h3 className="h3" style={{ color: 'white' }}>EduMax Hub</h3>
-          <h6 className="h6" style={{ margin: 0, fontStyle: 'italic' }}>Transforming World of Education Through Technology</h6>
+          <p className="h3">EduMax Hub</p>
         </div>
       </div>
       <div className="center-section">
-        <nav className="nav-links">
+         <nav className="nav-links">
           <Link to="/dashboard">Dashboard</Link>
           <Link to="/students">Student Marks</Link>
           <Link to="/courses">Results</Link>
           <Link to="/settings">Settings</Link>
         </nav>
-        <div className="search-bar">
-          <input id="input" type="text" placeholder="Search..." />
-          <button className="btn" type="submit">Search</button>
-        </div>
+       
       </div>
       <div className="right-section">
         <div className="user-profile">

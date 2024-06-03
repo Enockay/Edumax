@@ -6,10 +6,39 @@
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
+/* Green flag */
+.green-flag {
+    background-color: #d4edda; /* Light green background */
+    border-left: 5px solid #28a745; /* Green border on the left */
+    padding: 16px; /* Padding inside the box */
+    margin-top: 20px; /* Space above the green-flag section */
+    border-radius: 4px; /* Rounded corners */
+  }
+  
+  .green-flag h3 {
+    margin-top: 0; /* No margin on top */
+    color: #155724; /* Darker green color for the heading */
+  }
+  
+  .green-flag p {
+    margin: 8px 0; /* Margin above and below the paragraph */
+    color: #155724; /* Darker green color for the text */
+  }
+  
+  .green-flag ul {
+    margin: 8px 0; /* Margin above and below the list */
+    padding-left: 20px; /* Space before the list items */
+  }
+  
+  .green-flag li {
+    margin-bottom: 8px; /* Space below each list item */
+    color: #155724; /* Darker green color for the list items */
+  }
+  
 .delete-student-title {
     color: green;
     margin: 0;
+    font-size: 1.2rem;
     text-align: center;
 }
 

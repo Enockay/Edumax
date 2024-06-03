@@ -110,6 +110,25 @@ const Results = () => {
   };
 
   return (
+    <>
+    <div className="info-flag">
+      <div className='info-items'>
+       <center><h4 style={{margin:0}}>To generate the overall class results:</h4></center> 
+        <ul>
+          <li>Select the appropriate form, exam period, year, and exam type.</li>
+          <li>Click on the "Generate Results" button to generate the results.</li>
+          <li>Once generated, you can print the results by clicking on the "Print Results" button.</li>
+        </ul>
+        </div> 
+        <div className='info-items'>
+       <center><h4 style={{margin:0}}>To generate individual student results:</h4> </center> 
+        <ul>
+          <li>Select the class and stream, then choose the exam period.</li>
+          <li>Click on the "Generate Class Results" button to generate individual student reports.</li>
+          <li>Once generated, you can print the results by clicking on the "Print Class Results" button.</li>
+        </ul>
+        </div>
+      </div>
     <div className="results-container">
       <div className="rank-form-container">
         <div className='whole-class'>
@@ -134,9 +153,9 @@ const Results = () => {
               </select>
             </div>
             <div className="select-group">
-              <label htmlFor="term-select">year:</label>
+              <label htmlFor="term-select">Year:</label>
               <select id="term-select" value={year} onChange={(e) => setYear(e.target.value)} required>
-                <option value="">--Select Period--</option>
+                <option value="">--Select Year--</option>
                 {years.map((termName, index) => (
                   <option key={index} value={termName}>{termName}</option>
                 ))}
@@ -145,18 +164,13 @@ const Results = () => {
             <div className="select-group">
               <label htmlFor="term-select">Exam type:</label>
               <select id="term-select" value={exams} onChange={(e) => setExams(e.target.value)} required>
-                <option value="">--Select Period--</option>
+                <option value="">--Select Exam Type--</option>
                 {examTypes.map((termName, index) => (
                   <option key={index} value={termName}>{termName}</option>
                 ))}
               </select>
             </div> 
           </div>
-          {/** <div className='select-group'>
-            <label htmlFor="teacher-input" className='teacher'>Class Teacher:</label>
-            <input id="teacher-input" type='text' value={teacher} onChange={(e) => setTeacher(e.target.value)} required />
-             </div>
-           */}   
           <div className='button-results'>
             <button className='button' onClick={generateResults} disabled={!singleClass || !term}>Generate Results</button>
             <button className='button' onClick={handlePrintOverallResults} disabled={!singleClass}>Print Results</button>
@@ -199,16 +213,16 @@ const Results = () => {
           </div>
         </div>
       </div>
-      <div  className='select-notification'>
-         <div className='notification'>
-            <center><h3 className='noti' style={{color:"green"}}>Server Response</h3></center> 
-             <div className='spinner-container'>
-             {isLoading ? <span className="spinner"></span> : <div className={`notification-message ${notificationType}`}>{notification}</div>}
+      <div className='select-notification'>
+        <div className='notification'>
+          <center><h3 className='noti' style={{color:"green"}}>Server Response</h3></center> 
+          <div className='spinner-container'>
+            {isLoading ? <span className="spinner"></span> : <div className={`notification-message ${notificationType}`}>{notification}</div>}
+          </div>
         </div>
       </div>
-      </div>
-     
     </div>
+    </>
   );
 };
 

@@ -35,7 +35,8 @@
 }
 .select-notification{
   margin: 2%;
-  min-width: 30%;
+  min-width: 20%;
+  max-width: 24%;
   height: 440px;
   padding: 5px;
   box-shadow: 0 0 10px white;
@@ -132,4 +133,35 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+.info-item{
+  box-shadow: 0 0 10px beige;
+}
+.info-flag {
+  background-color: #e0f7e9; /* Light green background */
+  border-left: 5px solid #4caf50; /* Green border on the left */
+  padding: 16px; /* Padding inside the box */
+  margin-bottom: 20px; /* Space below the info-flag section */
+  border-radius: 4px;
+  display: flex; /* Rounded corners */
+}
+
+.info-flag h3 {
+  margin-top: 0; /* No margin on top */
+  color: #2e7d32; /* Darker green color for the heading */
+}
+
+.info-flag p {
+  margin: 8px 0; /* Margin above and below the paragraph */
+  color: #2e7d32; /* Darker green color for the text */
+}
+
+.info-flag ul {
+  margin: 8px 0; /* Margin above and below the list */
+  padding-left: 20px; /* Space before the list items */
+}
+
+.info-flag li {
+  margin-bottom: 8px; /* Space below each list item */
+  color: #2e7d32; /* Darker green color for the list items */
 }

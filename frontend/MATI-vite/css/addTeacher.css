@@ -1,136 +1,182 @@
-/* AdminPanel.css */
-body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    font-family: Arial, sans-serif;
-  }
+/* Container */
+.admin-panel-container {
+  display: flex;
+  flex-direction: column;
+  min-height: fit-content;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 0 10px rgb(226, 203, 203);
+  border-radius: 0.5rem;
+}
+
+/* Titles */
+.admin-panel-title {
+  text-align: center;
+  font-size: 1.4rem;
+  color: #333;
+  margin: 10px;
+}
+
+.admin-panel-subtitle {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Content Sections */
+.admin-panel-content {
+  display: flex;
+  flex: 1;
+  gap: 20px;
+}
+
+.add-teacher-section,
+.teachers-list-section {
+  flex: 1;
+  background: #ffffff;
+  padding: 7px;
+  width: fit-content;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  max-width: 47%;
+  flex-direction: column;
+}
+.teachers-list-section{
+  width: 70%;
+}
+#add-teacher-section{
+  max-width: 40%;
+}
+/* Red flag */
+.red-flag {
+  background-color: #f8d7da; /* Light red background */
+  border-left: 5px solid #f44336; /* Red border on the left */
+  padding: 16px; /* Padding inside the box */
+  margin-top: 20px; /* Space above the red-flag section */
+  border-radius: 4px; /* Rounded corners */
+}
+
+.red-flag h3 {
+  margin-top: 0; /* No margin on top */
+  color: #d32f2f; /* Darker red color for the heading */
+}
+
+.red-flag p {
+  margin: 8px 0; /* Margin above and below the paragraph */
+  color: #d32f2f; /* Darker red color for the text */
+}
+
+.red-flag ul {
+  margin: 8px 0; /* Margin above and below the list */
+  padding-left: 20px; /* Space before the list items */
+}
+
+.red-flag li {
+  margin-bottom: 8px; /* Space below each list item */
+  color: #d32f2f; /* Darker red color for the list items */
+}
+/* Form */
+.admin-panel-form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.teacher-form-group input {
+  padding: 5px;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  font-size: 1em;
+  width: 50%;
+}
+
+.button-group {
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Spinner */
+.spinner-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+
+.success-message {
+  color: green;
+  font-weight: bold;
+  text-align: center;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Teachers Table */
+.teachers-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
   
-  .admin-panel-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    background: #f7f7f7;
-  }
-  
-  .admin-panel-title {
-    margin-bottom: 20px;
-    font-size: 32px;
-    color: #333;
-  }
-  
-  .admin-panel-content {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    height: calc(100% - 60px);
-    gap: 20px;
-  }
-  
-  .add-teacher-section,
-  .teachers-list-section {
-    flex: 1;
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    overflow-y: auto;
-  }
-  
-  .admin-panel-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  label {
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
-  }
-  
-  input {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .btn {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    background-color: #007bff;
-    color: white;
-    transition: background-color 0.3s;
-  }
-  
-  .btn:hover {
-    background-color: #0056b3;
-  }
-  
-  .button-group {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .success-message, .error-message {
-    margin-top: 10px;
-    font-size: 14px;
-    text-align: center;
-  }
-  
-  .success-message {
-    color: green;
-  }
-  
-  .error-message {
-    color: red;
-  }
-  
-  .spinner-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 10px;
-  }
-  
-  .admin-panel-subtitle {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
-  }
-  
-  .teachers-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .teacher-card {
-    background: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  .teacher-card h4 {
-    margin: 0 0 10px;
-  }
-  
-  .teacher-card p {
-    margin: 5px 0;
-  }
-  
+}
+
+.teachers-table th,
+.teachers-table td {
+  border: 1px solid #ddd;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.teachers-table th {
+  background-color: #007bff;
+  color: white;
+}
+
+.teachers-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.teachers-table .btn-danger {
+  color: white;
+  background-color: red;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.teachers-table .btn-danger:hover {
+  background-color: darkred;
+}
+
+.teachers-table td .btn-danger {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
