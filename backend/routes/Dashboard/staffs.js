@@ -8,7 +8,8 @@ const staff = express.Router();
 staff.get('/fetch', async (req, res) => {
     try {
         const teachers = await Teacher.find();
-        res.json(teachers);
+        console.log(teachers)
+        res.status(200).json(teachers);
     } catch (err) {
         res.status(500).send('Network Error While fetching teachers');
     }

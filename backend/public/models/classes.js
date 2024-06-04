@@ -22,6 +22,10 @@ const TeachingSubjectSchema = new Schema({
 
 // Define the Classes schema
 const ClassesSchema = new Schema({
+  teacherName :{
+    type : String,
+    required : true,
+  },
   year: {
     type: String,
     required: true,

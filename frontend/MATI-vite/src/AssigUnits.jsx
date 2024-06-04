@@ -18,9 +18,13 @@ const AssigUnits = () => {
 
   useEffect(() => {
     // Fetch teachers from the system
-    fetch("https://edumax.fly.dev/teachers")
+    fetch("https://edumax.fly.dev/staff/fetch")
       .then(response => response.json())
-      .then(data => setTeachers(data.teachers))
+      .then(data => {
+        console.log(data)
+        setTeachers(data)
+
+      })
       .catch(error => console.error('Error fetching teachers:', error));
   }, []);
 

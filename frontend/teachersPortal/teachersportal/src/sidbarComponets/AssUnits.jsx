@@ -1,20 +1,36 @@
 import React, { useState, useEffect } from "react";
 import "./css/AssUnits.css";
+import { jwtDecode } from "jwt-decode";
 
 const AssUnits = () => {
   const [assignedUnits, setAssignedUnits] = useState([]);
   const [year, setYear] = useState("");
   const [term, setTerm] = useState("");
+  const [empty , setEmpty] = useState('');
 
   useEffect(() => {
+    const decodeData = ()=> {
+      const token = localStorage.getItem('token');
+      const decodedToken = jwtDecode(token);
+      return decodedToken.name
+    }
+    const teacherName = decodeData();
+
     // Fetch assigned units from the backend
-    const uri = "https://edumax.fly.dev/classes/assigned-units";
-    fetch(uri)
+    const uri = `https://edumax.fly.dev/classes/assigned-units/${teacherName}`;
+    fetch(uri,{
+      params : `${teacherName}`
+    })
       .then(response => response.json())
       .then(data => {
-        setAssignedUnits(data.teachingSubjects);
-        setYear(data.year);
-        setTerm(data.term);
+        if(data.length > 0){
+          setAssignedUnits(data[0].teachingSubjects);
+          setYear(data[0].year);
+          setTerm(data[0].term);
+        }else{
+           setEmpty("No Units Allocated Yet")
+        }
+        
       })
       .catch(error => {
         console.error('Error fetching assigned units:', error);
@@ -51,7 +67,7 @@ const AssUnits = () => {
   return (
     <div className="ass-container">
       <center>
-        <p className=""style={{fontSize:"1.3rem"}}>Your Selected Units</p>
+        <p className=""style={{fontSize:"1.3rem"}}>Allocated Units This Year</p>
       </center>
     <div className="ass-units-container">
       
@@ -97,7 +113,7 @@ const AssUnits = () => {
           ) : (
             <tr>
               <td colSpan="3" className="no-units">
-                No units selected. Please go to the classes and select units.
+              <center>{empty}</center>  
               </td>
             </tr>
           )}

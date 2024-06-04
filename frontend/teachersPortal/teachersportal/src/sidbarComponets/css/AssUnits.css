@@ -19,6 +19,7 @@
 
 .units-table {
   width: 100%;
+  height: fit-content;
   max-width: 800px;
   margin-bottom: 20px;
   border-collapse: collapse;

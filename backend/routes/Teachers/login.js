@@ -35,7 +35,7 @@ teacher.post('/register', async (req, res) => {
         // Check if the email exists in the system
         const existingTeacher = await teacherLoginModel.findOne({ email });
         if (!existingTeacher) {
-            return res.status(400).json({ message: 'Email not found in the system. Please contact admin.' });
+            return res.status(401).json({ message: 'Unauthorized to the system' });
         }
 
         // Update the existing teacher entry with the remaining details

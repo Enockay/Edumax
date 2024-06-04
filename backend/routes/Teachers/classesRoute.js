@@ -5,7 +5,7 @@ const ensureAuthenticated = require("./Auth");
 const teacherAss = express.Router();
 
 teacherAss.post('/update-subjects', async (req, res) => {
-  const { year, term, teachingSubjects } = req.body;
+  const { teacherName, year, term, teachingSubjects } = req.body;
   // Validate received data (optional if you trust the client-side validation)
   if (!year || !term || !Array.isArray(teachingSubjects)) {
     return res.status(400).json({ error: 'Invalid input data' });
@@ -13,23 +13,24 @@ teacherAss.post('/update-subjects', async (req, res) => {
 
   try {
     // Create a new Classes document
-    const newClasses = new Classes({ year, term, teachingSubjects });
+    const newClasses = new Classes({ teacherName,year, term, teachingSubjects });
     
     // Save the document to the database
     await newClasses.save();
     
     // Send a success response
-    res.json({ message: 'Subjects updated successfully' });
+    res.json({ message: `Subjects updated successfully for ${teacherName}` });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-teacherAss.get('/assigned-units', async (req, res) => {
+teacherAss.get('/assigned-units/:id', async (req, res) => {
     try {
       // Fetch the latest entry
-      const classesData = await Classes.findOne().sort({ _id: -1 }).exec();
+      const teacherName = req.params.id;
+      const classesData = await Classes.find({teacherName});
       if (!classesData) {
         return res.status(201).json({ error: 'No units found' });
       }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./css/Dashboard.css";
-
+import { jwtDecode } from "jwt-decode";
 
 const MainDashboard = () => {
   const [profileData, setProfileData] = useState({
@@ -22,7 +22,7 @@ const MainDashboard = () => {
   useEffect(() => {
     const username = localStorage.getItem("username");
     const profileEndpoint = `https://edumax.fly.dev/profile/${username}`;
-    const unitsEndpoint = "https://edumax.fly.dev/classes/assigned-units";
+    const unitsEndpoint = `https://edumax.fly.dev/classes/assigned-units/${profileData.name}`;
     const notificationsEndpoint = "https://edumax.fly.dev/notifications";
 
     // Fetch profile data
@@ -125,7 +125,7 @@ const MainDashboard = () => {
                 ) : (
                   <tr>
                     <td colSpan="2" className="no-units">
-                      No units selected. Please go to the classes and select units.
+                   <center>No Units Allocated Yet</center>  
                     </td>
                   </tr>
                 )}
