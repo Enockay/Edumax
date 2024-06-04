@@ -42,7 +42,7 @@ const MainDashboard = () => {
     fetch(unitsEndpoint)
       .then(response => response.json())
       .then(data => {
-        setAssignedUnits(data.teachingSubjects);
+        setAssignedUnits(data[0].teachingSubjects);
         setLoadingUnits(false);
       })
       .catch(error => {

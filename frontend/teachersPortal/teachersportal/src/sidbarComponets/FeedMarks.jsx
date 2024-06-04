@@ -4,8 +4,8 @@ import axios from 'axios';
 import './css/FeedMarks.css';
 
 const FeedMarks = () => {
-    const [streams,setStream] = useState([]);
-    const [units,setUnits] = useState([]);
+    const [streams, setStream] = useState([]);
+    const [units, setUnits] = useState([]);
     const [terms] = useState(['Term 1', 'Term 2', 'Term 3']);
     const [examTypes] = useState(['CAT', 'Midterm', 'Endterm', 'TestExam']);
     const [years] = useState(['2024', '2023', '2022', '2021']);
@@ -35,48 +35,51 @@ const FeedMarks = () => {
         'Geo': 'Geography',
         'Cre': 'CRE'
     };
-
-    /**useEffect(() => {
-        const decodeData = ()=> {
-          const token = localStorage.getItem('token');
-          const decodedToken = jwtDecode(token);
-          return decodedToken.name
+    const extractedStream = selectedStream.replace('Form ', '').replace(' ', '');
+    useEffect(() => {
+        const decodeData = () => {
+            const token = localStorage.getItem('token');
+            const decodedToken = jwtDecode(token);
+            return decodedToken.name
         }
         const teacherName = decodeData();
-    
+
         // Fetch assigned units from the backend
         const uri = `https://edumax.fly.dev/classes/assigned-units/${teacherName}`;
-        fetch(uri,{
-          params : `${teacherName}`
+        fetch(uri, {
+            params: `${teacherName}`
         })
-          .then(response => response.json())
-          .then(data => {
-            console.log(data)
-            if(data.length > 0){
-              setUnits(data[0].teachingSubjects);
-            }else{
-               setEmpty("No Units Allocated Yet")
-            }
-            
-          })
-          .catch(error => {
-            console.error('Error fetching assigned units:', error);
-          });
-      }, []);
-    **/
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    setStream(data[0].teachingSubjects);
+                    console.log(data[0].teachingSubjects)
+                } else {
+                    setEmpty("No Units Allocated Yet")
+                }
+
+            })
+            .catch(error => {
+                console.error('Error fetching assigned units:', error);
+            });
+    }, []);
+
     const fetchClassList = () => {
         if (!selectedStream || !selectedUnit) {
             setNotification('Stream and Subject fields cannot be empty');
             return;
         }
-
+        const fullUnitName = subjectMapping[selectedUnit]
+        console.log(fullUnitName);
+       
+        console.log(extractedStream)
         const uri = 'https://edumax.fly.dev/students/';
         setIsLoading(true);
         setUpdate('');
         axios.get(uri, {
             params: {
-                stream: selectedStream,
-                unit: selectedUnit
+                stream: extractedStream,
+                unit: fullUnitName
             }
         })
             .then(response => {
@@ -191,7 +194,7 @@ const FeedMarks = () => {
 
     const renderPaperFields = (student) => {
         const fullUnitName = subjectMapping[selectedUnit];
-        if (['3East', '3West', '4East', '4West'].includes(selectedStream)) {
+        if (['3East', '3West', '4East', '4West'].includes(extractedStream)) {
             if (['Chemistry', 'Biology', 'Physics', 'English', 'Kiswahili'].includes(fullUnitName)) {
                 return (
                     <>
@@ -243,7 +246,7 @@ const FeedMarks = () => {
                     </>
                 );
             }
-        } else if (['2East', '2West', '1East', '1West'].includes(selectedStream)) {
+        } else if (['2East', '2West', '1East', '1West'].includes(extractedStream)) {
             return (
                 <td>
                     <input
@@ -260,7 +263,7 @@ const FeedMarks = () => {
 
     const renderTableHeaders = () => {
         const fullUnitName = subjectMapping[selectedUnit];
-        if (['3East', '3West', '4East', '4West'].includes(selectedStream)) {
+        if (['3East', '3West', '4East', '4West'].includes(extractedStream)) {
             if (['Chemistry', 'Biology', 'Physics', 'English', 'Kiswahili'].includes(fullUnitName)) {
                 return (
                     <>
@@ -277,7 +280,7 @@ const FeedMarks = () => {
                     </>
                 );
             }
-        } else if (['2East', '2West', '1East', '1West'].includes(selectedStream)) {
+        } else if (['2East', '2West', '1East', '1West'].includes(extractedStream)) {
             return <th className='th th-p1'>P1</th>;
         }
         return null;
@@ -300,9 +303,9 @@ const FeedMarks = () => {
                             onChange={(e) => setSelectedStream(e.target.value)}
                         >
                             <option value="">Select Stream</option>
-                            {streams.map((stream) => (
-                                <option key={stream} value={stream}>
-                                    {stream}
+                            {streams.map((streamObj) => (
+                                <option key={streamObj._id} value={streamObj.stream}>
+                                    {streamObj.stream}
                                 </option>
                             ))}
                         </select>
@@ -314,17 +317,21 @@ const FeedMarks = () => {
                             onChange={(e) => setSelectedUnit(e.target.value)}
                         >
                             <option value="">Select Subject</option>
-                            {units.map((unit) => (
-                                <option key={unit} value={unit}>
-                                    {unit}
-                                </option>
-                            ))}
+                            {streams
+                                .filter((streamObj) => streamObj.stream === selectedStream)
+                                .flatMap((streamObj) => streamObj.units)
+                                .map((unit) => (
+                                    <option key={unit._id} value={unit.name}>
+                                        {unit.name}
+                                    </option>
+                                ))}
                         </select>
                     </div>
                     <button className='btn' onClick={fetchClassList}>
                         {isLoading ? 'Loading...' : 'Fetch Students'}
                     </button>
                 </div>
+
             </div>
 
             {notification && <p className='notification'>{notification}</p>}
