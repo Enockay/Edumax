@@ -46,9 +46,10 @@ const SchoolAggregate = () => {
                             <p>West: {data.forms[form].wests}</p>
                         </div>
                     ))}
-                    <center>{empty}</center>
+                   
                 </div>
             </div>
+            <center><p style={{color:"green",}}>{empty}</p></center>
         </div>
     );
 };
