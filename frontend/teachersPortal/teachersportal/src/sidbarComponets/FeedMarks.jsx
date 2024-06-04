@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import './css/FeedMarks.css';
 
 const FeedMarks = () => {
-    const [streams] = useState(['4East', '4West', '3East', '3West', '2East', '2West', '1East', '1West']);
-    const [units] = useState(['Eng', 'Kisw', 'Maths', 'Chem', 'Bio', 'Phy', 'Agri', 'Busn', 'Hist', 'Geo', 'Cre']);
+    const [streams,setStream] = useState([]);
+    const [units,setUnits] = useState([]);
     const [terms] = useState(['Term 1', 'Term 2', 'Term 3']);
     const [examTypes] = useState(['CAT', 'Midterm', 'Endterm', 'TestExam']);
     const [years] = useState(['2024', '2023', '2022', '2021']);
@@ -35,6 +36,34 @@ const FeedMarks = () => {
         'Cre': 'CRE'
     };
 
+    /**useEffect(() => {
+        const decodeData = ()=> {
+          const token = localStorage.getItem('token');
+          const decodedToken = jwtDecode(token);
+          return decodedToken.name
+        }
+        const teacherName = decodeData();
+    
+        // Fetch assigned units from the backend
+        const uri = `https://edumax.fly.dev/classes/assigned-units/${teacherName}`;
+        fetch(uri,{
+          params : `${teacherName}`
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data)
+            if(data.length > 0){
+              setUnits(data[0].teachingSubjects);
+            }else{
+               setEmpty("No Units Allocated Yet")
+            }
+            
+          })
+          .catch(error => {
+            console.error('Error fetching assigned units:', error);
+          });
+      }, []);
+    **/
     const fetchClassList = () => {
         if (!selectedStream || !selectedUnit) {
             setNotification('Stream and Subject fields cannot be empty');
@@ -256,6 +285,11 @@ const FeedMarks = () => {
 
     return (
         <div className='marks-main'>
+            <div className='green-flag'>
+                <center>
+                    <p>You are only Allowed to feed Marks Of the assigned Units if You cant Find Any Select follow up for Units Allocation</p>
+                </center>
+            </div>
             <div className='marks-header'>
                 <h3 className='title'>Feeding marks</h3>
                 <div className='form'>

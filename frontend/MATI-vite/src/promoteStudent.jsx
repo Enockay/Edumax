@@ -9,57 +9,76 @@ const PromotionForm = () => {
     const [graduationYear, setGraduationYear] = useState('');
     const [message, setMessage] = useState('');
     const [confirmation, setConfirmation] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [graduating , setGraduating] = useState(false);
+    const [error, setError] = useState('');
 
     const handlePromotion = async () => {
+       
         try {
-            const response = await axios.post('https://edumax.fly.dev/api/promotion/promote', {
+            setLoading(true);
+            const response = await axios.post('https://edumax.fly.dev/students/api/promotion/promote', {
                 currentStream,
                 nextStream
             });
             setMessage(response.data.message);
+            setLoading(false);
         } catch (error) {
             setMessage('Error promoting students');
+            setLoading(false);
         }
     };
 
     const handleGraduation = async () => {
+        if(!graduatingStream || graduationYear){
+            setError("all Fields Must Be Field");
+            return;
+        }
         try {
-            const response = await axios.post('https://edumax.fly.dev/api/promotion/graduate', {
+            setGraduating(true)
+            const response = await axios.post('https://edumax.fly.dev/students/api/promotion/graduate', {
                 graduatingStream,
                 year: graduationYear
             });
             setMessage(response.data.message);
+            setGraduating(false)
         } catch (error) {
             setMessage('Error graduating students');
+           setGraduating(false)
         }
     };
 
     const handleConfirmPromotion = () => {
+        if(!currentStream || !nextStream){
+            setError("All fields must be field");
+            return;
+        }
         setConfirmation(`Are you sure you want to promote all students from ${currentStream} to ${nextStream}?`);
     };
 
     return (
+        <>
         <div className='promotion-container'>
             <div className='alert'>
-                <p>--This part of the system is very crucial and sensitive.Always be keen while dealing with it.
-                    It can cause entire student data loss or even system crashes due to inconsistency. Make sure you carry out transitional proccess carefully.
+                <p>--This part of the system is very crucial and sensitive. Always be keen while dealing with it.
+                    It can cause entire student data loss or even system crashes due to inconsistency. Make sure you carry out transitional processes carefully.
                 </p>
                 <hr></hr>
-                </div>
-                <div className='inform'>
+            </div>
+            <div className='inform'>
                 <h5 style={{margin:0,textDecoration:"underline"}}>USE CASE</h5>
                 <ol>
                     <li>Fast Graduate Last Stream</li>
-                    <p style={{margin:0,fontStyle:"italic",fontSize:"0.7rem"}}>This will help create space for other students </p>
+                    <p style={{margin:0,fontStyle:"italic",fontSize:"0.65rem"}}>This will help create space for other students </p>
                     <li>Follow The Process Downward Till Last stream is empty </li>
                     <li>Can Now Admit New Form Ones To the System</li>
-                  <center> <p style={{margin:0,fontStyle:"italic",fontSize:"0.8rem"}}>N/BYou supposed to transition One stream at a Time</p></center> 
+                    <center> <p style={{margin:0,fontStyle:"italic",fontSize:"0.8rem"}}>N/BYou supposed to transition One stream at a Time</p></center> 
                 </ol>
                 <hr></hr>
             </div>
             <div className='promotion-form'>
-                <div>
-                    <center><p className="form-title">Promote Students</p></center>  
+                <div className='promotion-section'>
+                    <h3 className="form-title">Promote Students</h3>  
                     <label>
                         Current Stream:
                         <select value={currentStream} onChange={(e) => setCurrentStream(e.target.value)} className='inputs'>
@@ -91,13 +110,13 @@ const PromotionForm = () => {
                         {confirmation && (
                             <div className='confirmation'>
                                 <p>{confirmation}</p>
-                                <button onClick={handlePromotion} className='button-graduate'>Promote Students</button>
+                                {loading ? <div className='spinner'></div> : <button onClick={handlePromotion} className='button-graduate'>Promote Students</button>}
                             </div>
                         )}
                     </center>
                 </div>
-                <div>
-                    <center><p className="form-title">Graduate Stream</p></center>  
+                <div className='promotion-section'>
+                    <h3 className="form-title">Graduate Stream</h3>  
                     <label>
                         Graduating Stream:
                         <select value={graduatingStream} onChange={(e) => setGraduatingStream(e.target.value)} className='inputs'>
@@ -111,12 +130,15 @@ const PromotionForm = () => {
                         <input type="Number" value={graduationYear} onChange={(e) => setGraduationYear(e.target.value)} id="inputs"className='inputs' />
                     </label>
                     <center>
-                        <button onClick={handleGraduation} className='button-graduate'>Graduate Stream</button>
+                        {graduating? <div className='spinner'></div> : <button onClick={handleGraduation} className='button-graduate'>Graduate Stream</button>}
                     </center>
                 </div>  
             </div>
-            {message && <p className='message'>{message}</p>}
+           
         </div>
+        {error &&<center><div className='error'>{error}</div> </center>  }  
+        {message && <p className='message'>{message}</p>}
+        </>  
     );
 };
 

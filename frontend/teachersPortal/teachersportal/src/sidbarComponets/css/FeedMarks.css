@@ -5,7 +5,11 @@
     padding: 20px;
     font-family: 'Arial', sans-serif;
 }
-
+.green-flag{
+    border-left: 12px solid green;
+    padding: 0.2rem;
+    box-shadow: 0 0 10px gray;
+}
 .marks-header {
     display: flex;
     flex-direction: column;

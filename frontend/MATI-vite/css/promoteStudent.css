@@ -36,13 +36,18 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
+.error{
+    color: #f44336;
+    width: 50%;
+}
 .form-title {
     font-size: 1.2rem;
     color: blue;
     margin-bottom: 20px;
 }
-
+.inform{
+    font-size: 0.9rem;
+}
 label {
     display: block;
     margin-bottom: 10px;

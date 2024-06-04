@@ -55,7 +55,7 @@ const Classes = () => {
       units: subject.units.map(unit => ({ name: unit.name }))
     }));
 
-    const uri = "https://edumax.fly.dev/classes/update-subjects";
+    const uri = "";
     fetch(uri, {
       method: 'POST',
       headers: {

@@ -15,17 +15,21 @@ const SchoolAggregate = () => {
     });
     const [empty , setEmpty] = useState('');
 
-    useEffect(async () => {
-        await fetch('https://edumax.fly.dev/api/aggregate')
-            .then(response => response.json())
-            .then(data => {
-                if(data.length > 0){
-                    setData(data)
-                }else{
-                  setEmpty('System Aggregating Students')
-                }
-            })
-            .catch(error => console.error('Error fetching data:', error));
+    useEffect(() => {
+        const fetchItem = async ()=>{
+            try{
+                const response = await fetch('https://edumax.fly.dev/students/api/aggregate');
+                const data = await response.json();
+                 setData(data)
+                 setEmpty('')
+            }catch(error){
+                setEmpty("error occured while aggregating students");
+                console.log(error)
+            }
+        }
+
+        const fetchItems = fetchItem()
+         
     }, []);
 
     return (
