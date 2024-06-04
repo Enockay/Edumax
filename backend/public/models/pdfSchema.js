@@ -2,12 +2,12 @@
 const mongoose = require('mongoose');
 
 const pdfSchema = new mongoose.Schema({
-    year : String,
-    term : String,
-    class : String,
-    fileName: String,
-    data: Buffer, // Ensure the data field is a Buffer
-    contentType: String
+    year : { type : String , required : true },
+    term : { type : String, required : true },
+    class : {type : String,  required : true },
+    fileName: {type : String, required : true },
+    data: {type : Buffer ,required : true },
+    contentType: {type : String , required : true }
 });
 
 const PdfModel = mongoose.model('pdfResults', pdfSchema);

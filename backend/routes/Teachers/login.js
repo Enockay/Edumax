@@ -37,7 +37,10 @@ teacher.post('/register', async (req, res) => {
         if (!existingTeacher) {
             return res.status(401).json({ message: 'Unauthorized to the system' });
         }
-
+        
+        if(existingTeacher.password || existingTeacher.username){
+            return res.status(400).json({message : 'This Email is already Registered'})
+        }
         // Update the existing teacher entry with the remaining details
         existingTeacher.username = username;
         existingTeacher.password = password;

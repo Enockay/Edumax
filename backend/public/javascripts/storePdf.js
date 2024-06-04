@@ -1,9 +1,12 @@
 const PdfModel = require('../models/pdfSchema');
 
-const savePdf = async (fileName, pdfBytes) => {
+const savePdf = async (year, term, classes ,fileName, pdfBytes) => {
     try {
         const pdfBuffer = Buffer.from(pdfBytes); // Convert Uint8Array to Buffer
         const pdfDocument = new PdfModel({
+            year : year,
+            term : term,
+            class : classes,
             fileName: fileName,
             data: pdfBuffer,
             contentType: 'application/pdf'

@@ -39,7 +39,7 @@ router.get('/api/aggregate', async (req, res) => {
       }
     }
     
-    res.json({ totalMales, totalFemales, totalStudents, forms });
+    res.status(200).json({ totalMales, totalFemales, totalStudents, forms });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data', error });
   }

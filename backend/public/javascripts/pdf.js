@@ -98,7 +98,7 @@ const getCenteredPosition = (text, fontSize, pageWidth, font) => {
     return (pageWidth - font.widthOfTextAtSize(text, fontSize)) / 2;
 };
 
-const generateClassListForm = async (stream, term, teacher, gradedStudents, unitMeans, classMean, fileName) => {
+const generateClassListForm = async (year,stream, term, teacher, gradedStudents, unitMeans, classMean, fileName) => {
     const formatStream = (stream) => {
         const currentYear = new Date().getFullYear();
         return !isNaN(stream) ? `Form ${stream} ${currentYear}` : stream;
@@ -371,7 +371,7 @@ const generateClassListForm = async (stream, term, teacher, gradedStudents, unit
     // Save the PDF to the file
    
         const finalPdfBytes = await pdfDoc.save();
-        await savePdf(fileName,finalPdfBytes)
+        await savePdf(year, term, stream ,fileName,finalPdfBytes )
         const success = `Successfully Generated ${fileName} Results Can Print Them ..`
         
         return  success

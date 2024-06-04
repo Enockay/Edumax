@@ -7,7 +7,7 @@ const downloadResults = express.Router();
 downloadResults.get('/download-pdf/:fileName', async (req, res) => {
     const fileName = req.params.fileName;
     console.log('Requested fileName:', fileName);
-
+     
     try {
         const pdf = await Pdf.findOne({ fileName });  // Use findOne if expecting a single document
         if (!pdf) {
@@ -15,10 +15,6 @@ downloadResults.get('/download-pdf/:fileName', async (req, res) => {
             return res.status(404).send('Results not Found In the Database Maybe not generated');
         }
 
-        //console.log('PDF found:', pdf);
-        //console.log('PDF contentType:', pdf.contentType);
-        //console.log('PDF fileName:', pdf.fileName);
-        
         if (!pdf.contentType || !pdf.data) {
             console.log('PDF missing required fields');
             return res.status(500).send('Internal Server Error: PDF is missing required fields');
