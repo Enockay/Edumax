@@ -13,11 +13,18 @@ const SchoolAggregate = () => {
             form1: { easts: 0, wests: 0 }
         },
     });
+    const [empty , setEmpty] = useState('');
 
-    useEffect(() => {
-        fetch('https://edumax.fly.dev/api/aggregate')
+    useEffect(async () => {
+        await fetch('https://edumax.fly.dev/api/aggregate')
             .then(response => response.json())
-            .then(data => setData(data))
+            .then(data => {
+                if(data.length > 0){
+                    setData(data)
+                }else{
+                  setEmpty('System Aggregating Students')
+                }
+            })
             .catch(error => console.error('Error fetching data:', error));
     }, []);
 
@@ -39,6 +46,7 @@ const SchoolAggregate = () => {
                             <p>West: {data.forms[form].wests}</p>
                         </div>
                     ))}
+                    <center>{empty}</center>
                 </div>
             </div>
         </div>
