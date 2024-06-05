@@ -56,7 +56,7 @@ const GradeAlgorithm = () => {
                     <li><strong>Rule 2 (3-2-1-1):</strong> 3 languages, 2 sciences, 1 humanity, and 1 technical.</li>
                     <li><strong>Rule 3 (3-2-2-0):</strong> 3 languages, 2 sciences, and 2 humanities.</li>
                 </ul>
-                <p>If no rule matches, the algorithm selects the top 7 subjects based on points, regardless of type.</p>
+                <p>If no rule matches, <li><strong>Rule 3 (3-2-2-0):</strong> 3 languages, 2 sciences, and 2 humanities.</li>default algorithm.</p>
             </div>
             <div className='algorithm-section'>
                 <h3>Step 3: Calculating Total Points and Grade</h3>

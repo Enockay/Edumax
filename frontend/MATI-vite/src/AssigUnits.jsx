@@ -14,7 +14,8 @@ const AssigUnits = () => {
   const [selectedTeacher, setSelectedTeacher] = useState("");
   const [loading, setLoading] = useState(false);  // State for spinner
   const [error, setError] = useState("");  // State for error message
-  const [teachers, setTeachers] = useState([]);  // State for teachers list
+  const [teachers, setTeachers] = useState([]);
+  const [notification , setNotification] = useState('');
 
   useEffect(() => {
     // Fetch teachers from the system
@@ -73,7 +74,7 @@ const AssigUnits = () => {
       units: subject.units.map(unit => ({ name: unit.name }))
     }));
 
-    const uri = "https://edumax.fly.dev/classes/update-subjects";
+    const uri = "http://localhost:3000/classes/update-subjects";
     fetch(uri, {
       method: 'POST',
       headers: {
@@ -83,7 +84,8 @@ const AssigUnits = () => {
     })
     .then(response => response.json())
     .then(data => {
-      console.log('Success:', data);
+       setTeachingSubjects([]);
+       setNotification(data.message);
       setLoading(false);  // Hide spinner
       // Handle success response
     })
@@ -185,6 +187,7 @@ const AssigUnits = () => {
           {loading && <div className="spinner"></div>}  {/* Spinner */}
         </center>
       </div>
+     <center>{notification && <div className="notification" style={{color:"green",boxShadow:"0 0 10px gray",borderRadius:"0.5rem",width :"50%",padding:"0.9rem"}}>{notification}</div>}</center> 
     </div>
   );
 };
