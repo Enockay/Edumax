@@ -27,3 +27,14 @@ Content-Type: application/json
    "term" : "End Of Term 3 Results",
    "teacher" : "MR Oyier"
 }
+
+###
+POST http://localhost:3000/generate/reportForms
+Content-Type: application/json
+
+{
+  "year" : 2024,
+  "stream" : "2East",
+  "term" : "Term 1",
+  "examType" : "Midterm"
+}

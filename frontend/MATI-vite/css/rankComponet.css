@@ -34,12 +34,13 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 .select-notification{
-  margin: 2%;
-  min-width: 20%;
-  max-width: 24%;
+  margin: 1%;
+  min-width: 24%;
+  max-width: 25%;
   height: 440px;
   padding: 5px;
-  box-shadow: 0 0 10px white;
+  margin-top: 10%;
+  box-shadow: 0 0 10px rgb(19, 173, 57);
 }
 .selects, .selection-container {
   display: flex;
@@ -134,11 +135,14 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-.info-item{
-  box-shadow: 0 0 10px beige;
+.info-items{
+  box-shadow: 0 0 10px green;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  width: 100%;
 }
+
 .info-flag {
-  background-color: #e0f7e9; /* Light green background */
   border-left: 5px solid #4caf50; /* Green border on the left */
   padding: 16px; /* Padding inside the box */
   margin-bottom: 20px; /* Space below the info-flag section */

@@ -1,25 +1,33 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const Classes = require('../../public/models/classes'); 
+const Classes = require('../../public/models/classes'); // Ensure you import the Classes model
 const ensureAuthenticated = require("./Auth");
 const teacherAss = express.Router();
 
-teacherAss.post('/update-subjects', async (req, res) => {
+teacherAss.post('/update-subjects',  async (req, res) => {
   const { teacherName, year, term, teachingSubjects } = req.body;
-  // Validate received data (optional if you trust the client-side validation)
-  if (!year || !term || !Array.isArray(teachingSubjects)) {
+
+  // Validate received data
+  if (!teacherName || !year || !term || !Array.isArray(teachingSubjects)) {
     return res.status(400).json({ error: 'Invalid input data' });
   }
 
   try {
-    // Create a new Classes document
-    const newClasses = new Classes({ teacherName,year, term, teachingSubjects });
-    
-    // Save the document to the database
-    await newClasses.save();
-    
+    // Check if the teacher exists in the Classes model
+    let existingClass = await Classes.findOne({ teacherName, year, term });
+
+    if (existingClass) {
+      // Update the existing class document
+      existingClass.teachingSubjects = teachingSubjects;
+      await existingClass.save();
+    } else {
+      // Create a new class document if it doesn't exist
+      existingClass = new Classes({ teacherName, year, term, teachingSubjects });
+      await existingClass.save();
+    }
+
     // Send a success response
-    res.json({ message: `Subjects updated successfully for ${teacherName}` });
+    res.json({ message: `Subjects updated successfully for ${teacherName}`, data: existingClass });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });

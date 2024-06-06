@@ -108,7 +108,7 @@ const Sidebar = ({ onItemClick, collapsed }) => {
               <li className={selectedItem === 'produce-results' ? 'active' : ''}>
                 <a href="#produce-results" onClick={() => handleClick('produce-results')}>
                   <FontAwesomeIcon icon={faFileAlt} />
-                  <span>School Results</span>
+                  <span>Academic Results</span>
                 </a>
               </li>
               <li className={selectedItem === 'promote-stream' ? 'active' : ''}>

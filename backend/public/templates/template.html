@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Ranking</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .table-container {
+            margin: 0 auto;
+            width: 90%;
+            overflow: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            font-size: 10px; /* Reduced font size */
+        }
+        th {
+            background-color: #f2f2f2;
+            font-size: 12px; /* Adjusted header font size */
+        }
+        .chart-container {
+            width: 90%;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 style="font-size: 18px;">Matinyani Mixed Secondary School</h1>
+        <h2 style="font-size: 16px;">Transcript Result Form</h2>
+        <p>Class: {{stream}}</p>
+        <p>Term: {{term}}</p>
+        <p>Teacher: {{teacher}}</p>
+        <p>Date: {{date}}</p>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Admission</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Stream</th>
+                    {{#defaultUnitHeaders}}
+                    <th>{{.}}</th>
+                    {{/defaultUnitHeaders}}
+                    <th>AGP</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#gradedStudents}}
+                <tr>
+                    <td>{{rank}}</td>
+                    <td>{{studentAdmission}}</td>
+                    <td>{{studentName}}</td>
+                    <td>{{gender}}</td>
+                    <td>{{stream}}</td>
+                    {{#units}}
+                    <td>{{totalMarks}} {{grade}}</td>
+                    {{/units}}
+                    <td>{{totalPoints}} {{totalGrade}}</td>
+                </tr>
+                {{/gradedStudents}}
+            </tbody>
+        </table>
+    </div>
+    <div class="chart-container">
+        <canvas id="classPerformanceChart"></canvas>
+    </div>
+    <script>
+        const gradedStudents = JSON.parse('{{gradedStudentsJSON}}');
+        const ctx = document.getElementById('classPerformanceChart').getContext('2d');
+        const data = {
+            labels: gradedStudents.map(student => student.rank),
+            datasets: [{
+                label: 'Total Points',
+                data: gradedStudents.map(student => student.totalPoints),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        };
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Rank'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Total Points'
+                        }
+                    }
+                }
+            }
+        };
+        new Chart(ctx, config);
+    </script>
+</body>
+</html>

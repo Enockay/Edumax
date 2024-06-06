@@ -20,6 +20,7 @@ const examSchema = new mongoose.Schema({
   units: [unitSchema] ,
   totalPoints :{ type: String, required: false },
   totalGrade: { type: String, required: false },
+  totalMarks: {type: String,required: false},
   classRank: { type: String, required: false },
   overallRank: { type: String, required: false }
 });
@@ -32,6 +33,7 @@ const yearSchema = new mongoose.Schema({
 const studentMarksSchema = new mongoose.Schema({
   studentAdmission: { type: String, required: true },
   studentName: { type: String, required: true },
+  kcpe : {type:Number , required:false},
   years: [yearSchema],  // Array of years
   gender: { type: String, required: true },
   stream: { type: String, required: true },

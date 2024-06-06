@@ -46,7 +46,9 @@ const fetchStudentsMarks = async (stream, term, year, examType) => {
                                             grade: '' // Placeholder, will be calculated
                                         })),
                                         totalPoints: 0, // Placeholder, will be calculated
-                                        totalGrade: '' // Placeholder, will be calculated
+                                        totalMarks: 0, // Placeholder, will be calculated
+                                        totalGrade: '',
+                                        classRank: null, // This will be updated
                                     }
                                 ]
                             }
@@ -64,7 +66,6 @@ const fetchStudentsMarks = async (stream, term, year, examType) => {
 
     return studentUnits;
 };
-
 const calculateGradesAndPoints = (studentUnits) => {
     const gradedStudents = studentUnits.map(student => {
         student.years.forEach(yearData => {
@@ -74,11 +75,11 @@ const calculateGradesAndPoints = (studentUnits) => {
                     let totalMarks = 0;
 
                     if (['4East', '4West', '3East', '3West'].includes(student.stream)) {
-                        if (['Chemistry', 'Biology', 'Physics'].includes(unit.subject)) {
+                        if (['Chem', 'Bio', 'Phys'].includes(unit.subject)) {
                             totalMarks = Math.round(((unit.P1 || 0) + (unit.P2 || 0)) / 160 * 60 + (unit.P3 || 0));
-                        } else if (['Math', 'Agriculture', 'Business', 'History', 'CRE', 'Geography'].includes(unit.subject)) {
+                        } else if (['Math', 'Agri', 'Busn', 'Hist', 'CRE', 'Geo'].includes(unit.subject)) {
                             totalMarks = Math.round(((unit.P1 || 0) + (unit.P2 || 0)) / 2);
-                        } else if (['English', 'Kiswahili'].includes(unit.subject)) {
+                        } else if (['Eng', 'Kisw'].includes(unit.subject)) {
                             totalMarks = Math.round(((unit.P1 || 0) + (unit.P2 || 0)) / 2 + (unit.P3 || 0));
                         } else {
                             totalMarks = Math.round(unit.P1 || 0);
@@ -135,88 +136,109 @@ const calculateGradesAndPoints = (studentUnits) => {
                     };
                 });
 
-                // Select the best 7 subjects based on the rules
-                const subjects = {
-                    languages: [],
-                    sciences: [],
-                    humanities: [],
-                    technicals: []
+                // Abbreviate unit names
+                exam.units.forEach(unit => {
+                    unit.subject = abbreviateSubject(unit.subject);
+                });
+
+                // Gather all units in a single array
+                let allUnits = [...exam.units];
+
+                // Ensure compulsory subjects are included and award 1 point if missing
+                const compulsorySubjects = ['Eng', 'Kisw', 'Math'];
+                compulsorySubjects.forEach(subject => {
+                    if (!allUnits.some(unit => unit.subject === subject)) {
+                        allUnits.push({ subject, points: 1, grade: 'E', totalMarks: 0 });
+                    }
+                });
+
+                // Sort units by points descending
+                allUnits.sort((a, b) => b.points - a.points);
+
+                // Ensure at least 2 sciences and 1 humanity are included
+                const minimumSubjects = (units, subjectList, count) => {
+                    if (!units || !Array.isArray(units)) {
+                        console.error(`Invalid units array: ${units}`);
+                        return [];
+                    }
+                    const selected = units.filter(unit => subjectList.includes(unit.subject)).slice(0, count);
+                    while (selected.length < count) {
+                        selected.push({ subject: `${subjectList[0]} Placeholder`, points: 1, grade: 'E', totalMarks: 0 });
+                    }
+                    return selected;
                 };
 
-                exam.units.forEach(unit => {
-                    if (['English', 'Kiswahili', 'Math'].includes(unit.subject)) {
-                        subjects.languages.push(unit);
-                    } else if (['Chemistry', 'Biology', 'Physics'].includes(unit.subject)) {
-                        subjects.sciences.push(unit);
-                    } else if (['History', 'Geography', 'CRE'].includes(unit.subject)) {
-                        subjects.humanities.push(unit);
-                    } else if (['Agriculture', 'Business'].includes(unit.subject)) {
-                        subjects.technicals.push(unit);
+                let selectedLanguages = minimumSubjects(allUnits, ['Eng', 'Kisw', 'Math'], 3);
+                let selectedSciences = minimumSubjects(allUnits, ['Chem', 'Bio', 'Phys'], 2);
+                let selectedHumanities = minimumSubjects(allUnits, ['Hist', 'Geo', 'CRE'], 1);
+
+                // Create combinations based on the rules
+                const createCombination = (languages, sciences, humanities, technicials, allUnits) => {
+                    if (!Array.isArray(languages) || !Array.isArray(sciences) || !Array.isArray(humanities) || !Array.isArray(technicials) || !Array.isArray(allUnits)) {
+                        console.error(`Invalid combination arrays: ${JSON.stringify({ languages, sciences, humanities, technicials, allUnits })}`);
+                        return [];
                     }
+                    return [...languages, ...sciences, ...humanities, ...technicials].concat(
+                        allUnits.filter(unit => ![...languages, ...sciences, ...humanities, ...technicials].includes(unit)).slice(0, 7 - (languages.length + sciences.length + humanities.length + technicials.length))
+                    );
+                };
+
+                let combinations = [
+                    {
+                        rule: '3-3-1-0',
+                        units: createCombination(
+                            selectedLanguages,
+                            minimumSubjects(allUnits, ['Chem', 'Bio', 'Phys'], 3),
+                            minimumSubjects(allUnits, ['Hist', 'Geo', 'CRE'], 1),
+                            [],
+                            allUnits
+                        )
+                    },
+                    {
+                        rule: '3-2-1-1',
+                        units: createCombination(
+                            selectedLanguages,
+                            selectedSciences,
+                            selectedHumanities,
+                            minimumSubjects(allUnits, ['Agri', 'Busn', 'Comp'], 1),
+                            allUnits
+                        )
+                    },
+                    {
+                        rule: '3-2-2-0',
+                        units: createCombination(
+                            selectedLanguages,
+                            selectedSciences,
+                            minimumSubjects(allUnits, ['Hist', 'Geo', 'CRE'], 2),
+                            [],
+                            allUnits
+                        )
+                    }
+                ];
+
+                // Calculate total points for each combination
+                combinations.forEach(combination => {
+                    combination.totalPoints = combination.units.reduce((sum, unit) => sum + unit.points, 0);
                 });
 
-                // Sort by points descending
-                subjects.languages.sort((a, b) => b.points - a.points);
-                subjects.sciences.sort((a, b) => b.points - a.points);
-                subjects.humanities.sort((a, b) => b.points - a.points);
-                subjects.technicals.sort((a, b) => b.points - a.points);
+                // Select the combination with the highest total points
+                let bestCombination = combinations.reduce((best, current) => current.totalPoints > best.totalPoints ? current : best);
 
-                // Ensure compulsory subjects are included
-                const compulsorySubjects = ['English', 'Kiswahili', 'Math'];
-                compulsorySubjects.forEach(subject => {
-                    if (!subjects.languages.some(unit => unit.subject === subject)) {
-                        subjects.languages.push({ subject, points: 1, grade: 'E' });
-                    }
-                });
+                // Sort selected units by the desired order
+                const desiredOrder = ['Eng', 'Kisw', 'Math', 'Chem', 'Bio', 'Phys', 'Geo', 'Hist', 'Agri', 'Busn', 'CRE', 'Comp'];
+                bestCombination.units.sort((a, b) => desiredOrder.indexOf(a.subject) - desiredOrder.indexOf(b.subject));
 
-                // Apply rules and select units
-                let selectedUnits = [];
-
-                // Rule: 3-3-1-0
-                if (subjects.languages.length >= 3 && subjects.sciences.length >= 3 && subjects.humanities.length >= 1) {
-                    selectedUnits = [
-                        ...subjects.languages.slice(0, 3),
-                        ...subjects.sciences.slice(0, 3),
-                        subjects.humanities[0]
-                    ];
-                }
-
-                // Rule: 3-2-1-1
-                if (subjects.languages.length >= 3 && subjects.sciences.length >= 2 && subjects.humanities.length >= 1 && subjects.technicals.length >= 1) {
-                    selectedUnits = [
-                        ...subjects.languages.slice(0, 3),
-                        ...subjects.sciences.slice(0, 2),
-                        subjects.humanities[0],
-                        subjects.technicals[0]
-                    ];
-                }
-
-                // Rule: 3-2-2-0
-                if (subjects.languages.length >= 3 && subjects.sciences.length >= 2 && subjects.humanities.length >= 2) {
-                    selectedUnits = [
-                        ...subjects.languages.slice(0, 3),
-                        ...subjects.sciences.slice(0, 2),
-                        ...subjects.humanities.slice(0, 2)
-                    ];
-                }
-
-                // Default selection strategy: Select the best 7 subjects regardless of type if no rule matches
-                if (selectedUnits.length < 7) {
-                    const allUnits = [
-                        ...subjects.languages,
-                        ...subjects.sciences,
-                        ...subjects.humanities,
-                        ...subjects.technicals
-                    ].sort((a, b) => b.points - a.points);
-
-                    selectedUnits = allUnits.slice(0, 7);
-                }
-
-                exam.totalPoints = selectedUnits.reduce((sum, unit) => sum + unit.points, 0);
+                exam.totalPoints = bestCombination.totalPoints;
+                exam.totalMarks = bestCombination.units.reduce((sum, unit) => sum + unit.totalMarks, 0);
                 exam.totalGrade = calculateTotalGrade(exam.totalPoints);
 
                 // Debug log
-                console.log('Student:', student.studentName, 'Total Points:', exam.totalPoints, 'Total Grade:', exam.totalGrade);
+               // console.log('Student:', student.studentName);
+               // console.log('Units used for aggregation:', bestCombination.units);
+                //console.log('Total Marks:', exam.totalMarks);
+                //console.log('Total Points:', exam.totalPoints);
+                //console.log('Total Grade:', exam.totalGrade);
+               // console.log('Combination Rule Used:', bestCombination.rule);
             });
         });
 
@@ -226,14 +248,33 @@ const calculateGradesAndPoints = (studentUnits) => {
     return gradedStudents;
 };
 
+const abbreviateSubject = (subject) => {
+    const abbreviations = {
+        'English': 'Eng',
+        'Kiswahili': 'Kisw',
+        'Mathematics': 'Math',
+        'Chemistry': 'Chem',
+        'Biology': 'Bio',
+        'Physics': 'Phys',
+        'Geography': 'Geo',
+        'History': 'Hist',
+        'Agriculture': 'Agri',
+        'Business': 'Busn',
+        'CRE': 'CRE',
+        'Computer': 'Comp'
+    };
+
+    return abbreviations[subject] || subject;
+};
+
 const calculateTotalGrade = (totalPoints) => {
     if (totalPoints >= 74) {
         return 'A';
-    } else if (totalPoints >= 69) {
+    } else if (totalPoints >= 67) {
         return 'A-';
     } else if (totalPoints >= 66) {
         return 'B+';
-    } else if (totalPoints >= 58) {
+    } else if (totalPoints >= 57) {
         return 'B';
     } else if (totalPoints >= 53) {
         return 'B-';
@@ -243,31 +284,45 @@ const calculateTotalGrade = (totalPoints) => {
         return 'C';
     } else if (totalPoints >= 36) {
         return 'C-';
-    } else if (totalPoints >= 3) {
+    } else if (totalPoints >= 30) {
         return 'D+';
     } else if (totalPoints >= 26) {
         return 'D';
     } else if (totalPoints >= 22) {
         return 'D-';
-    } else if (totalPoints >= 19) {
-        return 'E';
     } else {
         return 'E';
     }
 };
 
 const sortAndRankStudents = (gradedStudents) => {
-    const sortedStudents = gradedStudents.slice().sort((a, b) => {
-        const totalPointsA = a.years.reduce((sum, year) => sum + year.exams.reduce((sumExams, exam) => sumExams + exam.totalPoints, 0), 0);
-        const totalPointsB = b.years.reduce((sum, year) => sum + year.exams.reduce((sumExams, exam) => sumExams + exam.totalPoints, 0), 0);
-        return totalPointsB - totalPointsA;
+    // Calculate total points for each student and add it to the student object
+    const studentsWithTotalPoints = gradedStudents.map(student => {
+        const totalPoints = student.years.reduce((sum, year) => 
+            sum + year.exams.reduce((sumExams, exam) => sumExams + exam.totalPoints, 0), 0);
+        return { ...student, totalPoints };
     });
 
-    sortedStudents.forEach((student, index) => {
-        student.rank = index + 1;
-    });
+    // Sort the students by total points in descending order
+    studentsWithTotalPoints.sort((a, b) => b.totalPoints - a.totalPoints);
 
-    return sortedStudents;
+    // Assign class ranks based on sorted order with ties handled
+    let currentRank = 1;
+    const totalStudents = studentsWithTotalPoints.length;
+
+    for (let i = 0; i < studentsWithTotalPoints.length; i++) {
+        if (i > 0 && studentsWithTotalPoints[i].totalPoints < studentsWithTotalPoints[i - 1].totalPoints) {
+            currentRank = i + 1;
+        }
+
+        studentsWithTotalPoints[i].years.forEach(year => {
+            year.exams.forEach(exam => {
+                exam.classRank = `${currentRank} out of ${totalStudents}`;
+            });
+        });
+    }
+
+    return studentsWithTotalPoints;
 };
 
 const calculateMeans = (gradedStudents) => {
@@ -289,7 +344,7 @@ const calculateMeans = (gradedStudents) => {
                         units[unit.subject].count++;
                     }
                 });
-                student.classRank = student.rank;
+                student.classRank = student.years[0].exams[0].classRank;
             });
         });
     });

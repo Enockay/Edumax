@@ -60,7 +60,8 @@ const GeneralSettings = () => {
 
   return (
     <div className="settings-container">
-      <h2>General Settings</h2>
+      <h6>General Settings</h6>
+      <center><h3 style={{color:"red"}}>Developer is Working on this page </h3></center>
       <div className="form-group">
         <label>School Name</label>
         <input type="text" value={schoolName} onChange={(e) => setSchoolName(e.target.value)} />

@@ -8,7 +8,7 @@ const Results = () => {
   const [streams, setStreams] = useState(['East', 'West']);
   const [years, setYears] = useState(['2021', '2022', '2023', '2024']);
   const [examTypes] = useState(['CAT', 'Midterm', 'Endterm', 'TestExam']);
-  const [exams ,setExams] = useState('');
+  const [exams, setExams] = useState('');
   const [teacher, setTeacher] = useState('');
   const [singleClass, setSingleClass] = useState('');
   const [term, setTerm] = useState('');
@@ -60,14 +60,14 @@ const Results = () => {
         stream = singleClass;
       }
 
-      const url = `https://edumax.fly.dev/generateResult`;
+      const url = `https://edumax.fly.dev/download-pdf/generateResult`;
       const Teacher = "Mr."
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ stream, term, Teacher,year,exams })
+        body: JSON.stringify({ stream, term, Teacher, year, exams })
       });
 
       if (!response.ok) {
@@ -111,117 +111,118 @@ const Results = () => {
 
   return (
     <>
-    <div className="info-flag">
-      <div className='info-items'>
-       <center><h4 style={{margin:0}}>To generate the overall class results:</h4></center> 
-        <ul>
-          <li>Select the appropriate form, exam period, year, and exam type.</li>
-          <li>Click on the "Generate Results" button to generate the results.</li>
-          <li>Once generated, you can print the results by clicking on the "Print Results" button.</li>
-        </ul>
-        </div> 
-        <div className='info-items'>
-       <center><h4 style={{margin:0}}>To generate individual student results:</h4> </center> 
-        <ul>
-          <li>Select the class and stream, then choose the exam period.</li>
-          <li>Click on the "Generate Class Results" button to generate individual student reports.</li>
-          <li>Once generated, you can print the results by clicking on the "Print Class Results" button.</li>
-        </ul>
+      <center> <h4>Academic Results Provision Platform</h4></center>
+      <div className="results-container">
+        <div className="rank-form-container">
+          <div className='info-items'>
+            <center><h4 style={{ margin: 0 }}>To generate the overall class results:</h4></center>
+            <ul>
+              <li>Select the appropriate form, exam period, year, and exam type.</li>
+              <li>Click on the "Generate Results" button to generate the results.</li>
+              <li>Once generated, you can print the results by clicking on the "Print Results" button.</li>
+            </ul>
+          </div>
+          <div className='whole-class'>
+            <h4 className='title'>Overall Class Results</h4>
+            <div className='selects'>
+              <div className="select-group">
+                <label htmlFor="class-select">Form:</label>
+                <select id="class-select" value={singleClass} onChange={(e) => setSingleClass(e.target.value)}>
+                  <option value="">--Select Form--</option>
+                  {classes.map((className, index) => (
+                    <option key={index} value={className}>{className}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="select-group">
+                <label htmlFor="term-select">Exam Period:</label>
+                <select id="term-select" value={term} onChange={(e) => setTerm(e.target.value)} required>
+                  <option value="">--Select Period--</option>
+                  {termExam.map((termName, index) => (
+                    <option key={index} value={termName}>{termName}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="select-group">
+                <label htmlFor="term-select">Year:</label>
+                <select id="term-select" value={year} onChange={(e) => setYear(e.target.value)} required>
+                  <option value="">--Select Year--</option>
+                  {years.map((termName, index) => (
+                    <option key={index} value={termName}>{termName}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="select-group">
+                <label htmlFor="term-select">Exam type:</label>
+                <select id="term-select" value={exams} onChange={(e) => setExams(e.target.value)} required>
+                  <option value="">--Select Exam Type--</option>
+                  {examTypes.map((termName, index) => (
+                    <option key={index} value={termName}>{termName}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className='button-results'>
+              <button className='button' onClick={generateResults} disabled={!singleClass || !term}>Generate Results</button>
+              <button className='button' onClick={handlePrintOverallResults} disabled={!singleClass}>Print Results</button>
+            </div>
+          </div>
+
+          <div className='info-items'>
+            <center><h4 style={{ margin: 0 }}>To generate individual student results:</h4> </center>
+            <ul>
+              <li>Select the class and stream, then choose the exam period.</li>
+              <li>Click on the "Generate Class Results" button to generate individual student reports.</li>
+              <li>Once generated, you can print the results by clicking on the "Print Class Results" button.</li>
+            </ul>
+          </div>
+
+          <div className='class-results'>
+            <h4 className='title'>Class Results</h4>
+            <div className="selection-container">
+              <div className="select-group">
+                <label htmlFor="class-select">Class:</label>
+                <select id="class-select" value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
+                  <option value="">--Select Class--</option>
+                  {classes.map((className, index) => (
+                    <option key={index} value={className}>{className}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="select-group">
+                <label htmlFor="stream-select">Select Stream:</label>
+                <select id="stream-select" value={selectedStream} onChange={(e) => setSelectedStream(e.target.value)}>
+                  <option value="">--Select Stream--</option>
+                  {streams.map((streamName, index) => (
+                    <option key={index} value={streamName}>{streamName}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="select-group">
+                <label htmlFor="term-select">Exam Period:</label>
+                <select id="term-select" value={term} onChange={(e) => setTerm(e.target.value)} required>
+                  <option value="">--Select Period--</option>
+                  {termExam.map((termName, index) => (
+                    <option key={index} value={termName}>{termName}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className='button-results'>
+              <button className='button' onClick={generateClassResults} disabled={!selectedClass || !selectedStream}>Generate Class Results</button>
+              <button className='button' onClick={handlePrintOverallResults} disabled={!results}>Print Class Results</button>
+            </div>
+          </div>
+        </div>
+        <div className='select-notification'>
+          <div className='notification'>
+            <center><h3 className='noti' style={{ color: "green" }}>Server Response</h3></center>
+            <div className='spinner-container'>
+              {isLoading ? <span className="spinner"></span> : <div className={`notification-message ${notificationType}`}>{notification}</div>}
+            </div>
+          </div>
         </div>
       </div>
-    <div className="results-container">
-      <div className="rank-form-container">
-        <div className='whole-class'>
-          <h4 className='title'>Overall Class Results</h4>
-          <div className='selects'>
-            <div className="select-group">
-              <label htmlFor="class-select">Form:</label>
-              <select id="class-select" value={singleClass} onChange={(e) => setSingleClass(e.target.value)}>
-                <option value="">--Select Form--</option>
-                {classes.map((className, index) => (
-                  <option key={index} value={className}>{className}</option>
-                ))}
-              </select>
-            </div>
-            <div className="select-group">
-              <label htmlFor="term-select">Exam Period:</label>
-              <select id="term-select" value={term} onChange={(e) => setTerm(e.target.value)} required>
-                <option value="">--Select Period--</option>
-                {termExam.map((termName, index) => (
-                  <option key={index} value={termName}>{termName}</option>
-                ))}
-              </select>
-            </div>
-            <div className="select-group">
-              <label htmlFor="term-select">Year:</label>
-              <select id="term-select" value={year} onChange={(e) => setYear(e.target.value)} required>
-                <option value="">--Select Year--</option>
-                {years.map((termName, index) => (
-                  <option key={index} value={termName}>{termName}</option>
-                ))}
-              </select>
-            </div>
-            <div className="select-group">
-              <label htmlFor="term-select">Exam type:</label>
-              <select id="term-select" value={exams} onChange={(e) => setExams(e.target.value)} required>
-                <option value="">--Select Exam Type--</option>
-                {examTypes.map((termName, index) => (
-                  <option key={index} value={termName}>{termName}</option>
-                ))}
-              </select>
-            </div> 
-          </div>
-          <div className='button-results'>
-            <button className='button' onClick={generateResults} disabled={!singleClass || !term}>Generate Results</button>
-            <button className='button' onClick={handlePrintOverallResults} disabled={!singleClass}>Print Results</button>
-          </div>
-        </div>
-        <div className='class-results'>
-          <h4 className='title'>Class Results</h4>
-          <div className="selection-container">
-            <div className="select-group">
-              <label htmlFor="class-select">Class:</label>
-              <select id="class-select" value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
-                <option value="">--Select Class--</option>
-                {classes.map((className, index) => (
-                  <option key={index} value={className}>{className}</option>
-                ))}
-              </select>
-            </div>
-            <div className="select-group">
-              <label htmlFor="stream-select">Select Stream:</label>
-              <select id="stream-select" value={selectedStream} onChange={(e) => setSelectedStream(e.target.value)}>
-                <option value="">--Select Stream--</option>
-                {streams.map((streamName, index) => (
-                  <option key={index} value={streamName}>{streamName}</option>
-                ))}
-              </select>
-            </div>
-            <div className="select-group">
-              <label htmlFor="term-select">Exam Period:</label>
-              <select id="term-select" value={term} onChange={(e) => setTerm(e.target.value)} required>
-                <option value="">--Select Period--</option>
-                {termExam.map((termName, index) => (
-                  <option key={index} value={termName}>{termName}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className='button-results'>
-            <button className='button' onClick={generateClassResults} disabled={!selectedClass || !selectedStream}>Generate Class Results</button>
-            <button className='button' onClick={handlePrintOverallResults} disabled={!results}>Print Class Results</button>
-          </div>
-        </div>
-      </div>
-      <div className='select-notification'>
-        <div className='notification'>
-          <center><h3 className='noti' style={{color:"green"}}>Server Response</h3></center> 
-          <div className='spinner-container'>
-            {isLoading ? <span className="spinner"></span> : <div className={`notification-message ${notificationType}`}>{notification}</div>}
-          </div>
-        </div>
-      </div>
-    </div>
     </>
   );
 };
