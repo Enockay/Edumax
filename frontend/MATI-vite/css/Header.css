@@ -1,9 +1,7 @@
 .header-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  background-color: #5367db;
-  padding: 10px 20px;
+  justify-content: space-between; /* Dark teal background for header */
   width: 100%;
   color: white;
 }

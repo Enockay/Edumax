@@ -12,15 +12,15 @@ body {
       "sidebar main"
       "footer footer";
     grid-template-columns: 200px 1fr;
-    grid-template-rows: 60px 1fr 50px;
+    grid-template-rows: 60px 1fr 70px;
     min-height: 100vh;
     height: fit-content;
   }
   
   .header {
     grid-area: header;
-    background-color: #5367db;
-    padding: 0.5rem;
+    background-color: #00796B;
+    padding: 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -34,8 +34,8 @@ body {
   
   .sidebar {
     grid-area: sidebar;
-    background-color: #0450241e;
-    color: #34495e;
+    background-color: gainsboro;
+    color: #030303;
     padding: 0.2rem;
     transition: width 0.3s ease;
   }
@@ -116,13 +116,13 @@ body {
   .main {
     grid-area: main;
     padding: 0.6rem;
-    background-color: #ffffff;
+    background-color: #FFFFFF
    
   }
   
   .footer {
     grid-area: footer;
-    background-color: aliceblue;
+    background-color: #afbbbd;
     color: #06046b;
     text-align: center;
     font-size: 0.8rem;

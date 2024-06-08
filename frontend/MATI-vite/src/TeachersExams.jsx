@@ -9,7 +9,7 @@ const ExamList = () => {
   useEffect(() => {
     const fetchExams = async () => {
       try {
-        const response = await fetch('http://localhost:3000/ip/exams');
+        const response = await fetch('https://edumax.fly.dev/ip/exams');
         const data = await response.json();
         setExams(data);
         setLoading(false);
@@ -23,7 +23,7 @@ const ExamList = () => {
   }, []);
 
   const handlePrint = async (examId) => {
-    window.open(`http://localhost:3000/ip/exams/${examId}/print`, '_blank');
+    window.open(`https://edumax.fly.dev/ip/exams/${examId}/print`, '_blank');
 
     try {
       await fetch(`/api/exams/${examId}/print`, { method: 'POST' });

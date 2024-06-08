@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const modelStudent = require('../../public/models/admitStudentSchema');
-
+const FeesReport = require("../../public/models/feeReport");
 // Fetch student data by stream, admission number, year, and term
 router.get('/student/:stream/:admissionNumber/:year/:term', async (req, res) => {
     const { stream, admissionNumber, year, term } = req.params;
@@ -41,11 +41,13 @@ router.get('/student/:stream/:admissionNumber/:year/:term', async (req, res) => 
 });
 
 router.post('/student/updateFees', async (req, res) => {
-    const { stream, admissionNumber, year, term, levi, amountPaid } = req.body;
-    console.log(req.body)
+    const { stream, admissionNumber, year, term, levi, amountPaid, collector } = req.body;
+    console.log(req.body);
+
     try {
         const Student = await modelStudent(stream);
         const student = await Student.findOne({ admissionNumber });
+        console.log(student);
 
         if (!student) {
             return res.status(400).json({ message: 'Student not found' });
@@ -61,29 +63,67 @@ router.post('/student/updateFees', async (req, res) => {
             return res.status(400).json({ message: 'Term not found for the student' });
         }
 
+        let balance;
         switch (levi) {
             case 'tuition':
                 termData.tuitionFees -= amountPaid;
+                balance = termData.totalTuitionToBePaid - termData.tuitionFees;
                 break;
             case 'uniform':
-                termData.uniformFees -= amountPaid;
+                if (termData.uniformFees !== undefined) {
+                    termData.uniformFees -= amountPaid;
+                    balance = termData.totalUniformFeesToBePaid - termData.uniformFees;
+                } else {
+                    return res.status(400).json({ message: 'Uniform fees not applicable for this term' });
+                }
                 break;
             case 'lunch':
                 termData.lunchFees -= amountPaid;
+                balance = termData.totalLunchFeesToBePaid - termData.lunchFees;
                 break;
             default:
                 return res.status(400).json({ message: 'Invalid levi type' });
+        }
+
+        // Ensure that payments array exists before pushing the new payment
+        if (!termData.payments) {
+            termData.payments = [];
         }
 
         termData.payments.push({ date: new Date(), amount: amountPaid, levi });
 
         await student.save();
 
+        // Create a new fees report entry
+        const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+        const time = new Date().toTimeString().split(' ')[0]; // HH:MM:SS format
+
+        const reportData = {
+            adm: student.admissionNumber,
+            fullName: student.fullName,
+            time: time,
+            feesPaid: amountPaid,
+            gender: student.gender,
+            stream: student.stream,
+        };
+
+        const newReport = new FeesReport({
+            stream: student.stream,
+            year: year,
+            term: term,
+            date: date,
+            reportData: [reportData],
+            collector: collector,
+        });
+
+        await newReport.save();
+
         res.json({
             message: 'Fees updated successfully',
             fullName: student.fullName,
             admissionNumber: student.admissionNumber,
             levi,
+            balance,
             updatedBalance: {
                 tuitionFees: termData.tuitionFees,
                 uniformFees: termData.uniformFees,
@@ -95,6 +135,8 @@ router.post('/student/updateFees', async (req, res) => {
         res.status(500).json({ message: 'Server error', error });
     }
 });
+
+module.exports = router;
 
 // Set total fees for all students
 router.post('/setTotalFees', async (req, res) => {

@@ -29,7 +29,7 @@ const Dashboard = () => {
       <div className="header">
          <Header/>
       </div>
-      <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
+      <div className={` ${collapsed ? 'collapsed' : ''}`}>
         <Sidebar onItemClick={handleItemOnClick} collapsed={collapsed} />
       </div>
       <div className="main">

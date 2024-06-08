@@ -6,7 +6,9 @@
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
+#amount{
+    width: 20%;
+}
 h2 {
     text-align: center;
     margin-bottom: 20px;
@@ -38,10 +40,16 @@ h2 {
 .updated-info{
     display: flex;
     justify-content: center;
+    width: 50%;
     border-radius: 0.9rem;
     align-items: center;
     box-shadow: 0 0 10px gainsboro;
     flex-direction: column;
+}
+.upd-info{
+    display: flex;
+    text-align: center;
+    justify-content: center; 
 }
 button {
     padding: 10px 20px;

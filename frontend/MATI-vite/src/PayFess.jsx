@@ -22,25 +22,30 @@ const PayFees = ({ userRole }) => {
     }, [userRole]);
 
     const handleAdmissionNumberChange = (e) => {
+        setUpdatedInfo(null)
         setAdmissionNumber(e.target.value);
     };
 
     const handleStreamChange = (e) => {
+        setUpdatedInfo(null)
         setStream(e.target.value);
     };
 
     const handleYearChange = (e) => {
+        setUpdatedInfo(null)
         setYear(e.target.value);
+
     };
 
     const handleTermChange = (e) => {
+        setUpdatedInfo(null)
         setTerm(e.target.value);
     };
 
     const fetchStudentData = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:3000/fees/student/${stream}/${admissionNumber}/${year}/${term}`);
+            const response = await axios.get(`https://edumax.fly.dev/fees/student/${stream}/${admissionNumber}/${year}/${term}`);
             const studentData = response.data;
             console.log(studentData)
             if (studentData) {
@@ -80,7 +85,7 @@ const PayFees = ({ userRole }) => {
 
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:3000/fees/student/updateFees', {
+            const response = await axios.post('https://edumax.fly.dev/fees/student/updateFees', {
                 stream,
                 admissionNumber,
                 year,
@@ -89,8 +94,8 @@ const PayFees = ({ userRole }) => {
                 amountPaid
             });
             const updatedStudentData = response.data;
-
-            setStudent(updatedStudentData);
+            console.log(updatedStudentData);
+            setStudent(null);
             setBalance(updatedStudentData.updatedBalance);
             setUpdatedInfo({
                 fullName: updatedStudentData.fullName,
@@ -112,13 +117,12 @@ const PayFees = ({ userRole }) => {
             <center>
                 <h3>Update Student Fees</h3>
             </center>
+            <center>
             <div style={{fontSize:"0.9rem"}} className="fee-alert fee-red-flag">
                 <span className="fee-close" onClick={() => setNotification(null)}>&times;</span>
-           <center>
            You can update fees for even previous terms or even view student balance 
-            </center>  
             </div>
-
+            </center>  
             {userRole === 'super-admin' ? (
                 <form onSubmit={handleSubmit}>
                     <div className='form-items'>
@@ -166,12 +170,14 @@ const PayFees = ({ userRole }) => {
                             </button>
                     </center>   
                     {student && (
+                        <>
+                        <center>
                         <div className="pay-fees-d">
                             <div className="student-d">
                                 <h3>{student.fullName}</h3>
-                                <p>Tuition Fees: Ksh<span className='amount'>{balance.tuitionFees}</span></p>
-                                <p>Uniform Fees: Ksh<span className='amount'>{balance.uniformFees}</span></p>
-                                <p>Lunch Fees: Ksh<span className='amount'>{balance.lunchFees}</span></p>
+                                <p>Tuition Fees Ksh : <span className='amount'>{balance.tuitionFees}</span></p>
+                                <p>Uniform Fees Ksh :<span className='amount'>{balance.uniformFees}</span></p>
+                                <p>Lunch Fees Ksh  :<span className='amount'>{balance.lunchFees}</span></p>
                             </div>
                             <div className="payment-d">
                                 <div className="form-g">
@@ -185,7 +191,9 @@ const PayFees = ({ userRole }) => {
                                 </div>
                                 <div className="form-g">
                                     <label>Amount Paid:</label>
-                                    <input type="number" value={amountPaid} onChange={handleAmountPaidChange} placeholder='Ksh 1000..' />
+                                    <div id='amount' className="input-payFees">
+                                    <input type="number" value={amountPaid}  onChange={handleAmountPaidChange} placeholder='Ksh 1000..' />
+                                    </div>
                                 </div>
                                 <center>
                                     <button type="submit" disabled={loading}>
@@ -194,22 +202,27 @@ const PayFees = ({ userRole }) => {
                                 </center>
                             </div>
                         </div>
+                        </center>
+                        </>
                     )}
                 </form>
             ) : (
                 <p>{responseMessage}</p>
             )}
-            {responseMessage && <div className="response-message">{responseMessage}</div>}
+           
             {updatedInfo && (
+                <div className='upd-info'>     
                 <div className="updated-info">
+                {responseMessage && <div className="response-message">{responseMessage}</div>}     
                     <h4>Updated Fees Information</h4>
-                    <p>Full Name: {updatedInfo.fullName}</p>
-                    <p>Admission Number: {updatedInfo.admissionNumber}</p>
-                    <p>Levi Paid: {updatedInfo.levi}</p>
-                    <p>Updated Balances:</p>
-                    <p>Tuition Fees: Ksh<span className='amount'>{updatedInfo.updatedBalance.tuitionFees}</span></p>
-                    <p>Uniform Fees: Ksh<span className='amount'>{updatedInfo.updatedBalance.uniformFees}</span></p>
-                    <p>Lunch Fees: Ksh<span className='amount'>{updatedInfo.updatedBalance.lunchFees}</span></p>
+                    <h5 style={{margin:"5px"}}>Full Name: <span className='amount'>{updatedInfo.fullName}</span></h5>
+                    <h5 style={{margin:"5px"}}>Admission Number: <span className='amount'>{updatedInfo.admissionNumber}</span></h5>
+                    <h5 style={{margin:"5px"}}>Levi Paid: <span className='amount'> {updatedInfo.levi}</span></h5>
+                    <h5 style={{margin:"5px"}}>Updated Balances: </h5>
+                    <h5 style={{margin:"5px"}}>Tuition Fees: Ksh <span className='amount'>{updatedInfo.updatedBalance.tuitionFees}</span></h5>
+                    <h5 style={{margin:"5px"}}>Uniform Fees: Ksh <span className='amount'>{updatedInfo.updatedBalance.uniformFees}</span></h5>
+                    <h5 style={{margin:"5px"}}>Lunch Fees: Ksh <span className='amount'>{updatedInfo.updatedBalance.lunchFees}</span></h5>
+                </div>
                 </div>
             )}
         </div>

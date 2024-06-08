@@ -19,7 +19,7 @@ const FeesReport = () => {
 
         try {
             const params = new URLSearchParams(filters);
-            const response = await fetch(`http://localhost:3000/fetchFeesReports?${params}`);
+            const response = await fetch(`https://edumax.fly.dev/fetchFeesReports?${params}`);
             const data = await response.json();
 
             if (Array.isArray(data)) {
