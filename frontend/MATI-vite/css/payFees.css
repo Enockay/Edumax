@@ -1,9 +1,9 @@
-/* PayFees.css */
 .pay-fees-container {
-    max-width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
     padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -12,66 +12,72 @@ h2 {
     margin-bottom: 20px;
 }
 
-.form-payFees {
+.form-payFees, .form-g {
     margin-bottom: 15px;
 }
 
 .input-payFees {
     display: flex;
-    gap: 10px;
+    align-items: center;
 }
 
-input[type="text"], input[type="number"], select {
-    width: fit-content;
-    padding: 3px;
-    border: 1px solid #ddd;
-    border-radius: 2px;
-    box-sizing: border-box;
+.input-payFees input {
+    flex: 1;
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
+.input-fee{
+    width: 60%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.updated-info{
+    display: flex;
+    justify-content: center;
+    border-radius: 0.9rem;
+    align-items: center;
+    box-shadow: 0 0 10px gainsboro;
+    flex-direction: column;
+}
 button {
-    padding: 2px 2px;
-    background-color: #007bff;
-    color: white;
+    padding: 10px 20px;
     border: none;
-    border-radius: 5px;
+    background: #007bff;
+    color: white;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
-
+.form-items{
+    display: flex;
+    justify-content: space-evenly;
+}
 button:hover {
-    background-color: #0056b3;
+    background: #0056b3;
 }
 
-.pay-fees-d{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+.pay-fees-d, .student-d, .payment-d {
     margin-top: 20px;
-}
-
-.student-d, .payment-d{
-    padding: 20px;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
 }
 
 .response-message {
     margin-top: 20px;
     padding: 10px;
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-    border-radius: 5px;
+    background: #dff0d8;
+    color: #3c763d;
+    border-radius: 4px;
     text-align: center;
 }
-
+.amount{
+    color: #31708f;
+}
 .updated-s {
     margin-top: 20px;
-    padding: 20px;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    padding: 10px;
+    background: #d9edf7;
+    color: #31708f;
+    border-radius: 4px;
 }
-

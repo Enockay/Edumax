@@ -21,13 +21,15 @@
 
 .title {
   text-align: center;
-  margin-bottom: 20px;
-  color: #333;
+  margin-bottom: 15px;
+  color: #62ad0c;
+  text-decoration: underline;
+  
 }
 
 .whole-class, .class-results,.select-notification {
   border: 1px solid #ddd;
-  padding: 20px;
+  padding: 10px;
   border-radius: 8px;
   margin-bottom: 20px;
   width: 100%;
@@ -113,6 +115,7 @@
 .notification-message.error {
   background-color: #f2dede;
   color: #a94442;
+  width: 100%;
 }
 
 .spinner-container {
@@ -122,12 +125,13 @@
   height: 40px;
 }
 
-.spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #007BFF;
+.spinning {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #23b810;
+  border-bottom: 4px solid blue;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  width: 45px;
+  height: 45px;
   animation: spin 1s linear infinite;
 }
 

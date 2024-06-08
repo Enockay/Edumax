@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
 const { ProducedResults } = require("../models/feedStudentMarks");
-const Report = require("../models/reportForms");
+const updateStudentPdf = require('./updateReportForm');
 
 const generateReportform = async (year, stream, term, examType) => {
   try {
@@ -214,16 +214,7 @@ const generateReportform = async (year, stream, term, examType) => {
       fs.writeFileSync(filePath, pdfBuffer);
 
       // Save the PDF to MongoDB
-      const report = new Report({
-        studentName: student.studentName,
-        stream,
-        term,
-        year,
-        examType,
-        pdf: pdfBuffer
-      });
-
-      await report.save();
+      await updateStudentPdf(student.studentAdmission, year, term, examType, pdfBuffer)
 
       //console.log(`Report for ${student.studentName} saved at ${filePath}`);
     }

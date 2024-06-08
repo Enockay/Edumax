@@ -22,7 +22,8 @@ const examSchema = new mongoose.Schema({
   totalGrade: { type: String, required: false },
   totalMarks: {type: String,required: false},
   classRank: { type: String, required: false },
-  overallRank: { type: String, required: false }
+  overallRank: { type: String, required: false },
+  pdf:Buffer,
 });
 
 const yearSchema = new mongoose.Schema({

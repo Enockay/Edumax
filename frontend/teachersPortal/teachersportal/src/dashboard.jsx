@@ -8,6 +8,7 @@ import Assignment from "./sidbarComponets/Assigment";
 import FeedMarks from "./sidbarComponets/FeedMarks";
 import AssUnits from "./sidbarComponets/AssUnits";
 import UpdateStudentMarks from "./sidbarComponets/UpdateMarks";
+import FileUpload from "./sidbarComponets/uploadExam";
 
 const Dashboard = () => {
     const [selectedItem, setSelectedItem] = useState("");
@@ -29,8 +30,10 @@ const Dashboard = () => {
                 return <FeedMarks/>
             case "Assigned-Units":
                 return <AssUnits/>
-                case "Update Student Marks":
+            case "Update Student Marks":
                 return <UpdateStudentMarks/>
+            case "Upload-Exams":
+                return <FileUpload/>
             default:
                 return <MainDashboard/>
         }

@@ -109,7 +109,7 @@ const AssigUnits = () => {
         <div className="first-2">
           <div className="form-group">
             <label>Year</label>
-            <input className="input" type="number" value={year} onChange={handleYearChange} placeholder="e.g., 2024" required />
+            <input className="input" id="year-input" type="number" value={year} onChange={handleYearChange} placeholder="e.g., 2024" required />
           </div>
           <div className="form-group">
             <label>Term</label>

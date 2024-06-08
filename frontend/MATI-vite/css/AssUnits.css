@@ -42,7 +42,16 @@
     flex-direction: column;
     margin-bottom: 15px;
   }
-  
+
+  #year-input{
+    width: 40%;
+  }
+
+  .class-form{
+    box-shadow: 0 0 10px rgb(230, 228, 227);
+    border-radius: 0.9rem;
+    padding: 0.9rem;
+  }
   .form-group label {
     margin-bottom: 8px;
     font-weight: bold;
@@ -55,7 +64,9 @@
     border-radius: 4px;
     font-size: 1rem;
   }
-  
+  .inform p {
+    margin: 0;
+  }
   .select[multiple] {
     height: auto;
   }

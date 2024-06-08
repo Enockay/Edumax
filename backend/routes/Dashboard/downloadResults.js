@@ -1,21 +1,48 @@
-// routes/downloadResults.js
 const express = require('express');
-const Pdf = require('../../public/models/pdfSchema');  // Import the Pdf model
+const ClassModel = require('../../public/models/pdfSchema'); // Import the ClassModel
 
 const downloadResults = express.Router();
 
-downloadResults.get('/download-pdf/:fileName', async (req, res) => {
-    const fileName = req.params.fileName;
-    console.log('Requested fileName:', fileName);
-     
+downloadResults.get('/:year/:term/:examType/:fileName/:stream', async (req, res) => {
+    const { year, term, examType, fileName, stream } = req.params;
+    //console.log(req.params)
+
     try {
-        const pdf = await Pdf.findOne({ fileName });  // Use findOne if expecting a single document
-        if (!pdf) {
+        // Find the class document containing the requested PDF
+        const classDoc = await ClassModel.findOne({
+            'class': stream,
+            'years.year': year,
+            'years.terms.term': term,
+            'years.terms.examTypes.examType': examType,
+            'years.terms.examTypes.pdf.fileName': fileName
+        });
+
+        if (!classDoc) {
             console.log('PDF not found in database');
-            return res.status(404).send('Results not Found In the Database Maybe not generated');
+            return res.status(400).send('Results not Found In the Database Maybe not generated');
         }
 
-        if (!pdf.contentType || !pdf.data) {
+        let pdf;
+
+        // Traverse the hierarchy to find the specific PDF
+        for (const y of classDoc.years) {
+            if (y.year === year) {
+                for (const t of y.terms) {
+                    if (t.term === term) {
+                        for (const e of t.examTypes) {
+                            if (e.examType === examType && e.pdf.fileName === fileName) {
+                                pdf = e.pdf;
+                                break;
+                            }
+                        }
+                        if (pdf) break;
+                    }
+                }
+                if (pdf) break;
+            }
+        }
+
+        if (!pdf || !pdf.contentType || !pdf.data) {
             console.log('PDF missing required fields');
             return res.status(500).send('Internal Server Error: PDF is missing required fields');
         }

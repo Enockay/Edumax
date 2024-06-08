@@ -25,9 +25,14 @@ var teacherlogin = require("./routes/Teachers/login");
 var profile = require("./routes/Teachers/getProfile");
 var assign = require("./routes/Teachers/assignmet");
 var staff = require("./routes/Dashboard/staffs");
-var promotionRoutes = require("./routes/Dashboard/promoteStudents")
+var promotionRoutes = require("./routes/Dashboard/promoteStudents");
+var reportForms = require("./routes/Dashboard/reportCards");
 var ensureAuthenticated = require("./routes/Teachers/Auth");
 var reportform = require("./routes/Dashboard/ReportForm");
+var fees = require('./routes/Dashboard/studentFeesUpd');
+var feesReport = require("./routes/Dashboard/feesReport");
+var exam = require("./routes/Dashboard/exams");
+var uploadExam = require("./routes/Teachers/uploadExam");
 var app = express();
 var uri = process.env.MONGO_URL;
 var key = process.env.SECRET_KEY;
@@ -78,10 +83,11 @@ app.post("/AdmitStudent", AdmitStudent);
 app.post("/generateResult", generateResult);
 app.get('/students/', studentMarksUpdate);
 app.put('/students/marks', updateStudentMarks);
-app.get("/download-pdf/:fileName", downloadResults);
+app.use("/download-pdf/", downloadResults);
 app.use("/students", updateStudentInfo);
 app.post("/login", login);
 app.use('/api', updateStudent); 
+app.use("/fees",fees);
 app.use('/ass',assign);
 app.use("/classes", teacherAss);
 app.use('/api/auth', teacherlogin);
@@ -89,7 +95,11 @@ app.get('/profile/:id', profile);
 app.use("/staff",staff)
 app.use('/api/promotion', promotionRoutes);
 app.get("/api/aggregate",schoolAggregate);
-app.post('/generate/reportForms',reportform)
+app.post('/generate/reportForms',reportform);
+app.get("/download-report",reportForms);
+app.get("/fetchFeesReports",feesReport);
+app.use("/ip",exam);
+app.post("/exams/upload",uploadExam)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

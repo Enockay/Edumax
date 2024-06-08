@@ -22,7 +22,9 @@
   color: #333;
   margin-bottom: 10px;
 }
-
+.info-flag{
+  box-shadow: 0 0 10px gray;
+}
 /* Content Sections */
 .admin-panel-content {
   display: flex;

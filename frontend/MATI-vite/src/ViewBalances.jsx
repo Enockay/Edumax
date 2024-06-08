@@ -1,124 +1,287 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import '../css/index.css';
 
-const ViewBalances = () => {
-    const [stream, setStream] = useState('');
-    const [feeType, setFeeType] = useState('');
-    const [criteria, setCriteria] = useState('');
-    const [amount, setAmount] = useState('');
-    const [students, setStudents] = useState([]);
-    const [errors, setErrors] = useState({});
+const FeesForm = () => {
+    const [allStudentsFormData, setAllStudentsFormData] = useState({
+        year: '',
+        term :'',
+        tuition: '',
+        lunch: ''
+    });
 
-    const handleStreamChange = (e) => setStream(e.target.value);
-    const handleFeeTypeChange = (e) => setFeeType(e.target.value);
-    const handleCriteriaChange = (e) => setCriteria(e.target.value);
-    const handleAmountChange = (e) => setAmount(e.target.value);
+    const [singleStudentFormData, setSingleStudentFormData] = useState({
+        admissionNumber: '',
+        name: '',
+        stream: '',
+        year: '',
+        term: '',
+        tuition: '',
+        uniform: '',
+        lunch: ''
+    });
 
-    const handleSubmit = (e) => {
+    const [loading, setLoading] = useState(false);
+    const [notification, setNotification] = useState(null);
+
+    const handleAllStudentsChange = (e) => {
+        setAllStudentsFormData({ ...allStudentsFormData, [e.target.name]: e.target.value });
+    };
+
+    const handleSingleStudentChange = (e) => {
+        setSingleStudentFormData({ ...singleStudentFormData, [e.target.name]: e.target.value });
+    };
+
+    const handleAllStudentsSubmit = async (e) => {
         e.preventDefault();
-        
-        // Validate fields
-        const newErrors = {};
-        if (!stream) newErrors.stream = 'Stream is required';
-        if (!feeType) newErrors.feeType = 'Fee type is required';
-        if (!criteria) newErrors.criteria = 'Criteria is required';
-        if (!amount) newErrors.amount = 'Amount is required';
-        
-        setErrors(newErrors);
+        setLoading(true);
+        setNotification(null);
 
-        // If there are no errors, show dummy data
-        if (Object.keys(newErrors).length === 0) {
-            // Dummy data
-            const dummyData = [
-                { adm: '123', fullName: 'John Doe', gender: 'Male', feeBalance: 1500 },
-                { adm: '124', fullName: 'Jane Smith', gender: 'Female', feeBalance: 500 },
-                { adm: '125', fullName: 'Alice Johnson', gender: 'Female', feeBalance: 1000 }
-            ];
+        try {
+            const response = await axios.post('http://localhost:3000/fees/setTotalFees', allStudentsFormData);
+            setLoading(false);
+            setNotification({ type: 'success', message: response.data.message });
+        } catch (error) {
+            setLoading(false);
+            setNotification({ type: 'error', message: error.response?.data?.message || 'Server error' });
+        }
+    };
 
-            // Filtering the dummy data based on criteria
-            let filteredStudents = dummyData;
-            if (criteria === 'greater') {
-                filteredStudents = dummyData.filter(student => student.feeBalance > Number(amount));
-            } else if (criteria === 'less') {
-                filteredStudents = dummyData.filter(student => student.feeBalance < Number(amount));
-            } else if (criteria === 'equal') {
-                filteredStudents = dummyData.filter(student => student.feeBalance === Number(amount));
-            }
+    const handleSingleStudentSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setNotification(null);
 
-            setStudents(filteredStudents);
+        try {
+            const response = await axios.post('http://localhost:3000/fees/students/admit', singleStudentFormData);
+            setLoading(false);
+            setNotification({ type: 'success', message: response.data.message });
+            setSingleStudentFormData("")
+        } catch (error) {
+            setLoading(false);
+            setNotification({ type: 'error', message: error.response?.data?.message || 'Server error' });
+        }
+    };
+
+    const fetchStudentDetails = async () => {
+        setLoading(true);
+        setNotification(null);
+
+        try {
+            const response = await fetch(`http://localhost:3000/fees/students/${singleStudentFormData.admissionNumber}`);
+            setLoading(false);
+            const data = await response.json();
+            const student = data;
+            console.log(student.fullName)
+            setSingleStudentFormData({
+                ...singleStudentFormData,
+                name: student.fullName,
+                stream: student.stream,
+                term: '',
+                tuition: '',
+                uniform: '',
+                lunch: ''
+            });
+        } catch (error) {
+            setLoading(false);
+            setNotification({ type: 'error', message: error.response?.data?.message || 'Student not found' });
         }
     };
 
     return (
-        <div className="view-balances-container">
-            <h1>Bulk Student Balancies</h1>
-            <form onSubmit={handleSubmit} className="view-balances-form">
-                <div>
-                    <label>Stream:</label>
-                    <select value={stream} onChange={handleStreamChange}>
-                        <option value="">Select Stream</option>
-                        <option value="Form 4 East">Form 4 East</option>
-                        <option value="Form 4 West">Form 4 West</option>
-                        <option value="Form 3 East">Form 3 East</option>
-                        <option value="Form 3 West">Form 3 West</option>
-                        <option value="Form 2 East">Form 2 East</option>
-                        <option value="Form 2 West">Form 2 West</option>
-                        <option value="Form 1 East">Form 1 East</option>
-                        <option value="Form 1 West">Form 1 West</option>
-                    </select>
-                    {errors.stream && <div className="error">{errors.stream}</div>}
-                </div>
-                <div>
-                    <label>Fee Type:</label>
-                    <select value={feeType} onChange={handleFeeTypeChange}>
-                        <option value="">Select Fee Type</option>
-                        <option value="Tuition">Tuition</option>
-                        <option value="Lunch">Lunch</option>
-                    </select>
-                    {errors.feeType && <div className="error">{errors.feeType}</div>}
-                </div>
-                <div>
-                    <label>Criteria:</label>
-                    <select value={criteria} onChange={handleCriteriaChange}>
-                        <option value="">Select Criteria</option>
-                        <option value="greater">Greater than</option>
-                        <option value="less">Less than</option>
-                        <option value="equal">Equal to</option>
-                    </select>
-                    {errors.criteria && <div className="error">{errors.criteria}</div>}
-                </div>
-                <div>
-                    <label>Amount:</label>
-                    <input type="number" value={amount} onChange={handleAmountChange} />
-                    {errors.amount && <div className="error">{errors.amount}</div>}
-                </div>
-                <button type="submit">Search</button>
-            </form>
+        <div className="fee-fullscreen-container">
+            <header className="fee-header">
+                <h1 className="fee-title">School Finance Remittance</h1>
+            </header>
 
-            {students.length > 0 && (
-                <table className="students-table">
-                    <thead>
-                        <tr>
-                            <th>Admission Number</th>
-                            <th>Full Name</th>
-                            <th>Gender</th>
-                            <th>Fee Balance</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {students.map((student) => (
-                            <tr key={student.adm}>
-                                <td>{student.adm}</td>
-                                <td>{student.fullName}</td>
-                                <td>{student.gender}</td>
-                                <td>{student.feeBalance}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+            <div className="fee-alert fee-red-flag">
+                <span className="fee-close" onClick={() => setNotification(null)}>&times;</span>
+              Please Note At the start of every new term students must be either automatically update there fees for that term still new student must be admitted to finance 
+            </div>
+
+            <div className="fee-form-container">
+                <div className='fee-form-items'>
+                <form onSubmit={handleAllStudentsSubmit} className="fee-form">
+                    <center>
+                    <h4>Automatic Admit All Students To Finance</h4>
+                    </center>
+                    <div className="fee-form-group">
+                        <label htmlFor="year" className="fee-label">Year</label>
+                        <input
+                            type="text"
+                            id="year"
+                            name="year"
+                            value={allStudentsFormData.year}
+                            onChange={handleAllStudentsChange}
+                            className="fee-input"
+                            required
+                        />
+                    </div>
+                    <div className="fee-form-group">
+                        <label htmlFor="stream" className="fee-label">Term</label>
+                        <select
+                            id="stream"
+                            name="Term"
+                            value={allStudentsFormData.stream}
+                            onChange={handleAllStudentsChange}
+                            className="fee-input"
+                            required
+                        >
+                            <option value="">Select Term</option>
+                            <option value="Term 1">Term 1</option>
+                            <option value="Term 2">Term 2</option>
+                            <option value="Term 3">Term 3</option>
+                        </select>
+                    </div>
+                    <div className="fee-form-group">
+                        <label htmlFor="tuition" className="fee-label">Tuition</label>
+                        <input
+                            type="number"
+                            id="tuition"
+                            name="tuition"
+                            value={allStudentsFormData.tuition}
+                            onChange={handleAllStudentsChange}
+                            className="fee-input"
+                            required
+                        />
+                    </div>
+                    <div className="fee-form-group">
+                        <label htmlFor="lunch" className="fee-label">Lunch</label>
+                        <input
+                            type="number"
+                            id="lunch"
+                            name="lunch"
+                            value={allStudentsFormData.lunch}
+                            onChange={handleAllStudentsChange}
+                            className="fee-input"
+                            required
+                        />
+                    </div>
+                    <div className="fee-form-group">
+                        <button type="submit" className="fee-button" disabled={loading}>
+                            {loading ? 'Setting Fees...' : 'Set Fees'}
+                        </button>
+                    </div>
+                </form>
+
+                <form onSubmit={handleSingleStudentSubmit} className="fee-form">
+                  <center>
+                     <h4>Admit New Student To Finance</h4>
+                    </center>  
+                    <div className="fee-form-group-in">
+                        <label htmlFor="admissionNumber" className="fee-label">Admission Number</label>
+                        <input
+                            type="text"
+                            id="admissionNumber"
+                            name="admissionNumber"
+                            value={singleStudentFormData.admissionNumber}
+                            onChange={handleSingleStudentChange}
+                            className="fee-input"
+                            required
+                        />
+                        <button type="button" className="fee-button fee-fetch-button" onClick={fetchStudentDetails} disabled={loading}>
+                            {loading ? 'Fetching...' : 'Fetch Student'}
+                        </button>
+                    </div>
+                    {singleStudentFormData.name && (
+                        <>
+                        
+                             <center>
+                               <h4>Name: {singleStudentFormData.name}.</h4>
+                               <h4 style={{marginBottom:0}}>Stream : {singleStudentFormData.stream}.</h4>
+                             </center>
+                          
+                            <div className="fee-form-group">
+                                <label htmlFor="year" className="fee-label">Year</label>
+                                <input
+                                    type="text"
+                                    id="year"
+                                    name="year"
+                                    value={singleStudentFormData.year}
+                                    onChange={handleSingleStudentChange}
+                                    className="fee-input"
+                                    required
+                                />
+                            </div>
+                            <div className="fee-form-group">
+                        <label htmlFor="stream" className="fee-label">Term</label>
+                        <select
+                            id="stream"
+                            name="term"
+                            value={allStudentsFormData.stream}
+                            onChange={handleSingleStudentChange}
+                            className="fee-input"
+                            required
+                        >
+                            <option value="">Select Term</option>
+                            <option value="Term 1">Term 1</option>
+                            <option value="Term 2">Term 2</option>
+                            <option value="Term 3">Term 3</option>
+                        </select>
+                    </div>
+                            <div className="fee-form-group">
+                                <label htmlFor="tuition" className="fee-label">Tuition</label>
+                                <input
+                                    type="number"
+                                    id="tuition"
+                                    name="tuition"
+                                    value={singleStudentFormData.tuition}
+                                    onChange={handleSingleStudentChange}
+                                    className="fee-input"
+                                    required
+                                />
+                            </div>
+                            <div className="fee-form-group">
+                                <label htmlFor="uniform" className="fee-label">Uniform</label>
+                                <input
+                                    type="number"
+                                    id="uniform"
+                                    name="uniform"
+                                    value={singleStudentFormData.uniform}
+                                    onChange={handleSingleStudentChange}
+                                    className="fee-input"
+                                    required
+                                />
+                            </div>
+                            <div className="fee-form-group">
+                                <label htmlFor="lunch" className="fee-label">Lunch</label>
+                                <input
+                                    type="number"
+                                    id="lunch"
+                                    name="lunch"
+                                    value={singleStudentFormData.lunch}
+                                    onChange={handleSingleStudentChange}
+                                    className="fee-input"
+                                    required
+                                />
+                            </div>
+                            <div className="fee-form-group">
+                                <button type="submit" className="fee-button" disabled={loading}>
+                                    {loading ? 'Setting Fees...' : 'Set Fees'}
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </form>
+                </div>  
+            </div>
+
+            {loading && (
+                <div className="fee-spinner">
+                    <div className="fee-double-bounce1"></div>
+                    <div className="fee-double-bounce2"></div>
+                </div>
+            )}
+             {notification && (
+                <div className={`fee-alert ${notification.type === 'error' ? 'fee-alert-error' : 'fee-alert-success'}`}>
+                    <span className="fee-close" onClick={() => setNotification(null)}>&times;</span>
+                   <center>
+                   {notification.message}
+                    </center> 
+                </div>
             )}
         </div>
     );
 };
 
-export default ViewBalances;
+export default FeesForm;

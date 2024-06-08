@@ -10,9 +10,10 @@ const generateResults = async (stream, term, Teacher,year,exams,fileName) => {
         await saveGradedStudents(sortedAndRankedStudents);
         const unitMeans = calculateMeans(sortedAndRankedStudents);
         const classMean = sortedAndRankedStudents.reduce((acc, student) => acc + student.totalPoints, 0) / sortedAndRankedStudents.length;
-        const pdfBuffer =   await generateClassListForm(year,stream,term,Teacher,sortedAndRankedStudents, unitMeans, classMean, fileName);
-        
-        return pdfBuffer
+        const pdfBuffer =   await generateClassListForm(year,stream,term,Teacher,sortedAndRankedStudents, unitMeans, classMean, fileName,exams);
+         
+        return pdfBuffer;
+
     } catch (error) {
         console.error('Error:', error);
     }

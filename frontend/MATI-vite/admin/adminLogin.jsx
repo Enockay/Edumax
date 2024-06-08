@@ -88,7 +88,7 @@ const AdminLogin = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="form-input"
+              className="form-inputs"
             />
           </div>
           <div className="admin-form-group">

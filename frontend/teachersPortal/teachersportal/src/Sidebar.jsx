@@ -59,7 +59,7 @@ const Sidebar = ({ onItemClick }) => {
                         <ul className="dropdown">
                             <li>
                                 <FontAwesomeIcon icon={faBookOpen} />
-                                <span onClick={() => handleItemClick("Feed-Student-Marks")}>Feed Student Marks</span>
+                                <span onClick={() => handleItemClick("Feed-Student-Marks")}>Feed  Marks</span>
                             </li>
                             <li>
                                 <FontAwesomeIcon icon={faBookOpen} />
@@ -67,7 +67,11 @@ const Sidebar = ({ onItemClick }) => {
                             </li>
                             <li>
                                 <FontAwesomeIcon icon={faBookOpen} />
-                                <span onClick={() => handleItemClick("Update Student Marks")}>Update Student Marks</span>
+                                <span onClick={() => handleItemClick("Update Student Marks")}>Update  Marks</span>
+                            </li>
+                            <li>
+                                <FontAwesomeIcon icon={faBookOpen} />
+                                <span onClick={() => handleItemClick("Upload-Exams")}>Upload Exams</span>
                             </li>
                             <hr />
                         </ul>

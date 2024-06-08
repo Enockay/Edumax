@@ -22,8 +22,24 @@ const SchoolAggregate = () => {
             try {
                 const response = await fetch('https://edumax.fly.dev/api/aggregate');
                 const data = await response.json();
+                
+                // Verify if data contains the necessary properties before setting it
+                if (
+                    data &&
+                    typeof data.totalMales === 'number' &&
+                    typeof data.totalFemales === 'number' &&
+                    typeof data.totalStudents === 'number' &&
+                    data.forms &&
+                    typeof data.forms.form1 === 'object' &&
+                    typeof data.forms.form2 === 'object' &&
+                    typeof data.forms.form3 === 'object' &&
+                    typeof data.forms.form4 === 'object'
+                ) {
                     setData(data);
                     setEmpty('');
+                } else {
+                    setEmpty("Data is not in the expected format.");
+                }
             } catch (error) {
                 setEmpty("Error occurred while aggregating students");
                 console.log(error);
@@ -46,8 +62,8 @@ const SchoolAggregate = () => {
             ) : (
                 <div className="aggregate-details">
                     <div className="aggregate-gender">
-                        <h3>Total Males: {''}</h3>
-                        <h3>Total Females: {''}</h3>
+                        <h3>Total Males: {data.totalMales}</h3>
+                        <h3>Total Females: {data.totalFemales}</h3>
                     </div>
                     <h3>Total Students: {data.totalStudents}</h3>
                     <div className="more-d">More On Wide Screen</div>
@@ -62,7 +78,7 @@ const SchoolAggregate = () => {
                     </div>
                 </div>
             )}
-            <center><p style={{ color: "green", }}>{empty}</p></center>
+            {empty && <center><p style={{ color: "green", }}>{empty}</p></center>}
         </div>
     );
 };

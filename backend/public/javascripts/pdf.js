@@ -10,7 +10,7 @@ const logoPath = path.join(__dirname, '../../public/images/logo.png');
     const logoDataUrl = `data:image/png;base64,${logoBase64}`;
 
 // Function to generate PDF
-const generateClassRankingPdf = async (year, stream, term, teacher, gradedStudents, unitMeans, classMean, fileName) => {
+const generateClassRankingPdf = async (year, stream, term, teacher, gradedStudents, unitMeans, classMean, fileName,exams) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
@@ -170,7 +170,7 @@ const generateClassRankingPdf = async (year, stream, term, teacher, gradedStuden
                         <img src=${logoDataUrl} alt="School Logo">
                         <h2>MATINYANI MIXED SECONDARY SCHOOL</h2>
                         <h3>BROADSHEET RESULTS FORM</h3>
-                        <h3>EXAM :${term} MidTerm EXAM</h3>
+                        <h3>EXAM :${term} ${exams} EXAM</h3>
                         <h3>ClASS: FORM${stream}<h3>
                         <h3>Release Date: ${new Date().toLocaleDateString()}</h3>
                     </div>
@@ -265,7 +265,13 @@ const generateClassRankingPdf = async (year, stream, term, teacher, gradedStuden
     await browser.close();
 
     // Save the PDF to MongoDB or any storage
-    await savePdf(year, term, stream, fileName, pdfBytes);
+    try{
+        await savePdf(year, term, stream,exams, fileName, pdfBytes);
+        return `Form ${stream}  ${term} Results are Now Available For Printing`
+    }catch(err){
+        return `error ocured while producing results pdf`
+    }
+   
 };
 
 module.exports = generateClassRankingPdf;

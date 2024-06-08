@@ -1,0 +1,71 @@
+.container {
+    margin: 20px;
+  }
+  
+  h1 {
+    margin-bottom: 20px;
+  }
+  
+  .date-filter {
+    margin-bottom: 20px;
+    padding: 5px;
+  }
+  
+  .exam-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .exam-table th,
+  .exam-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .exam-table th {
+    background-color: #f2f2f2;
+    text-align: left;
+  }
+  
+  .exam-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .exam-table tr:hover {
+    background-color: #ddd;
+  }
+  
+  .exam-table tr.printed {
+    background-color: #e0ffe0;
+  }
+  
+  .btn {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+  
+  .link {
+    margin-left: 10px;
+    text-decoration: none;
+    color: #0000EE;
+  }
+  
+  .printed-flag {
+    color: green;
+    font-weight: bold;
+    margin-left: 10px;
+  }
+  
+  .loading {
+    font-size: 24px;
+    text-align: center;
+  }
+  

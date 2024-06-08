@@ -14,7 +14,12 @@ import {
   faCaretUp,
   faCog,
   faUserCircle,
-  faSignOutAlt
+  faSignOutAlt,
+  faEnvelopeOpenText,
+  faClipboardList,
+  faCalendarAlt,
+  faPhoneAlt,
+  faCashRegister
 } from '@fortawesome/free-solid-svg-icons';
 import '../css/Dashboard.css';
 
@@ -36,8 +41,8 @@ const Sidebar = ({ onItemClick, collapsed }) => {
 
   return (
     <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
-     <center><h5>SIDEBAR UTILITIES</h5></center> 
-     <hr></hr>
+      <center><h5>SIDEBAR UTILITIES</h5></center> 
+      <hr></hr>
       <ul>
         <li className={selectedItem === 'admit-student' ? 'active' : ''}>
           <a href="#admit-student" onClick={() => handleClick('admit-student')}>
@@ -127,17 +132,17 @@ const Sidebar = ({ onItemClick, collapsed }) => {
           )}
         </li>
         <li>
-          <a onClick={() => toggleDropdown('finance')}>
-            <FontAwesomeIcon icon={faBalanceScale} />
-            <span>Finance</span>
-            <FontAwesomeIcon icon={openDropdowns.finance ? faCaretUp : faCaretDown} className="caret-icon" />
+          <a onClick={() => toggleDropdown('finance-desk')}>
+            <FontAwesomeIcon icon={faCashRegister} />
+            <span>Finance Desk</span>
+            <FontAwesomeIcon icon={openDropdowns['finance-desk'] ? faCaretUp : faCaretDown} className="caret-icon" />
           </a>
-          {openDropdowns.finance && (
+          {openDropdowns['finance-desk'] && (
             <ul className="dropdown">
-              <li className={selectedItem === 'view-balances' ? 'active' : ''}>
-                <a href="#view-balances" onClick={() => handleClick('view-balances')}>
+              <li className={selectedItem === 'School-Fees' ? 'active' : ''}>
+                <a href="#School-Fess" onClick={() => handleClick('School-Fees')}>
                   <FontAwesomeIcon icon={faBalanceScale} />
-                  <span>View Balances</span>
+                  <span>Finance Admission</span>
                 </a>
               </li>
               <li className={selectedItem === 'fees-info' ? 'active' : ''}>
@@ -150,6 +155,41 @@ const Sidebar = ({ onItemClick, collapsed }) => {
                 <a href="#pay-fees" onClick={() => handleClick('pay-fees')}>
                   <FontAwesomeIcon icon={faMoneyBillWave} />
                   <span>Pay Fees</span>
+                </a>
+              </li>
+              <li className={selectedItem === 'budget-planning' ? 'active' : ''}>
+                <a href="#budget-planning" onClick={() => handleClick('budget-planning')}>
+                  <FontAwesomeIcon icon={faBalanceScale} />
+                  <span>Budget Planning</span>
+                </a>
+              </li>
+            </ul>
+          )}
+        </li>
+        <li>
+          <a onClick={() => toggleDropdown('secretary-desk')}>
+            <FontAwesomeIcon icon={faEnvelopeOpenText} />
+            <span>Secretary Desk</span>
+            <FontAwesomeIcon icon={openDropdowns['secretary-desk'] ? faCaretUp : faCaretDown} className="caret-icon" />
+          </a>
+          {openDropdowns['secretary-desk'] && (
+            <ul className="dropdown">
+              <li className={selectedItem === 'Teachers-Exams' ? 'active' : ''}>
+                <a href="#Teachers-Exams" onClick={() => handleClick('Teachers-Exams')}>
+                  <FontAwesomeIcon icon={faCalendarAlt} />
+                  <span>Teachers Exams</span>
+                </a>
+              </li>
+              <li className={selectedItem === 'manage-records' ? 'active' : ''}>
+                <a href="#manage-records" onClick={() => handleClick('manage-records')}>
+                  <FontAwesomeIcon icon={faClipboardList} />
+                  <span>Manage Records</span>
+                </a>
+              </li>
+              <li className={selectedItem === 'handle-inquiries' ? 'active' : ''}>
+                <a href="#handle-inquiries" onClick={() => handleClick('handle-inquiries')}>
+                  <FontAwesomeIcon icon={faPhoneAlt} />
+                  <span>Handle Inquiries</span>
                 </a>
               </li>
             </ul>

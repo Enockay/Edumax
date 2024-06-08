@@ -61,7 +61,7 @@ const AdmitStudent = () => {
             setIsLoading(true);
             setResponseMessage('');
             // Replace with your actual API endpoint
-            fetch(url, {
+            fetch(uri, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

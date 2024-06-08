@@ -14,14 +14,15 @@ import PromotionForm from './promoteStudent';
 import GradeAlgorithm from './Algorithms';
 import AssUnits from './AssigUnits';
 import GeneralSettings from './settings';
+import ExamList from './TeachersExams';
 
 const Body = ({selectedItem}) => {
     switch (selectedItem) {
         case 'admit-student':
             return <AdmitStudent />;
         case 'pay-fees':
-            return <PayFees />;
-        case 'view-balances':
+            return <PayFees userRole={"super-admin"}/>;
+        case 'School-Fees':
             return <ViewBalances />;
         case 'Add-Teacher':
             return <AddTeacher/>;   
@@ -35,7 +36,7 @@ const Body = ({selectedItem}) => {
             return <SchoolAggregate />;
         case 'update-student':
             return <DeleteStudent/>;
-        case 'Fees-info':
+        case 'fees-info':
             return <FeesReport/>
         case 'produce-results':
             return <Results/>
@@ -49,7 +50,8 @@ const Body = ({selectedItem}) => {
            return <AssUnits/>
         case 'settings' : 
            return <GeneralSettings/>
-
+        case 'Teachers-Exams':
+            return <ExamList/>
         default:
             return <SchoolAggregate/>;
     }

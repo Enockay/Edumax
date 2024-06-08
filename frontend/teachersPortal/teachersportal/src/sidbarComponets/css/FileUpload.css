@@ -1,0 +1,89 @@
+/* Container styling */
+.file-upload-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Title styling */
+  .file-upload-title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Form styling */
+  .file-upload-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  /* Form left and right columns */
+  .form-lft, .form-rit {
+    flex: 1 1 45%;
+    min-width: 300px;
+  }
+  
+  /* Form group styling */
+  .form-gp {
+    margin-bottom: 15px;
+  }
+  
+  .form-labeel {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+  }
+  
+  /* Input and textarea styling */
+  .form-in, .form-txtarea {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .form-in:focus, .form-txtarea:focus {
+    border-color: #66afe9;
+    outline: none;
+    box-shadow: 0 0 5px rgba(102, 175, 233, 0.5);
+  }
+  
+  .form-txtarea {
+    resize: vertical;
+    height: 150px;
+  }
+  
+  .form-btn {
+    grid-column: span 2;
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    width: 100%;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .form-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  @media (max-width: 768px) {
+    .file-upload-form {
+      grid-template-columns: 1fr;
+    }
+  
+    .form-btn {
+      grid-column: span 1;
+    }
+  }
+  

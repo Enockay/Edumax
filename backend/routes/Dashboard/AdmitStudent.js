@@ -46,9 +46,7 @@ AdmitStudent.post("/AdmitStudent", async (req, res) => {
       dateOfAdmission,
       gender,
       formerSchool,
-      tuitionFees,
       uniformFees,
-      lunchFees,
       boardingOrDay
     );
 
