@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../src/assets/logo.jpeg';
-import { jwtDecode } from "jwt-Decode"
+import { jwtDecode } from "jwt-decode"
 import profile from '../src/assets/profile.png';
 import "../css/Header.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
