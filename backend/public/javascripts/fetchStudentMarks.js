@@ -204,6 +204,7 @@ const calculateGradesAndPoints = (studentUnits) => {
                             allUnits
                         )
                     },
+                    
                     {
                         rule: '3-2-2-0',
                         units: createCombination(

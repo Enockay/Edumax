@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import {jwtDecode} from "jwt-decode";
 import '../css/payFees.css';
 
 const PayFees = ({ userRole }) => {
@@ -41,7 +42,14 @@ const PayFees = ({ userRole }) => {
         setUpdatedInfo(null)
         setTerm(e.target.value);
     };
-
+    const collectorFunction = async ()=>{
+        const token = localStorage.getItem("token");
+        const name = await jwtDecode(token);
+        return name.fullName;
+    }
+    
+    const collector = collectorFunction();
+    
     const fetchStudentData = async () => {
         setLoading(true);
         try {
@@ -91,7 +99,8 @@ const PayFees = ({ userRole }) => {
                 year,
                 term,
                 levi,
-                amountPaid
+                amountPaid,
+                collector,
             });
             const updatedStudentData = response.data;
             console.log(updatedStudentData);

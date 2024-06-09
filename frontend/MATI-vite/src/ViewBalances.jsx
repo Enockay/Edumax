@@ -38,7 +38,7 @@ const FeesForm = () => {
         setNotification(null);
 
         try {
-            const response = await axios.post('http://localhost:3000/fees/setTotalFees', allStudentsFormData);
+            const response = await axios.post('https://edumax.fly.dev/fees/setTotalFees', allStudentsFormData);
             setLoading(false);
             setNotification({ type: 'success', message: response.data.message });
         } catch (error) {
@@ -53,7 +53,7 @@ const FeesForm = () => {
         setNotification(null);
 
         try {
-            const response = await axios.post('http://localhost:3000/fees/students/admit', singleStudentFormData);
+            const response = await axios.post('https://edumax.fly.dev/fees/students/admit', singleStudentFormData);
             setLoading(false);
             setNotification({ type: 'success', message: response.data.message });
             setSingleStudentFormData("")
@@ -68,7 +68,7 @@ const FeesForm = () => {
         setNotification(null);
 
         try {
-            const response = await fetch(`http://localhost:3000/fees/students/${singleStudentFormData.admissionNumber}`);
+            const response = await fetch(`https://edumax.fly.dev/fees/students/${singleStudentFormData.admissionNumber}`);
             setLoading(false);
             const data = await response.json();
             const student = data;

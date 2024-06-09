@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../src/assets/logo.jpeg';
+import { jwtDecode } from "jwt-Decode"
 import profile from '../src/assets/profile.png';
 import "../css/Header.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,8 +14,11 @@ const Header = () => {
 
   useEffect(() => {
     const storedAdminName = localStorage.getItem('username');
-    if (storedAdminName) {
-      setAdminName(storedAdminName);
+    const token = localStorage.getItem("token");
+    const name = jwtDecode(token);
+
+    if (name) {
+      setAdminName(name.fullName);
     }
 
     const loginTime = localStorage.getItem('loginTime');

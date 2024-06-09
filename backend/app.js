@@ -85,7 +85,7 @@ app.get('/students/', studentMarksUpdate);
 app.put('/students/marks', updateStudentMarks);
 app.use("/download-pdf/", downloadResults);
 app.use("/students", updateStudentInfo);
-app.post("/login", login);
+app.use("/admin", login);
 app.use('/api', updateStudent); 
 app.use("/fees",fees);
 app.use('/ass',assign);

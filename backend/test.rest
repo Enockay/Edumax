@@ -38,3 +38,25 @@ Content-Type: application/json
   "term" : "Term 1",
   "examType" : "Midterm"
 }
+
+###
+POST http://localhost:3000/admin/register
+Content-Type: application/json
+
+{
+  "fullName" : "Enock Mwema",
+  "username" : "admin",
+  "password" : "Enockay23#",
+  "uniqueId" : "Enockay12345"
+}
+
+### 
+POST http://localhost:3000/admin/login
+Content-Type: application/json
+
+{
+  "username":"Oyier",
+  "password" :"Oyier23#"
+}
+
+###
