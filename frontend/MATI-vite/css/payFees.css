@@ -7,7 +7,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 #amount{
-    width: 20%;
+    width: fit-content;
 }
 h2 {
     text-align: center;
@@ -66,7 +66,15 @@ button {
 button:hover {
     background: #0056b3;
 }
+.payment-d{
+    padding: 0;
+    
+}
 
+.pay-fees-d{
+    display: flex;
+    justify-content: space-evenly;
+}
 .pay-fees-d, .student-d, .payment-d {
     margin-top: 20px;
 }

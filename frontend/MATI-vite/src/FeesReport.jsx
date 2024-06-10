@@ -16,31 +16,46 @@ const FeesReport = () => {
     const fetchReports = async () => {
         setLoading(true);
         setError('');
-
+        setReport([]);
+    
         try {
             const params = new URLSearchParams(filters);
             const response = await fetch(`https://edumax.fly.dev/fetchFeesReports?${params}`);
-            const data = await response.json();
-
-            if (Array.isArray(data)) {
-                const flatReportData = data.flatMap(reportItem =>
-                    reportItem.reportData.map(entry => ({
-                        ...entry,
-                        collector: reportItem.collector,
-                        date: reportItem.date
-                    }))
-                );
-                setReport(flatReportData);
+    
+            if (!response.ok) {
+                // If the response status is not OK, try to read the error message from the response
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Error fetching report data.');
+            }
+    
+            // Ensure the response is JSON
+            if (response.headers.get('Content-Type')?.includes('application/json')) {
+                const data = await response.json();
+                console.log(data);
+    
+                if (Array.isArray(data) && data.length > 0) {
+                    const flatReportData = data.flatMap(reportItem =>
+                        reportItem.reportData.map(entry => ({
+                            ...entry,
+                            collector: reportItem.collector,
+                            date: reportItem.date
+                        }))
+                    );
+                    setReport(flatReportData);
+                } else {
+                    setError('No data found.');
+                }
             } else {
-                throw new Error('Invalid report data format received.');
+                throw new Error('Invalid JSON response received.');
             }
         } catch (err) {
             console.error('Error fetching report data:', err);
-            setError('Error fetching report data.');
+            setError(err.message);
         } finally {
             setLoading(false);
         }
     };
+    
 
     useEffect(() => {
         fetchReports();
@@ -49,7 +64,12 @@ const FeesReport = () => {
     return (
         <div className="fees-report">
             <h2 className="fees-report__title">Fees Reports</h2>
-            <center><h5>Can view the fees report that was earlier updated in the system for each student per stream</h5></center>
+            <center>
+            <div style={{fontSize:"0.9rem"}} className="fee-alert fee-red-flag">
+                <span className="fee-close" onClick={() => setNotification(null)}>&times;</span>
+            <h5 style={{margin:0}}>Can view the fees report that was earlier updated in the system for each student per stream</h5>
+            </div>
+            </center>  
             <div className="fees-report__filter">
                 <div className="fees-report__filter-item">
                     <label>Select Stream:</label>
@@ -69,9 +89,9 @@ const FeesReport = () => {
                     <label>Select Term:</label>
                     <select name="term" value={filters.term} onChange={handleChange}>
                         <option value="">Select Term</option>
-                        <option value="Term1">Term1</option>
-                        <option value="Term2">Term2</option>
-                        <option value="Term3">Term3</option>
+                        <option value="Term 1">Term1</option>
+                        <option value="Term 2">Term2</option>
+                        <option value="Term 3">Term3</option>
                     </select>
                 </div>
                 <div className="fees-report__filter-item">
@@ -80,7 +100,7 @@ const FeesReport = () => {
                     </input>
                 </div>
             </div>
-            {error && <div className="fees-report__error">{error}</div>}
+           <center>{error && <div className="correction-error-message">{error}</div>}</center> 
             {loading ? (
                 <center>
                     <ClipLoader color={"#123abc"} loading={loading} size={50} />
@@ -97,6 +117,7 @@ const FeesReport = () => {
                                     <th>Full Name</th>
                                     <th>Date</th>
                                     <th>Time</th>
+                                    <th>Levi</th>
                                     <th>Fees Paid</th>
                                     <th>Gender</th>
                                     <th>Collector</th> {/* Add Collector column */}
@@ -110,6 +131,7 @@ const FeesReport = () => {
                                         <td>{entry.fullName}</td>
                                         <td>{entry.date}</td>
                                         <td>{entry.time}</td>
+                                        <td>{entry.levi}</td>
                                         <td>{entry.feesPaid}</td>
                                         <td>{entry.gender}</td>
                                         <td>{entry.collector}</td> {/* Display Collector */}

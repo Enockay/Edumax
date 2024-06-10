@@ -9,7 +9,8 @@ const FeesReportSchema = new mongoose.Schema({
     reportData: [{
         adm: String,
         fullName: String,
-        time: String,  // Time in HH:MM:SS format
+        time: String,
+        levi:String,  // Time in HH:MM:SS format
         feesPaid: Number,
         gender: String,
         stream: String

@@ -15,6 +15,8 @@ import GradeAlgorithm from './Algorithms';
 import AssUnits from './AssigUnits';
 import GeneralSettings from './settings';
 import ExamList from './TeachersExams';
+import FeeReport from './Records';
+import CorrectionSheet from './Correction';
 
 const Body = ({selectedItem}) => {
     switch (selectedItem) {
@@ -52,6 +54,10 @@ const Body = ({selectedItem}) => {
            return <GeneralSettings/>
         case 'Teachers-Exams':
             return <ExamList/>
+        case 'Records':
+            return <FeeReport/>
+        case 'correction':
+            return <CorrectionSheet/>
         default:
             return <SchoolAggregate/>;
     }

@@ -1,29 +1,35 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const paymentSchema = new mongoose.Schema({
     date: { type: Date, default: Date.now },
     amount: { type: Number, required: true },
     levi: { type: String, required: true },
+    mode: { type: String, enum: ['Cash', 'Mpesa', 'Bank'], required: true },
+    mpesaCode: { type: String },
+    bankCode: { type: String },
+    balance: {
+        tuition: { type: Number },
+        lunch: { type: Number },
+    }
 });
 
-const termfees = new mongoose.Schema({
+const termfeesSchema = new mongoose.Schema({
     term: { type: String, required: true },
     totalTuitionToBePaid: { type: Number, required: true },
-    totalUniformFeesToBePaid: { type: Number, required: false },
     totalLunchFeesToBePaid: { type: Number, required: false },
     tuitionFees: { type: Number, required: true },
-    uniformFees: { type: Number, required: false },
     lunchFees: { type: Number, required: false },
     payments: { type: [paymentSchema], required: false }
 });
 
-const years = new mongoose.Schema({
+const yearsSchema = new mongoose.Schema({
     year: { type: String, required: true },
-    termfees: { type: [termfees], required: true }
+    totalBalance: { type: Number },
+    termfees: { type: [termfeesSchema], required: true }
 });
 
-const fees = new mongoose.Schema({
-    year: { type: [years], required: true },
+const feesSchema = new mongoose.Schema({
+    year: { type: [yearsSchema], required: true },
 });
 
 const studentSchema = new mongoose.Schema({
@@ -38,7 +44,7 @@ const studentSchema = new mongoose.Schema({
     dateOfAdmission: { required: true, type: String },
     gender: { required: true, type: String },
     formerSchool: { required: true, type: String },
-    fees: { type: fees, required: false },
+    fees: { type: feesSchema, required: false },
     uniformFees: { required: false, type: Number },
     boardingOrDay: { required: true, type: String }
 });

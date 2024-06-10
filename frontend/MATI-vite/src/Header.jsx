@@ -15,8 +15,9 @@ const Header = () => {
   useEffect(() => {
     const storedAdminName = localStorage.getItem('username');
     const token = localStorage.getItem("token");
+    
     const name = jwtDecode(token);
-
+    console.log(name)
     if (name) {
       setAdminName(name.fullName);
     }

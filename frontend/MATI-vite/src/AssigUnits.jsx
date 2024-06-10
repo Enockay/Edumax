@@ -107,11 +107,11 @@ const AssigUnits = () => {
             <p className="p">Unit Selection</p>
         </center>
         <div className="first-2">
-          <div className="form-group">
+          <div className="Ass-form-group">
             <label>Year</label>
             <input className="input" id="year-input" type="number" value={year} onChange={handleYearChange} placeholder="e.g., 2024" required />
           </div>
-          <div className="form-group">
+          <div className="Ass-form-group">
             <label>Term</label>
             <select className="select" value={term} onChange={handleTermChange} required>
               <option value="" disabled>Select Term</option>
@@ -124,7 +124,7 @@ const AssigUnits = () => {
           </div>
         </div>
         <div className="second-2">
-          <div className="form-group">
+          <div className="Ass-form-group">
             <label>Teacher's Name</label>
             <select className="select" value={selectedTeacher} onChange={handleTeacherChange} required>
               <option value="" disabled>Select Teacher</option>
@@ -135,7 +135,7 @@ const AssigUnits = () => {
               ))}
             </select>
           </div>
-          <div className="form-group">
+          <div className="Ass-form-group">
             <label>Select Stream</label>
             <select className="select" value={selectedStream} onChange={handleStreamChange} required>
               <option value="" disabled>Select Stream</option>
@@ -146,7 +146,7 @@ const AssigUnits = () => {
               ))}
             </select>
           </div>
-          <div className="form-group">
+          <div className="Ass-form-group">
             <label>Select Units</label>
             <select className="select" multiple value={selectedUnits} onChange={handleUnitChange} required>
               {units.map((unit, index) => (

@@ -128,6 +128,12 @@ const Sidebar = ({ onItemClick, collapsed }) => {
                   <span>School Algorithms</span>
                 </a>
               </li>
+              <li className={selectedItem === 'correction' ? 'active' : ''}>
+                <a href="#corrections" onClick={() => handleClick('correction')}>
+                  <FontAwesomeIcon icon={faSchool} />
+                  <span>Correction-Sheets</span>
+                </a>
+              </li> 
             </ul>
           )}
         </li>
@@ -157,10 +163,10 @@ const Sidebar = ({ onItemClick, collapsed }) => {
                   <span>Pay Fees</span>
                 </a>
               </li>
-              <li className={selectedItem === 'budget-planning' ? 'active' : ''}>
-                <a href="#budget-planning" onClick={() => handleClick('budget-planning')}>
+              <li className={selectedItem === 'Records' ? 'active' : ''}>
+                <a href="#Records" onClick={() => handleClick('Records')}>
                   <FontAwesomeIcon icon={faBalanceScale} />
-                  <span>Budget Planning</span>
+                  <span>Records</span>
                 </a>
               </li>
             </ul>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {jwtDecode} from "jwt-decode";
+import {jwtDecode} from 'jwt-decode'; // Corrected import
 import '../css/payFees.css';
 
 const PayFees = ({ userRole }) => {
@@ -12,9 +12,24 @@ const PayFees = ({ userRole }) => {
     const [balance, setBalance] = useState({});
     const [levi, setLevi] = useState('');
     const [amountPaid, setAmountPaid] = useState(0);
+    const [mode, setMode] = useState(''); // New state variable for payment mode
+    const [mpesaCode, setMpesaCode] = useState(''); // New state variable for mpesaCode
+    const [bankCode, setBankCode] = useState(''); // New state variable for bankCode
     const [responseMessage, setResponseMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const [updatedInfo, setUpdatedInfo] = useState(null);
+    const [collector, setCollector] = useState('');
+
+    const collectorFunction = () => {
+        const token = localStorage.getItem("token");
+        const name = jwtDecode(token);
+        const fullName = name.fullName;
+        setCollector(fullName);
+    };
+
+    useEffect(() => {
+        collectorFunction(); // Call the function here
+    }, []);
 
     useEffect(() => {
         if (userRole !== 'super-admin') {
@@ -23,39 +38,30 @@ const PayFees = ({ userRole }) => {
     }, [userRole]);
 
     const handleAdmissionNumberChange = (e) => {
-        setUpdatedInfo(null)
+        setUpdatedInfo(null);
         setAdmissionNumber(e.target.value);
     };
 
     const handleStreamChange = (e) => {
-        setUpdatedInfo(null)
+        setUpdatedInfo(null);
         setStream(e.target.value);
     };
 
     const handleYearChange = (e) => {
-        setUpdatedInfo(null)
+        setUpdatedInfo(null);
         setYear(e.target.value);
-
     };
 
     const handleTermChange = (e) => {
-        setUpdatedInfo(null)
+        setUpdatedInfo(null);
         setTerm(e.target.value);
     };
-    const collectorFunction = async ()=>{
-        const token = localStorage.getItem("token");
-        const name = await jwtDecode(token);
-        return name.fullName;
-    }
-    
-    const collector = collectorFunction();
-    
+
     const fetchStudentData = async () => {
         setLoading(true);
         try {
             const response = await axios.get(`https://edumax.fly.dev/fees/student/${stream}/${admissionNumber}/${year}/${term}`);
             const studentData = response.data;
-            console.log(studentData)
             if (studentData) {
                 setStudent(studentData);
                 setBalance({
@@ -87,6 +93,18 @@ const PayFees = ({ userRole }) => {
         setAmountPaid(parseFloat(e.target.value));
     };
 
+    const handleModeChange = (e) => {
+        setMode(e.target.value);
+    };
+
+    const handleMpesaCodeChange = (e) => {
+        setMpesaCode(e.target.value);
+    };
+
+    const handleBankCodeChange = (e) => {
+        setBankCode(e.target.value);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (userRole !== 'super-admin') return;
@@ -100,10 +118,12 @@ const PayFees = ({ userRole }) => {
                 term,
                 levi,
                 amountPaid,
+                mode,
+                mpesaCode,
+                bankCode,
                 collector,
             });
             const updatedStudentData = response.data;
-            console.log(updatedStudentData);
             setStudent(null);
             setBalance(updatedStudentData.updatedBalance);
             setUpdatedInfo({
@@ -183,7 +203,8 @@ const PayFees = ({ userRole }) => {
                         <center>
                         <div className="pay-fees-d">
                             <div className="student-d">
-                                <h3>{student.fullName}</h3>
+                                <h4 style={{margin:0}}>Student Balancies</h4>
+                                <h3>Name:<span className='amount'>{student.fullName}</span></h3>
                                 <p>Tuition Fees Ksh : <span className='amount'>{balance.tuitionFees}</span></p>
                                 <p>Uniform Fees Ksh :<span className='amount'>{balance.uniformFees}</span></p>
                                 <p>Lunch Fees Ksh  :<span className='amount'>{balance.lunchFees}</span></p>
@@ -197,20 +218,42 @@ const PayFees = ({ userRole }) => {
                                         <option value="uniform">Uniform</option>
                                         <option value="lunch">Lunch</option>
                                     </select>
-                                </div>
+                                   
                                 <div className="form-g">
+                                    <label>Mode of Payment:</label>
+                                    <select value={mode} onChange={handleModeChange}>
+                                        <option value="">Select Mode</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="Mpesa">M-Pesa</option>
+                                        <option value="Bank">Bank</option>
+                                    </select>
+                                </div>
+                                {mode === 'mpesa' && (
+                                    <div className="form-g">
+                                        <label>M-Pesa Code:</label>
+                                        <input type="text" value={mpesaCode} onChange={handleMpesaCodeChange} placeholder='M-Pesa Code'/>
+                                    </div>
+                                )}
+                                {mode === 'bank' && (
+                                    <div className="form-g">
+                                        <label>Bank Code:</label>
+                                        <input type="text" value={bankCode} onChange={handleBankCodeChange} placeholder='Bank Code'/>
+                                    </div>
+                                )}
+                                 <div className="form-g">
                                     <label>Amount Paid:</label>
                                     <div id='amount' className="input-payFees">
-                                    <input type="number" value={amountPaid}  onChange={handleAmountPaidChange} placeholder='Ksh 1000..' />
+                                    <input type="number" value={amountPaid} onChange={handleAmountPaidChange} placeholder='Ksh 1000..' />
                                     </div>
                                 </div>
-                                <center>
-                                    <button type="submit" disabled={loading}>
+                                </div>
+                            </div>
+                        </div>
+                        <center>
+                                <button type="submit" disabled={loading}>
                                         {loading ? 'Updating...' : 'Update Student Fees'}
                                     </button>
                                 </center>
-                            </div>
-                        </div>
                         </center>
                         </>
                     )}
@@ -236,7 +279,6 @@ const PayFees = ({ userRole }) => {
             )}
         </div>
     );    
-   
 };
 
 export default PayFees;

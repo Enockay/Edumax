@@ -13,38 +13,38 @@ const isSuperAdmin = (req, res, next) => {
 
 router.get('/fetchFeesReports', async (req, res) => {
     const { stream, term, date } = req.query;
-    console.log(req.query);
-    
+   // console.log(req.query);
+
     let filter = {};
 
-    if (stream) {
-        filter.stream = stream;
-    }else if (term) {
-        filter.term = term;
-    }else if (date) {
-        filter.date = date;
-    }else {
-        filter.date = Date.now();
-    }
+    if (stream) filter.stream = stream;
+    if (term) filter.term = term;
+    if (date) filter.date = date;
 
     try {
         const reports = await FeesReport.find(filter).sort({ date: -1 });
-        
-        const responseData = reports.map(report => ({
-            _id: report._id,
-            createdAt: report.createdAt,
-            updatedAt: report.updatedAt,
-            stream: report.stream,
-            term: report.term,
-            year: report.year,
-            date: report.date,
-            reportData: report.reportData || [],
-            collector: report.collector // Ensure collector information is included
-        }));
-        res.json(responseData);
+
+        if (reports.length > 0) {
+            const responseData = reports.map(report => ({
+                _id: report._id,
+                createdAt: report.createdAt,
+                updatedAt: report.updatedAt,
+                stream: report.stream,
+                term: report.term,
+                year: report.year,
+                date: report.date,
+                reportData: report.reportData || [],
+                collector: report.collector
+            }));
+            res.status(200).json(responseData);
+        } else {
+            res.status(404).json({ message: "No data found" });
+        }
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Server error', error });
     }
+
 });
 
-module.exports = router;
+module.exports = router

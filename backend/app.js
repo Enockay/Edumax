@@ -33,6 +33,9 @@ var fees = require('./routes/Dashboard/studentFeesUpd');
 var feesReport = require("./routes/Dashboard/feesReport");
 var exam = require("./routes/Dashboard/exams");
 var uploadExam = require("./routes/Teachers/uploadExam");
+var fetchFeesRecords = require("./routes/Dashboard/Records");
+var correctionSheets = require("./routes/Dashboard/correction");
+
 var app = express();
 var uri = process.env.MONGO_URL;
 var key = process.env.SECRET_KEY;
@@ -99,7 +102,9 @@ app.post('/generate/reportForms',reportform);
 app.get("/download-report",reportForms);
 app.get("/fetchFeesReports",feesReport);
 app.use("/ip",exam);
-app.post("/exams/upload",uploadExam)
+app.post("/exams/upload",uploadExam);
+app.use("/Records",fetchFeesRecords);
+app.post("/CorrectionSheet",correctionSheets)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
