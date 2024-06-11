@@ -37,8 +37,8 @@ const AdminLogin = () => {
       }
     } catch (err) {
       setIsLoading(false); // Hide spinner
+      console.log(err)
       setError('An error occurred. Please try again.');
-      navigate('/dashboard'); 
     }
   };
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {jwtDecode }from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
+import ClipLoader from 'react-spinners/ClipLoader';
 import './css/FileUpload.css';
 
 const FileUpload = () => {
@@ -10,6 +11,9 @@ const FileUpload = () => {
   const [dueDate, setDueDate] = useState('');
   const [notification, setNotification] = useState('');
   const [file, setFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -19,48 +23,82 @@ const FileUpload = () => {
     }
   }, []);
 
+  const handleFileUpload = async () => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch('http://localhost:3000/exams/uploadFile', {
+      method: 'POST',
+      body: formData
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.message || 'Failed to upload file');
+    }
+    return result.filePath;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const token = localStorage.getItem('token');
     if (!token) {
-      alert('You must be logged in to upload files.');
+      setError('You must be logged in to upload files.');
       return;
     }
 
-    const formData = new FormData();
-    formData.append('className', className);
-    formData.append('section', section);
-    formData.append('teacherName', teacherName);
-    formData.append('subject', subject);
-    formData.append('dueDate', dueDate);
-    formData.append('notification', notification);
-    formData.append('file', file);
+    setIsLoading(true);
 
     try {
+      const filePath = await handleFileUpload();
+
+      const data = {
+        className,
+        section,
+        teacherName,
+        subject,
+        dueDate,
+        notification,
+        filePath,
+        token
+      };
+
       const response = await fetch('http://localhost:3000/exams/upload', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
-        body: formData
+        body: JSON.stringify(data)
       });
 
       const result = await response.json();
+      setIsLoading(false);
+
       if (response.ok) {
-        alert('File uploaded successfully!');
+        setSuccessMessage('File uploaded successfully!');
+        setError('');
       } else {
-        alert(`Failed to upload file: ${result.message}`);
+        setError(`Failed to upload file: ${result.message}`);
       }
     } catch (error) {
       console.error('Error uploading file:', error);
-      alert('Failed to upload file');
+      setIsLoading(false);
+      setError('Failed to upload file');
     }
   };
 
   return (
     <div className="file-upload-container">
       <h2 className="file-upload-title">Upload Exam File</h2>
+      {isLoading && (
+        <div className="spinner-container">
+          <ClipLoader color="#007bff" loading={isLoading} size={50} />
+          <p className="spinner-text">Uploading...</p>
+        </div>
+      )}
+      {error && <div className="error-message">{error}</div>}
+      {successMessage && <div className="success-message">{successMessage}</div>}
       <form className="file-upload-form" onSubmit={handleSubmit}>
         <div className="form-lft">
           <div className="form-gp">
@@ -133,7 +171,7 @@ const FileUpload = () => {
           </div>
         </div>
         <div className="form-foot">
-          <button className="form-btn" type="submit">Upload</button>
+          <button className="form-btn" type="submit" disabled={isLoading}>Upload</button>
         </div>
       </form>
     </div>

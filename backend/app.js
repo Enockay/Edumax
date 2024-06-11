@@ -102,7 +102,7 @@ app.post('/generate/reportForms',reportform);
 app.get("/download-report",reportForms);
 app.get("/fetchFeesReports",feesReport);
 app.use("/ip",exam);
-app.post("/exams/upload",uploadExam);
+app.post("/exams/uploadFile",uploadExam);
 app.use("/Records",fetchFeesRecords);
 app.post("/CorrectionSheet",correctionSheets)
 

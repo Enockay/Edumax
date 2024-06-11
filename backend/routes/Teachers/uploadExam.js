@@ -17,9 +17,16 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-router.post('/exams/upload', upload.single('file'), async (req, res) => {
+router.post('/exams/uploadFile', upload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded' });
+  }
+  res.status(200).json({ filePath: req.file.path });
+});
+
+router.post('/exams/upload', async (req, res) => {
   try {
-    const token = req.headers['authorization'].split(' ')[1];
+    const token = req.body.token;
     if (!token) return res.status(403).json({ message: 'No token provided' });
 
     jwt.verify(token, secretKey, async (err, decoded) => {
@@ -29,19 +36,16 @@ router.post('/exams/upload', upload.single('file'), async (req, res) => {
       }
 
       const { name } = decoded;
-      const { className, subject, notification } = req.body;
-      const fileUrl = req.file.path;
-
-      console.log('Decoded token:', decoded);
-      console.log('Request body:', req.body);
-      console.log('File path:', fileUrl);
+      const { className, section, subject, dueDate, notification, filePath } = req.body;
 
       const newExam = new Exam({
         teacherName: name,
         className,
+        section,
         subject,
+        dueDate,
         notification,
-        fileUrl,
+        fileUrl: filePath,
         uploadedAt: new Date(),
         printed: false
       });

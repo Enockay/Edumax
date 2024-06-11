@@ -42,6 +42,7 @@ const MainDashboard = () => {
     fetch(unitsEndpoint)
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         setAssignedUnits(data[0].teachingSubjects);
         setLoadingUnits(false);
       })
