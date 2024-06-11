@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+const { launchPuppeteer } = require('../../puppeteerConfig');
 const savePdf = require('./storePdf');
 const fs = require("fs")
 const path = require('path');
@@ -11,7 +11,7 @@ const logoPath = path.join(__dirname, '../../public/images/logo.png');
 
 // Function to generate PDF
 const generateClassRankingPdf = async (year, stream, term, teacher, gradedStudents, unitMeans, classMean, fileName,exams) => {
-    const browser = await puppeteer.launch();
+    const browser = await launchPuppeteer();
     const page = await browser.newPage();
 
     // Compute rankings

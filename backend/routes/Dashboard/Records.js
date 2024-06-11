@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Student = require('../../public/models/admitStudentSchema'); // Adjust the path as necessary
-const puppeteer = require('puppeteer');
+const { launchPuppeteer } = require('../../puppeteerConfig');
 
 router.get('/fetchFeesRecords', async (req, res) => {
     const { year, stream, admissionNumber } = req.query;
@@ -41,7 +41,7 @@ router.post('/generatePDF', async (req, res) => {
     const { year, stream, admissionNumber, feeRecords } = req.body;
 
     try {
-        const browser = await puppeteer.launch();
+        const browser = await launchPuppeteer();
         const page = await browser.newPage();
 
         // Construct HTML content

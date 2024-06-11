@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const puppeteer = require('puppeteer');
+const { launchPuppeteer } = require('../../puppeteerConfig');
 const path = require('path');
 
 const { StudentMarks } = require('../../public/models/feedStudentMarks'); // Adjust the path if necessary
@@ -28,7 +28,7 @@ router.post('/CorrectionSheet', async (req, res) => {
     try {
         const students = await StudentMarks.find({ 'years.year': year, stream });
 
-        const browser = await puppeteer.launch();
+        const browser = await launchPuppeteer();
         const page = await browser.newPage();
 
         const generateHeaders = () => {

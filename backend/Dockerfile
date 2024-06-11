@@ -1,39 +1,34 @@
-# syntax = docker/dockerfile:1
+# Use the official Node.js image as the base image
+FROM node:18
 
-# Adjust NODE_VERSION as desired
-ARG NODE_VERSION=20.11.1
-FROM node:${NODE_VERSION}-slim as base
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+  wget \
+  gnupg \
+  --no-install-recommends
 
-LABEL fly_launch_runtime="Node.js"
+# Install Google Chrome
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+  sh -c 'echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
+  apt-get update && \
+  apt-get install -y google-chrome-stable --no-install-recommends && \
+  rm -rf /var/lib/apt/lists/*
 
-# Node.js app lives here
+# Set the working directory
 WORKDIR /app
 
-# Set production environment
-ENV NODE_ENV="production"
+# Copy application files
+COPY . .
 
+# Install Node.js dependencies
+RUN npm install
 
-# Throw-away build stage to reduce size of final image
-FROM base as build
+# Copy the entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Install packages needed to build node modules
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3
-
-# Install node modules
-COPY --link package-lock.json package.json ./
-RUN npm ci
-
-# Copy application code
-COPY --link . .
-
-
-# Final stage for app image
-FROM base
-
-# Copy built application
-COPY --from=build /app /app
-
-# Start the server by default, this can be overwritten at runtime
+# Expose the port your app runs on
 EXPOSE 3000
-CMD [ "npm", "run", "start" ]
+
+# Run the entrypoint script
+CMD ["/entrypoint.sh"]

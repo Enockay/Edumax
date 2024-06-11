@@ -17,7 +17,7 @@ const PromotionForm = () => {
        
         try {
             setLoading(true);
-            const response = await axios.post('https://edumax.fly.dev/students/api/promotion/promote', {
+            const response = await axios.post('https://edumax.fly.dev/api/promotion/promote', {
                 currentStream,
                 nextStream
             });
@@ -30,13 +30,13 @@ const PromotionForm = () => {
     };
 
     const handleGraduation = async () => {
-        if(!graduatingStream || graduationYear){
-            setError("all Fields Must Be Field");
+        if(!graduatingStream || !graduationYear){
+            setError("all Graduaion fields  Must Be Field");
             return;
         }
         try {
             setGraduating(true)
-            const response = await axios.post('https://edumax.fly.dev/students/api/promotion/graduate', {
+            const response = await axios.post('https://edumax.fly.dev/api/promotion/graduate', {
                 graduatingStream,
                 year: graduationYear
             });

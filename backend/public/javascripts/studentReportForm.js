@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+const { launchPuppeteer } = require('../../puppeteerConfig');
 const fs = require('fs');
 const path = require('path');
 const { ProducedResults } = require("../models/feedStudentMarks");
@@ -46,7 +46,7 @@ const generateReportform = async (year, stream, term, examType) => {
     const logoBase64 = fs.readFileSync(logoPath).toString('base64');
     const logoDataUrl = `data:image/png;base64,${logoBase64}`;
     
-    const browser = await puppeteer.launch();
+    const browser = await launchPuppeteer();
     const page = await browser.newPage();
 
     for (const student of students) {
