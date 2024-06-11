@@ -7,8 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "postinstall": "npx puppeteer install"
+    "preview": "vite preview"
   },
 
   "dependencies": {
@@ -27,8 +26,7 @@
     "react-shadow": "^20.4.0",
     "react-spinners": "^0.13.8",
     "react-to-print": "^2.15.1",
-    "styled-components": "^6.1.11",
-    "puppeteer": "^20.0.0"  
+    "styled-components": "^6.1.11"
   },
   
   "devDependencies": {

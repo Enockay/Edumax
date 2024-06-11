@@ -218,7 +218,7 @@ const PayFees = ({ userRole }) => {
                                         <option value="uniform">Uniform</option>
                                         <option value="lunch">Lunch</option>
                                     </select>
-                                   
+                                   </div>
                                 <div className="form-g">
                                     <label>Mode of Payment:</label>
                                     <select value={mode} onChange={handleModeChange}>
@@ -228,13 +228,13 @@ const PayFees = ({ userRole }) => {
                                         <option value="Bank">Bank</option>
                                     </select>
                                 </div>
-                                {mode === 'mpesa' && (
+                                {mode === 'Mpesa' && (
                                     <div className="form-g">
                                         <label>M-Pesa Code:</label>
                                         <input type="text" value={mpesaCode} onChange={handleMpesaCodeChange} placeholder='M-Pesa Code'/>
                                     </div>
                                 )}
-                                {mode === 'bank' && (
+                                {mode === 'Bank' && (
                                     <div className="form-g">
                                         <label>Bank Code:</label>
                                         <input type="text" value={bankCode} onChange={handleBankCodeChange} placeholder='Bank Code'/>
@@ -248,7 +248,7 @@ const PayFees = ({ userRole }) => {
                                 </div>
                                 </div>
                             </div>
-                        </div>
+                        
                         <center>
                                 <button type="submit" disabled={loading}>
                                         {loading ? 'Updating...' : 'Update Student Fees'}

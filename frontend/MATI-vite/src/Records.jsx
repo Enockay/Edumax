@@ -10,9 +10,11 @@ const FeeReport = () => {
     const [feeRecords, setFeeRecords] = useState(null);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [loadingMessage, setLoadingMessage] = useState('');
 
     const handleFetchRecords = async () => {
         setLoading(true);
+        setLoadingMessage('Fetching fee records...');
         try {
             const response = await axios.get('https://edumax.fly.dev/Records/fetchFeesRecords', {
                 params: { year, stream, admissionNumber }
@@ -29,6 +31,8 @@ const FeeReport = () => {
     };
 
     const generatePDF = async () => {
+        setLoading(true);
+        setLoadingMessage('Generating fee statement...');
         try {
             const response = await axios.post('https://edumax.fly.dev/Records/generatePDF', {
                 year,
@@ -42,16 +46,22 @@ const FeeReport = () => {
             // Save the PDF using FileSaver.js
             const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
             saveAs(pdfBlob, 'fee_report.pdf');
+            setError('');
         } catch (err) {
             console.error('Error generating PDF:', err);
             setError('Error generating PDF');
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <div className="fee-report-container">
-            <h1>Fee Payment Records</h1>
-            <div className="form-group">
+            <h1>Fee Payment Statement</h1>
+            <div className="green-flag">
+                <p>This component allows you to fetch and view fee payment records for a specific student. Enter the year, stream, and admission number, then click "Fetch Records". Once the records are fetched, you can generate a PDF of the fee statement by clicking "Print PDF".</p>
+            </div>
+            <div className="Records-form-group">
                 <label>
                     Year: 
                     <input 
@@ -85,15 +95,20 @@ const FeeReport = () => {
                         onChange={(e) => setAdmissionNumber(e.target.value)} 
                     />
                 </label>
+            </div>
+            <div className="button-container">
                 <button onClick={handleFetchRecords}>Fetch Records</button>
             </div>
             {error && <p className="error-message">{error}</p>}
-            {loading && <div className="spinner"></div>}
+            {loading && (
+                <div className="spinner-container">
+                    <div className="spinner"></div>
+                    <p>{loadingMessage}</p>
+                </div>
+            )}
             {feeRecords && (
-                <div>
-                    <center>
-                        <button onClick={generatePDF}>Print PDF</button>
-                    </center>
+                <div className="button-container">
+                    <button onClick={generatePDF}>Print PDF</button>
                 </div>
             )}
         </div>

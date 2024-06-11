@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useNavigate } from 'react-router-dom';
 import {
   faUserPlus,
   faMoneyBillWave,
@@ -23,10 +24,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import '../css/Dashboard.css';
 
+
 const Sidebar = ({ onItemClick, collapsed }) => {
   const [selectedItem, setSelectedItem] = useState('school-aggregate'); // Default selected item
   const [openDropdowns, setOpenDropdowns] = useState({}); // State to manage open dropdowns
-
+  const navigate = useNavigate();
   const handleClick = (item) => {
     setSelectedItem(item);
     onItemClick(item);
@@ -37,6 +39,13 @@ const Sidebar = ({ onItemClick, collapsed }) => {
       ...prev,
       [dropdown]: !prev[dropdown],
     }));
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('loginTime');
+    navigate('/');
   };
 
   return (
@@ -236,8 +245,8 @@ const Sidebar = ({ onItemClick, collapsed }) => {
             <span>User Profile</span>
           </a>
         </li>
-        <li className={selectedItem === 'logout' ? 'active' : ''}>
-          <a href="#logout" onClick={() => handleClick('logout')}>
+        <li>
+          <a href="#logout" onClick={handleLogout}>
             <FontAwesomeIcon icon={faSignOutAlt} />
             <span>Logout</span>
           </a>
@@ -246,5 +255,6 @@ const Sidebar = ({ onItemClick, collapsed }) => {
     </div>
   );
 };
+
 
 export default Sidebar;

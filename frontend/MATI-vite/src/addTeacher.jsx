@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ClipLoader } from 'react-spinners'; // Import spinner component
-import '../css/addTeacher.css'; // Import your CSS file for styling
+import { ClipLoader } from 'react-spinners';
+import '../css/addTeacher.css';
 
 const AddTeacher = () => {
   const [teachers, setTeachers] = useState([]);
@@ -9,9 +9,9 @@ const AddTeacher = () => {
   const [teacherEmail, setTeacherEmail] = useState('');
   const [feedback, setFeedback] = useState('');
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false); // Spinner state
-  const [isDeleting, setIsDeleting] = useState(false); // Deleting state
-  const [deleteError, setDeleteError] = useState(''); // Delete error state
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
     fetchTeachers();
@@ -33,7 +33,7 @@ const AddTeacher = () => {
       email: teacherEmail,
     };
 
-    setIsLoading(true); // Show spinner
+    setIsLoading(true);
     try {
       const response = await axios.post('https://edumax.fly.dev/staff/post', newTeacher);
       setFeedback('Teacher added successfully.');
@@ -44,7 +44,7 @@ const AddTeacher = () => {
     } catch (err) {
       setError('Failed to add teacher.');
     } finally {
-      setIsLoading(false); // Hide spinner
+      setIsLoading(false);
     }
   };
 
@@ -66,26 +66,23 @@ const AddTeacher = () => {
   };
 
   return (
-    <div className="admin-panel-container">
-      <h2 className="admin-panel-title">Admin Panel - Manage Teachers</h2>
+    <div className="add-teacher-container">
+      <h2 className="add-teacher-title">Admin Panel - Manage Teachers</h2>
 
-      {/* Info flag */}
-      <div className="info-flag">
-        <div>
-        <h3 style={{margin:0}}>Instructions</h3>
+      <div className="instructions-container">
+        <h3>Instructions</h3>
         <p>To manage the teachers' accounts effectively, please follow these steps:</p>
         <ul>
           <li>To add a new teacher, fill in the name and email fields and click "Add Teacher".</li>
           <li>To delete a teacher, click the "Delete" button next to their name in the list.</li>
           <li>Ensure all information is correct before proceeding.</li>
         </ul>
-        </div>
       </div>
 
-      <div className="admin-panel-content">
-        <div className="add-teacher-section" id="add-teacher-section">
-          <form onSubmit={handleAddTeacher} className="admin-panel-form">
-            <div className="teacher-form-group">
+      <div className="content-container">
+        <div className="form-section">
+          <form onSubmit={handleAddTeacher} className="teacher-form">
+            <div className="Add-form-group">
               <label htmlFor="teacherName">Teacher Name:</label>
               <input
                 type="text"
@@ -95,7 +92,7 @@ const AddTeacher = () => {
                 required
               />
             </div>
-            <div className="teacher-form-group">
+            <div className="Add-form-group">
               <label htmlFor="teacherEmail">Teacher Email:</label>
               <input
                 type="email"
@@ -106,7 +103,7 @@ const AddTeacher = () => {
               />
             </div>
             <div className="button-group">
-              <center><button type="submit" className="btn-primary">Add Teacher</button></center>
+              <button type="submit" className="btn-primary">Add Teacher</button>
             </div>
             {isLoading && (
               <div className="spinner-container">
@@ -118,47 +115,44 @@ const AddTeacher = () => {
           </form>
         </div>
         <div className="teachers-list-section">
-          <h3 className="admin-panel-subtitle">List of Teachers</h3>
-          <div className="teachers-list">
-            {error && <div className="error-message">{error}</div>}
-            {deleteError && <div className="error-message">{deleteError}</div>}
-            {isDeleting && (
-              <div className="spinner-container">
-                <ClipLoader color="#007bff" loading={isDeleting} size={50} />
-                <p>Please wait, deleting teacher...</p>
-              </div>
-            )}
-            <table className="teachers-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Actions</th>
+          <h3>List of Teachers</h3>
+          {error && <div className="error-message">{error}</div>}
+          {deleteError && <div className="error-message">{deleteError}</div>}
+          {isDeleting && (
+            <div className="spinner-container">
+              <ClipLoader color="#007bff" loading={isDeleting} size={50} />
+              <p>Please wait, deleting teacher...</p>
+            </div>
+          )}
+          <table className="teachers-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {teachers.map((teacher) => (
+                <tr key={teacher._id}>
+                  <td>{teacher.name}</td>
+                  <td>{teacher.email}</td>
+                  <td>
+                    <button
+                      className="btn-danger"
+                      onClick={() => handleDeleteTeacher(teacher._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {teachers.map((teacher) => (
-                  <tr key={teacher._id}>
-                    <td>{teacher.name}</td>
-                    <td>{teacher.email}</td>
-                    <td>
-                      <button
-                        className="btn-danger"
-                        onClick={() => handleDeleteTeacher(teacher._id)}
-                      >
-                        Delete 
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
-      {/* Red flag */}
-      <div className="red-flag">
+      <div className="important-notice">
         <h3>Important Notice</h3>
         <p>If any account is deleted, the teacher will lose access to their account details and data associated with the school system.</p>
         <ul>
