@@ -6,7 +6,7 @@ const { launchPuppeteer } = require('../../puppeteerConfig');
 
 router.get('/fetchFeesRecords', async (req, res) => {
     const { year, stream, admissionNumber } = req.query;
-    
+
     const Studentstream = await Student(stream);
 
     try {
@@ -36,7 +36,6 @@ router.get('/fetchFeesRecords', async (req, res) => {
     }
 });
 
-
 router.post('/generatePDF', async (req, res) => {
     const { year, stream, admissionNumber, feeRecords } = req.body;
 
@@ -49,33 +48,44 @@ router.post('/generatePDF', async (req, res) => {
             <html>
             <head>
                 <style>
-                    /* Add your custom styles here */
+                    /* Custom styles */
                     body {
                         font-family: Arial, sans-serif;
-                        margin: 0;
+                        margin: 15px;
                         padding: 0;
-                        background-color: #f5f5f5;
+                        display:flex;
+                        flex-direction :column;
+                        justify-content:center;
+                        align-items:center;
+                        background-color: white;
                     }
                     .container {
-                        max-width: 800px;
+                        width: 700px;
                         margin: 0 auto;
                         padding: 20px;
                         border: 2px solid #333;
                         background-color: #fff;
                     }
                     .header {
-                        text-align: center;
                         margin-bottom: 20px;
+                        border: 1px solid #ccc;
+                        padding: 10px;
+                        margin: 20px;
+                    }
+                    .heading {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
                     }
                     .school-logo {
                         max-width: 150px;
-                        margin-bottom: 10px;
                     }
                     .title {
                         font-size: 24px;
                         font-weight: bold;
-                        margin-bottom: 10px;
+                        margin: 0;
                         text-align: center;
+                        flex-grow: 1;
                     }
                     .statement-info {
                         text-align: center;
@@ -97,49 +107,58 @@ router.post('/generatePDF', async (req, res) => {
                     }
                     .footer {
                         text-align: center;
-                        margin-top: 50px;
+                        margin-top: 0;
                         font-size: 14px;
+                    }
+                    .border-frame {
+                        border: 1px solid #000;
+                        padding: 10px;
+                        margin: 20px;
                     }
                 </style>
             </head>
             <body>
                 <div class="container">
-                    <div class="header">
+                    
+                    <div class="border-frame">
+                        <div class="statement-info">
+                        <div class="header">
+                        <div class="heading">
                         <img src="school-logo.png" alt="School Logo" class="school-logo">
                         <h1 class="title">Fee Payment Records</h1>
-                    </div>
-                    <div class="statement-info">
+                        </div>
                         <p><strong>Student Name:</strong> ${feeRecords.fullName}</p>
                         <p><strong>Stream:</strong> ${stream}</p>
-                        <p><strong>Term:</strong> ${year}</p>
-                    </div>
-                    <table class="table">
-                        <tr>
-                            <th>Date</th>
-                            <th>Term</th>
-                            <th>levi</th>
-                            <th>Mode</th>
-                            <th>Amount</th>
-                        </tr>
-                        ${feeRecords.feesRecord.map(term => term.payments.map(payment => `
+                        <p><strong>Year:</strong> ${year}</p>
+                         </div>
+                            
+                        </div>
+                        <table class="table">
                             <tr>
-                                <td>${new Date(payment.date).toLocaleDateString()}</td>
-                                <td>${term.term}</td>
-                                <td>${payment.levi}</td>
-                                <td>${payment.mode}</td>
-                                <td>${payment.amount}</td>
+                                <th>Date</th>
+                                <th>Term</th>
+                                <th>Levy</th>
+                                <th>Mode</th>
+                                <th>Amount</th>
                             </tr>
-                        `).join('')).join('')}
-                        <tr>
-                            <td></td>
-                            <td><strong>Total Balance:</strong></td>
-                            <td><strong>${feeRecords.feesRecord.reduce((total, term) => total + term.totalTuitionToBePaid + term.totalUniformFeesToBePaid + term.totalLunchFeesToBePaid - term.payments.reduce((total, payment) => total + payment.amount, 0), 0)}</strong></td>
-                        </tr>
-                    </table>
-                    <p class="footer">Produced by Finance, Mantinyani Mixed Secondary</p>
-                    <p class="footer">Approved by Principal, Martin Kitome Kimongo</p>
-                    <p class="footer">School Stamp</p>
+                            ${feeRecords.feesRecord.map(term => term.payments.map(payment => `
+                                <tr>
+                                    <td>${new Date(payment.date).toLocaleDateString()}</td>
+                                    <td>${term.term}</td>
+                                    <td>${payment.levi}</td>
+                                    <td>${payment.mode}</td>
+                                    <td>${payment.amount}</td>
+                                </tr>
+                            `).join('')).join('')}
+                            <tr>
+                                <td colspan="4" style="text-align: right;"><strong>Total Balance:</strong></td>
+                                <td><strong>${feeRecords.feesRecord.reduce((total, term) => total + term.totalTuitionToBePaid + term.totalUniformFeesToBePaid + term.totalLunchFeesToBePaid - term.payments.reduce((total, payment) => total + payment.amount, 0), 0)}</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p class="footer">Fees Statement for Admission ${admissionNumber} generated by Matinyani Mixed Finance Office</p>
                 </div>
+                <p class="footer">Produced by Finance, Mantinyani Mixed Secondary</p>
             </body>
             </html>
         `;
@@ -160,4 +179,3 @@ router.post('/generatePDF', async (req, res) => {
 });
 
 module.exports = router;
-
