@@ -23,7 +23,7 @@ const AdminLogin = () => {
     }
     setIsLoading(true); // Show spinner
     try {
-      const url = 'http://localhost:3000/admin/login/';
+      const url = 'https://edumax.fly.dev/admin/login/';
       const response = await axios.post(url, { username, password });
       setIsLoading(false); // Hide spinner
       if (response.data.success) {
