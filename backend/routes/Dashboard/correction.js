@@ -28,6 +28,9 @@ router.post('/CorrectionSheet', async (req, res) => {
     try {
         const students = await StudentMarks.find({ 'years.year': year, stream });
 
+        // Sort students by their admission number
+        students.sort((a, b) => a.studentAdmission - b.studentAdmission);
+
         const browser = await launchPuppeteer();
         const page = await browser.newPage();
 
@@ -131,100 +134,109 @@ router.post('/CorrectionSheet', async (req, res) => {
             }
         };
 
-        const content = `
-    <html>
-    <head>
-        <style>
-            @page {
-                size: landscape;
-            }
-            body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-            }
-            .outer-frame {
-                border: 2px solid #000;
-                padding: 10px;
-            }
-            .inner-frame {
-                border: 1px solid #000;
-                padding: 10px;
-            }
-            .container {
-                width: 100%;
-                padding: 10px;
-            }
-            .header {
-                text-align: center;
-                margin-bottom: 10px;
-            }
-            .header h1 {
-                margin: 0;
-            }
-            .content {
-                margin-top: 10px;
-            }
-            .content table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-            .content th, .content td {
-                border: 1px solid #ddd;
-                padding: 5px;
-            }
-            .content th {
-                background-color: #f2f2f2;
-                text-align: left;
-            }
-            .footer {
-                text-align: center;
-                margin-top: 10px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="outer-frame">
-            <div class="inner-frame">
-                <div class="container">
-                    <div class="header">
-                        <h1>Correction Sheet</h1>
-                        <p>${stream} - ${term} - ${examType} - ${year}</p>
-                    </div>
-                    <div class="content">
-                        <table>
-                            <tr>
-                                <th>ADM</th>
-                                <th>Student Name</th>
-                                ${generateHeaders()}
-                                <th>Sign1</th>
-                                <th>Sign2</th>
-                            </tr>
-                            ${students.map(student => {
-                                const examYear = student.years.find(y => y.year === year);
-                                if (!examYear) return '';
-                                const exam = examYear.exams.find(e => e.term === term && e.examType === examType);
-                                if (!exam) return '';
-                                return `<tr>${generateRows(student, exam)}</tr>`;
-                            }).join('')}
-                        </table>
-                    </div>
-                    <div class="footer">
-                        <p>Correction Sheet for ${stream} produced by Matinyani Mixed Secondary School on ${new Date().toLocaleString()}</p>
+        const generatePageContent = (studentsChunk) => `
+            <div class="outer-frame">
+                <div class="inner-frame">
+                    <div class="container">
+                        <div class="header">
+                            <h3>Correction Sheet</h3>
+                            <p>${stream} - ${term} - ${examType} - ${year}</p>
+                        </div>
+                        <div class="content">
+                            <table>
+                                <tr>
+                                    <th>ADM</th>
+                                    <th>Student Name</th>
+                                    ${generateHeaders()}
+                                    <th>Sign1</th>
+                                    <th>Sign2</th>
+                                </tr>
+                                ${studentsChunk.map(student => {
+                                    const examYear = student.years.find(y => y.year === year);
+                                    if (!examYear) return '';
+                                    const exam = examYear.exams.find(e => e.term === term && e.examType === examType);
+                                    if (!exam) return '';
+                                    return `<tr>${generateRows(student, exam)}</tr>`;
+                                }).join('')}
+                            </table>
+                        </div>
+                        <div class="footer">
+                            <p>Correction Sheet for ${stream} produced by Matinyani Mixed Secondary School on ${new Date().toLocaleString()}</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </body>
-    </html>
-`;
+        `;
 
+        // Estimate the number of rows that fit on a page
+        const rowsPerPage = 20;
+        const studentChunks = [];
+        for (let i = 0; i < students.length; i += rowsPerPage) {
+            studentChunks.push(students.slice(i, i + rowsPerPage));
+        }
+
+        const content = `
+        <html>
+        <head>
+            <style>
+                @page {
+                    size: landscape;
+                    margin: 0;
+                }
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                }
+                .outer-frame {
+                    border: 2px solid #000;
+                    padding: 10px;
+                    margin: 10px;
+                }
+                .inner-frame {
+                    border: 1px solid #000;
+                    padding: 10px;
+                }
+                .container {
+                    width: 100%;
+                    padding: 10px;
+                }
+                .header {
+                    text-align: center;
+                    margin-bottom: 10px;
+                }
+                .header h1 {
+                    margin: 0;
+                }
+                .content {
+                    margin-top: 10px;
+                }
+                .content table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                .content th, .content td {
+                    border: 1px solid #ddd;
+                    padding: 5px;
+                }
+                .content th {
+                    background-color: #f2f2f2;
+                    text-align: left;
+                }
+                .footer {
+                    text-align: center;
+                    margin-top: 10px;
+                }
+            </style>
+        </head>
+        <body>
+            ${studentChunks.map(chunk => generatePageContent(chunk)).join('')}
+        </body>
+        </html>
+        `;
 
         await page.setContent(content);
         const pdf = await page.pdf({ format: 'A4' });
-
-        // Close page with a frame
-        await page.setContent('</div></div></div></body></html>');
 
         await browser.close();
 

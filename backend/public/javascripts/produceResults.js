@@ -3,6 +3,7 @@ const generateClassListForm  = require("./pdf");
 const saveGradedStudents  = require("./saveGradedStudents");
 
 const generateResults = async (stream, term, Teacher,year,exams,fileName) => {
+    console.log("file name atgenerate result",fileName)
     try {
         const studentUnits = await fetchStudentsMarks(stream,term,year,exams);
         const gradedStudents = calculateGradesAndPoints(studentUnits, year, term, exams);

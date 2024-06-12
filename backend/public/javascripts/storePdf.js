@@ -1,6 +1,7 @@
 const ClassModel = require('../models/pdfSchema'); 
 
 const savePdf = async (year, term, classes, examType, fileName, pdfBytes) => {
+    //console.log(fileName)
     try {
         const pdfBuffer = Buffer.from(pdfBytes); // Convert Uint8Array to Buffer
 

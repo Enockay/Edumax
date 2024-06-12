@@ -98,7 +98,7 @@ const currentYear = getCurrentYear();
       // Indicate loading state
       setIsLoading(true);
       setNotification("System Availing ReportForms for Printing");
-      const response = await fetch(`http://localhost:3000/download-report?year=${year}&term=${term}&stream=${stream}&examType=${examType}`, {
+      const response = await fetch(`https://edumax.fly.dev/download-report?year=${year}&term=${term}&stream=${stream}&examType=${examType}`, {
         method: 'GET',
       });
   
@@ -152,7 +152,7 @@ const currentYear = getCurrentYear();
         stream = singleClass;
       }
 
-      const url = `http://localhost:3000/generateResult`;
+      const url = `https://edumax.fly.dev/generateResult`;
       const Teacher = "Mr."
       const response = await fetch(url, {
         method: 'POST',
@@ -204,7 +204,7 @@ const currentYear = getCurrentYear();
         examType : examType,
         term : classExamPeriod
       }
-      const response = await fetch(`http://localhost:3000/generate/reportForms`, {
+      const response = await fetch(`https://edumax.fly.dev/generate/reportForms`, {
          method : "POST",
          headers : {
           "Content-Type": "application/json"

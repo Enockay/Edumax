@@ -16,7 +16,9 @@ const processNewStudent = async (
     boardingOrDay
 ) => {
     try {
+       // console.log('Fetching model for stream:', stream);
         const modeledStudent = await modelStudent(stream);
+        //console.log('Model fetched:', modeledStudent);
 
         const newStudent = new modeledStudent({
             fullName: fullName,
@@ -35,9 +37,13 @@ const processNewStudent = async (
             boardingOrDay: boardingOrDay,
         });
 
+       // console.log('New student data:', newStudent);
+
         const admittedStudent = await newStudent.save();
+        console.log('Admitted student:', admittedStudent);
         return 'Successfully admitted student';
     } catch (error) {
+        console.error('Error occurred while admitting student:', error);
         return `Error occurred while admitting student: ${error.message}`;
     }
 };

@@ -40,8 +40,8 @@ const feesSchema = new mongoose.Schema({
 const studentSchema = new mongoose.Schema({
     fullName: { required: true, type: String },
     guardianName: { required: true, type: String },
-    guardianTel: { required: true, type: Number },
-    admissionNumber: { required: true, type: Number },
+    guardianTel: { required: true, type: String },
+    admissionNumber: { required: true, type: String },
     stream: { required: true, type: String },
     kcpeIndex: { required: true, type: Number },
     kcpeMarks: { required: true, type: Number },

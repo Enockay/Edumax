@@ -6,6 +6,7 @@
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.4.1",
     "bcryptjs": "^2.4.3",
     "chartjs-node-canvas": "^4.1.6",
     "connect-mongo": "^5.1.0",

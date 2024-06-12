@@ -12,21 +12,20 @@ const AssigUnits = () => {
   const [selectedUnits, setSelectedUnits] = useState([]);
   const [teachingSubjects, setTeachingSubjects] = useState([]);
   const [selectedTeacher, setSelectedTeacher] = useState("");
-  const [loading, setLoading] = useState(false);  // State for spinner
-  const [error, setError] = useState("");  // State for error message
+  const [loading, setLoading] = useState(false); // State for spinner
+  const [error, setError] = useState(""); // State for error message
   const [teachers, setTeachers] = useState([]);
-  const [notification , setNotification] = useState('');
+  const [notification, setNotification] = useState("");
 
   useEffect(() => {
     // Fetch teachers from the system
     fetch("https://edumax.fly.dev/staff/fetch")
       .then(response => response.json())
       .then(data => {
-        console.log(data)
-        setTeachers(data)
-
+        console.log(data);
+        setTeachers(data);
       })
-      .catch(error => console.error('Error fetching teachers:', error));
+      .catch(error => console.error("Error fetching teachers:", error));
   }, []);
 
   const handleYearChange = (event) => {
@@ -62,58 +61,74 @@ const AssigUnits = () => {
     setSelectedUnits([]);
   };
 
+  const handleRemoveSubject = (streamToRemove) => {
+    setTeachingSubjects(teachingSubjects.filter(subject => subject.stream !== streamToRemove));
+  };
+
+  const handleRemoveUnit = (streamToRemove, unitToRemove) => {
+    setTeachingSubjects(teachingSubjects.map(subject => {
+      if (subject.stream === streamToRemove) {
+        return {
+          ...subject,
+          units: subject.units.filter(unit => unit.name !== unitToRemove)
+        };
+      }
+      return subject;
+    }));
+  };
+
   const handleUpdateSubjects = () => {
     if (!year || !term || teachingSubjects.length === 0 || !selectedTeacher) {
       setError("All fields are required and there must be at least one subject");
       return;
     }
     setError("");
-    setLoading(true);  // Show spinner
+    setLoading(true); // Show spinner
     const teachingSubjectsWithSchema = teachingSubjects.map(subject => ({
       stream: subject.stream,
       units: subject.units.map(unit => ({ name: unit.name }))
     }));
 
-    const uri = "http://localhost:3000/classes/update-subjects";
+    const uri = "https://edumax.fly.dev/classes/update-subjects";
     fetch(uri, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ year, term, teacherName: selectedTeacher, teachingSubjects: teachingSubjectsWithSchema }),
     })
-    .then(response => response.json())
-    .then(data => {
-       setTeachingSubjects([]);
-       setNotification(data.message);
-      setLoading(false);  // Hide spinner
-      // Handle success response
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      setLoading(false);  // Hide spinner
-      // Handle error response
-    });
+      .then(response => response.json())
+      .then(data => {
+        setTeachingSubjects([]);
+        setNotification(data.message);
+        setLoading(false); // Hide spinner
+        // Handle success response
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        setLoading(false); // Hide spinner
+        // Handle error response
+      });
   };
 
   return (
-    <div className="classes-container">
-      <div className="inform">
+    <div className="assign-units-container">
+      <div className="assign-units-inform">
         <p>Admin Panel: Allocate units to the teacher based on their name. Fill in all fields and use the "Add Subjects" button to add units, then "Update Subjects" to finalize.</p>
-        <p>If Teachers Name is not Found in The Select the teacher is not in the System Yet</p>
+        <p>If the teacher's name is not found in the select, the teacher is not in the system yet.</p>
       </div>
-      <div className="class-form">
+      <div className="assign-units-form">
         <center>
-            <p className="p">Unit Selection</p>
+          <p className="assign-units-title">Unit Selection</p>
         </center>
-        <div className="first-2">
-          <div className="Ass-form-group">
+        <div className="assign-units-row">
+          <div className="assign-units-form-group">
             <label>Year</label>
-            <input className="input" id="year-input" type="number" value={year} onChange={handleYearChange} placeholder="e.g., 2024" required />
+            <input className="assign-units-input" type="number" value={year} onChange={handleYearChange} placeholder="e.g., 2024" required />
           </div>
-          <div className="Ass-form-group">
+          <div className="assign-units-form-group">
             <label>Term</label>
-            <select className="select" value={term} onChange={handleTermChange} required>
+            <select className="assign-units-select" value={term} onChange={handleTermChange} required>
               <option value="" disabled>Select Term</option>
               {terms.map((termOption, index) => (
                 <option key={index} value={termOption}>
@@ -123,10 +138,10 @@ const AssigUnits = () => {
             </select>
           </div>
         </div>
-        <div className="second-2">
-          <div className="Ass-form-group">
+        <div className="assign-units-row">
+          <div className="assign-units-form-group">
             <label>Teacher's Name</label>
-            <select className="select" value={selectedTeacher} onChange={handleTeacherChange} required>
+            <select className="assign-units-select" value={selectedTeacher} onChange={handleTeacherChange} required>
               <option value="" disabled>Select Teacher</option>
               {teachers.map((teacher, index) => (
                 <option key={index} value={teacher.name}>
@@ -135,9 +150,9 @@ const AssigUnits = () => {
               ))}
             </select>
           </div>
-          <div className="Ass-form-group">
+          <div className="assign-units-form-group">
             <label>Select Stream</label>
-            <select className="select" value={selectedStream} onChange={handleStreamChange} required>
+            <select className="assign-units-select" value={selectedStream} onChange={handleStreamChange} required>
               <option value="" disabled>Select Stream</option>
               {streams.map((stream, index) => (
                 <option key={index} value={stream}>
@@ -146,9 +161,9 @@ const AssigUnits = () => {
               ))}
             </select>
           </div>
-          <div className="Ass-form-group">
+          <div className="assign-units-form-group">
             <label>Select Units</label>
-            <select className="select" multiple value={selectedUnits} onChange={handleUnitChange} required>
+            <select className="assign-units-select" multiple value={selectedUnits} onChange={handleUnitChange} required>
               {units.map((unit, index) => (
                 <option key={index} value={unit}>
                   {unit}
@@ -158,19 +173,20 @@ const AssigUnits = () => {
           </div>
         </div>
         <center>
-          <button className="btn" onClick={handleAddSubjects}>Add Subjects</button>
-          {error && <p className="error">{error}</p>}
+          <button className="assign-units-btn" onClick={handleAddSubjects}>Add Subjects</button>
+          {error && <p className="assign-units-error">{error}</p>}
         </center>
       </div>
-      <div className="subject-table">
+      <div className="assign-units-subject-table">
         <center>
-            <p className="p">Unit Basket</p>
+          <p className="assign-units-title">Unit Basket</p>
         </center>
         <table>
           <thead>
             <tr>
               <th>Stream</th>
               <th>Units</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -178,16 +194,24 @@ const AssigUnits = () => {
               <tr key={index}>
                 <td>{subject.stream}</td>
                 <td>{subject.units.map(unit => unit.name).join(", ")}</td>
+                <td>
+                  <button className="assign-units-remove-btn" onClick={() => handleRemoveSubject(subject.stream)}>Remove Stream</button>
+                  {subject.units.map(unit => (
+                    <button key={unit.name} className="assign-units-remove-btn" onClick={() => handleRemoveUnit(subject.stream, unit.name)}>Remove {unit.name}</button>
+                  ))}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
         <center>
-          <button className="btn" onClick={handleUpdateSubjects}>Update Subjects</button>
-          {loading && <div className="spinner"></div>}  {/* Spinner */}
+          <button className="assign-units-btn" onClick={handleUpdateSubjects}>Update Subjects</button>
+          {loading && <div className="assign-units-spinner"></div>} {/* Spinner */}
         </center>
       </div>
-     <center>{notification && <div className="notification" style={{color:"green",boxShadow:"0 0 10px gray",borderRadius:"0.5rem",width :"50%",padding:"0.9rem"}}>{notification}</div>}</center> 
+      <center>
+        {notification && <div className="assign-units-notification">{notification}</div>}
+      </center>
     </div>
   );
 };

@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { StudentMarks } = require("../../public/models/feedStudentMarks");
+const { ProducedResults } = require("../../public/models/feedStudentMarks");
 const { PDFDocument } = require('pdf-lib');
 const stream = require('stream');
 
 router.get('/download-report', async (req, res) => {
     const { year, term, stream: studentStream, examType } = req.query;
-    //console.log(req.query);
+    console.log(req.query);
 
     try {
         const PAGE_SIZE = 50; // Number of students to process per page
@@ -17,7 +17,7 @@ router.get('/download-report', async (req, res) => {
         const pdfDoc = await PDFDocument.create();
 
         while (moreStudents) {
-            const students = await StudentMarks.find({
+            const students = await ProducedResults.find({
                 'years.year': year,
                 stream: studentStream,
                 'years.exams.term': term,

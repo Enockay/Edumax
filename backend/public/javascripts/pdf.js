@@ -10,17 +10,17 @@ const logoBase64 = fs.readFileSync(logoPath).toString('base64');
 const logoDataUrl = `data:image/png;base64,${logoBase64}`;
 
 // Function to generate PDF
-const generateClassRankingPdf = async (year, stream, term, teacher, gradedStudents, unitMeans, classMean, fileName, exams) => {
+const generateClassRankingPdf = async (year,stream,term,Teacher,gradedStudents, unitMeans, Mean, fileName,exams) => {
+    console.log(fileName)
     const browser = await launchPuppeteer();
     const page = await browser.newPage();
 
     // Compute rankings
-    gradedStudents.sort((a, b) => b.years[0].exams[0].totalPoints - a.years[0].exams[0].totalPoints); // Sort by totalPoints descending
+    gradedStudents.sort((a, b) => b.years[0].exams[0].totalPoints - a.years[0].exams[0].totalPoints);
     let rank = 1;
-    let streamRank = 1;
     for (let i = 0; i < gradedStudents.length; i++) {
         if (i > 0 && gradedStudents[i].years[0].exams[0].totalPoints === gradedStudents[i - 1].years[0].exams[0].totalPoints) {
-            gradedStudents[i].rank = gradedStudents[i - 1].rank; // Same rank for same points
+            gradedStudents[i].rank = gradedStudents[i - 1].rank;
         } else {
             gradedStudents[i].rank = rank;
         }
@@ -38,12 +38,11 @@ const generateClassRankingPdf = async (year, stream, term, teacher, gradedStuden
 
     Object.keys(studentsByStream).forEach(stream => {
         const streamStudents = studentsByStream[stream];
-        streamStudents.sort((a, b) => b.years[0].exams[0].totalPoints - a.years[0].exams[0].totalPoints); // Sort by totalPoints descending
-
+        streamStudents.sort((a, b) => b.years[0].exams[0].totalPoints - a.years[0].exams[0].totalPoints);
         let streamRank = 1;
         for (let i = 0; i < streamStudents.length; i++) {
             if (i > 0 && streamStudents[i].years[0].exams[0].totalPoints === streamStudents[i - 1].years[0].exams[0].totalPoints) {
-                streamStudents[i].streamRank = streamStudents[i - 1].streamRank; // Same rank for same points
+                streamStudents[i].streamRank = streamStudents[i - 1].streamRank;
             } else {
                 streamStudents[i].streamRank = streamRank;
             }
@@ -53,11 +52,9 @@ const generateClassRankingPdf = async (year, stream, term, teacher, gradedStuden
 
     const studentsData = gradedStudents.map(student => {
         const yearData = student.years.find(y => y.year === year);
-        if (!yearData) return null; // Skip if no data for the year
-
+        if (!yearData) return null;
         const termData = yearData.exams.find(exam => exam.term === term);
-        if (!termData) return null; // Skip if no data for the term
-
+        if (!termData) return null;
         const units = termData.units || [];
         return {
             rank: student.rank || '--',
@@ -66,7 +63,7 @@ const generateClassRankingPdf = async (year, stream, term, teacher, gradedStuden
             gender: student.gender || '--',
             stream: student.stream || '--',
             streamRank: student.streamRank || '--',
-            totalMarks: termData.totalMarks|| '--', // Sum of all unit marks
+            totalMarks: termData.totalMarks || '--',
             units: defaultUnitHeaders.map(unit => {
                 const unitData = units.find(u => u.subject === unit) || {};
                 const totalMarks = unitData.totalMarks !== undefined ? unitData.totalMarks : '--';
@@ -77,6 +74,27 @@ const generateClassRankingPdf = async (year, stream, term, teacher, gradedStuden
             totalGrade: termData.totalGrade || '--',
         };
     }).filter(student => student !== null);
+
+    // Grade distribution analysis
+    const gradeDistribution = {};
+    gradedStudents.forEach(student => {
+        const grade = student.years[0].exams[0].totalGrade;
+        if (!gradeDistribution[grade]) {
+            gradeDistribution[grade] = { total: 0, streams: {} };
+        }
+        gradeDistribution[grade].total++;
+        if (!gradeDistribution[grade].streams[student.stream]) {
+            gradeDistribution[grade].streams[student.stream] = 0;
+        }
+        gradeDistribution[grade].streams[student.stream]++;
+    });
+
+    // Class mean calculation
+    const totalPoints = gradedStudents.reduce((acc, student) => acc + student.years[0].exams[0].totalPoints, 0);
+    const classMeanRaw = totalPoints / gradedStudents.length;
+    
+    // Mapping the class mean to a scale of 1-12
+    const classMean = Math.round((classMeanRaw / 12) * 12);
 
     // Inline HTML template
     const htmlTemplate = `
@@ -238,26 +256,46 @@ const generateClassRankingPdf = async (year, stream, term, teacher, gradedStuden
             <div class="outer-frame">
                 <div class="inner-frame">
                     <div class="summary-section">
-                        <h3>Class Mean</h3>
+                       <center> <h3>Class Mean</h3></center>
                         <table class="summary-table">
                             <tr>
                                 <th>Class Mean</th>
-                                <td>${classMean.toFixed(2)}</td>
+                                <td>${classMean}</td>
                             </tr>
                         </table>
-                        <h3>Unit Means</h3>
+                        <center><h3>Unit Means</h3></center>
+                        <table class="summary-table">
+                             ${Object.entries(unitMeans).map(([unit, mean]) => 
+                                ` <thead>
+                                    <tr>
+                                        <th>${unit}</th>
+                                        <th>${mean.toFixed(2)}</th>
+                                    </tr>
+                                `).join('')}
+                                
+                            </thead>
+                            <tbody>
+                               <tr>
+                                    <td>Unit</td>
+                                    <td>Mean</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                       <center> <h4>Grade Distribution</h4></center>
                         <table class="summary-table">
                             <thead>
                                 <tr>
-                                    <th>Unit</th>
-                                    <th>Mean</th>
+                                    <th>Grade</th>
+                                    <th>Total</th>
+                                    ${Object.keys(studentsByStream).map(stream => `<th>${stream}</th>`).join('')}
                                 </tr>
                             </thead>
                             <tbody>
-                                ${Object.entries(unitMeans).map(([unit, mean]) => `
+                                ${Object.entries(gradeDistribution).map(([grade, data]) => `
                                     <tr>
-                                        <td>${unit}</td>
-                                        <td>${mean.toFixed(2)}</td>
+                                        <td>${grade}</td>
+                                        <td>${data.total}</td>
+                                        ${Object.keys(studentsByStream).map(stream => `<td>${data.streams[stream] || 0}</td>`).join('')}
                                     </tr>
                                 `).join('')}
                             </tbody>
