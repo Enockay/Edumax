@@ -26,6 +26,7 @@ var server = http.createServer(app);
  */
 
 server.listen(port, '0.0.0.0');
+server.setTimeout(300000); 
 server.on('error', onError);
 server.on('listening', onListening);
 

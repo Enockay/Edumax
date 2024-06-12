@@ -98,7 +98,7 @@ const currentYear = getCurrentYear();
       // Indicate loading state
       setIsLoading(true);
       setNotification("System Availing ReportForms for Printing");
-      const response = await fetch(`https://edumax.fly.dev/download-report?year=${year}&term=${term}&stream=${stream}&examType=${examType}`, {
+      const response = await fetch(`http://localhost:3000/download-report?year=${year}&term=${term}&stream=${stream}&examType=${examType}`, {
         method: 'GET',
       });
   
@@ -152,7 +152,7 @@ const currentYear = getCurrentYear();
         stream = singleClass;
       }
 
-      const url = `https://edumax.fly.dev/generateResult`;
+      const url = `http://localhost:3000/generateResult`;
       const Teacher = "Mr."
       const response = await fetch(url, {
         method: 'POST',
@@ -185,11 +185,36 @@ const currentYear = getCurrentYear();
     setNotification(`Generating ${selectedClass} ${selectedStream} Results and Individual Report in Progress..`);
     setNotificationType('info');
     try {
-      const response = await axios.get(`https://edumax.fly.dev/api/students`, {
-        params: { class: selectedClass, stream: selectedStream, year, term }
+      let stream;
+      if (selectedClass === 'Form 1') {
+        stream = `1${selectedStream}`;
+      } else if (selectedClass === 'Form 2') {
+        stream = `2${selectedStream}`;
+      } else if (selectedClass === 'Form 3') {
+        stream = `3${selectedStream}`;
+      } else if (selectedClass === 'Form 4') {
+        stream = `4${selectedStream}`;
+      } else {
+        stream = null;
+      }
+
+      const items = {
+        year : year,
+        stream : stream,
+        examType : examType,
+        term : classExamPeriod
+      }
+      const response = await fetch(`http://localhost:3000/generate/reportForms`, {
+         method : "POST",
+         headers : {
+          "Content-Type": "application/json"
+         },
+         body : JSON.stringify(items)
       });
+      const data = await response.json();
+      console.log(data)
       setIsLoading(false)
-      setResults(response.data);
+      setResults(data.data);
       setNotification('Results generated successfully.');
       setNotificationType('success');
     } catch (error) {

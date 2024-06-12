@@ -25,14 +25,14 @@ const FeedMarks = () => {
     const subjectMapping = {
         'Eng': 'English',
         'Kisw': 'Kiswahili',
-        'Maths': 'Mathematics',
+        'Math': 'Mathematics',
         'Chem': 'Chemistry',
         'Bio': 'Biology',
         'Phy': 'Physics',
         'Agri': 'Agriculture',
         'Busn': 'Business',
         'Hist': 'History',
-        'Geo': 'Geography',
+        'Geog': 'Geography',
         'Cre': 'CRE'
     };
     const extractedStream = selectedStream.replace('Form ', '').replace(' ', '');

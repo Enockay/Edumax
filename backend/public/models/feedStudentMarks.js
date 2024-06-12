@@ -22,7 +22,7 @@ const examSchema = new mongoose.Schema({
   totalGrade: { type: String, required: false },
   totalMarks: {type: String,required: false},
   classRank: { type: String, required: false },
-  overallRank: { type: String, required: false },
+  streamRank: { type: String, required: false },
   pdf:Buffer,
 });
 
@@ -43,5 +43,6 @@ const studentMarksSchema = new mongoose.Schema({
 
 const StudentMarks = mongoose.model('StudentMarks', studentMarksSchema);
 const ProducedResults = mongoose.model('ProducedResults', studentMarksSchema);
+//mongoose.set('debug',true);
 
 module.exports = { StudentMarks, ProducedResults };

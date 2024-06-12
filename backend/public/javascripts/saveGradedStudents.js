@@ -1,7 +1,7 @@
 const {  ProducedResults } = require('../models/feedStudentMarks');
 
 const saveGradedStudents = async (gradedStudents) => {
-   // console.log("Graded students:", JSON.stringify(gradedStudents, null, 2));
+  // console.log("Graded students:", JSON.stringify(gradedStudents, null, 2));
     try {
         const bulkOps = gradedStudents.map(student => {
             //console.log("Processing student:", student.studentAdmission);
@@ -57,7 +57,8 @@ const saveGradedStudents = async (gradedStudents) => {
                             totalPoints: exam.totalPoints,
                             totalGrade: exam.totalGrade,
                             totalMarks: exam.totalMarks,
-                            classRank : exam.classRank
+                            classRank : exam.classRank,
+                            streamRank : exam.streamRank
                         };
                     }).filter(Boolean) // Filter out null entries
                 };

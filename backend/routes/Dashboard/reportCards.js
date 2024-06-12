@@ -1,12 +1,12 @@
 const express = require("express");
-const app = express.Router();
+const router = express.Router();
 const { StudentMarks } = require("../../public/models/feedStudentMarks");
 const { PDFDocument } = require('pdf-lib');
 const stream = require('stream');
 
-app.get('/download-report', async (req, res) => {
+router.get('/download-report', async (req, res) => {
     const { year, term, stream: studentStream, examType } = req.query;
-    console.log(req.query);
+    //console.log(req.query);
 
     try {
         const PAGE_SIZE = 50; // Number of students to process per page
@@ -31,17 +31,15 @@ app.get('/download-report', async (req, res) => {
             } else {
                 await Promise.all(students.map(async (student) => {
                     const yearData = student.years.find(y => y.year === year);
+                    //console.log("student  year",yearData);
                     if (yearData) {
-                        await Promise.all(yearData.exams.map(async (exam) => {
-                            if (exam.term === term && exam.examType === examType) {
-                                const pdfBytes = exam.pdf;
-                                if (pdfBytes) {
-                                    const existingPdfDoc = await PDFDocument.load(pdfBytes);
-                                    const copiedPages = await pdfDoc.copyPages(existingPdfDoc, existingPdfDoc.getPageIndices());
-                                    copiedPages.forEach((page) => pdfDoc.addPage(page));
-                                }
-                            }
-                        }));
+                        const exam = yearData.exams.find(e => e.term === term && e.examType === examType);
+                        //console.log("student exams",exam)
+                        if (exam && exam.pdf) {
+                            const existingPdfDoc = await PDFDocument.load(exam.pdf);
+                            const copiedPages = await pdfDoc.copyPages(existingPdfDoc, existingPdfDoc.getPageIndices());
+                            copiedPages.forEach((page) => pdfDoc.addPage(page));
+                        }
                     }
                 }));
                 page += 1;
@@ -65,4 +63,4 @@ app.get('/download-report', async (req, res) => {
     }
 });
 
-module.exports = app;
+module.exports = router;

@@ -1,74 +1,51 @@
-const mongoose = require('mongoose');
-const { StudentMarks } = require('../models/feedStudentMarks'); // Adjust the path to your file
+const { ProducedResults } = require("../models/feedStudentMarks");
 
-async function updateStudentPdf(studentAdmission, year, term, examType, pdfBuffer) {
-  try {
-    // Normalize year to string
-    const normalizedYear = String(year);
-
-    console.log(`Attempting to update PDF for student ${studentAdmission}, year ${normalizedYear}, term ${term}, examType ${examType}`);
-
-    // Attempt to find the specific student and exam
-    const updateResult = await StudentMarks.updateOne(
-      {
-        studentAdmission,
-        'years.year': normalizedYear,
-        'years.exams.term': term,
-        'years.exams.examType': examType
-      },
-      {
-        $set: {
-          'years.$[yearElem].exams.$[examElem].pdf': pdfBuffer
-        }
-      },
-      {
+const updateStudentPdfs = async (pdfUpdates, batchSize, concurrency) => {
+  // Function to update a batch of students
+  const updateBatch = async (batch) => {
+    const bulkOps = batch.map((update) => ({
+      updateOne: {
+        filter: {
+          studentAdmission: update.studentAdmission,
+          'years.year': update.year,
+          'years.exams.term': update.term,
+          'years.exams.examType': update.examType,
+        },
+        update: {
+          $set: {
+            'years.$[yearElem].exams.$[examElem].pdf': update.pdfBuffer,
+          },
+        },
         arrayFilters: [
-          { 'yearElem.year': normalizedYear },
-          { 'examElem.term': term, 'examElem.examType': examType }
-        ]
-      }
-    );
+          { 'yearElem.year': update.year },
+          { 'examElem.term': update.term, 'examElem.examType': update.examType },
+        ],
+      },
+    }));
 
-    console.log('Update result:', updateResult);
+   const update =  await ProducedResults.bulkWrite(bulkOps);
+   //console.log(update);
+  };
 
-    if (updateResult.matchedCount > 0) {
-      if (updateResult.modifiedCount > 0) {
-       // console.log('PDF updated successfully');
-      } else {
-        console.log('PDF update failed: Document found, but no changes made');
-      }
-    } else {
-      console.log('PDF update failed: No matching record found');
-    }
-  
-  } catch (error) {
-    console.error('Error updating PDF:', error);
-  }
-  
-}
-async function fetchUpdatedDocument(studentAdmission, year, term, examType) {
-    try {
-      const student = await StudentMarks.findOne({
-        studentAdmission,
-        'years.year': String(year),
-        'years.exams.term': term,
-        'years.exams.examType': examType
-      });
-  
-      if (!student) {
-        console.log('Document not found');
-        return;
-      }
-  
-      // Navigate to the specific exam record
-      const yearRecord = student.years.find(y => y.year === String(year));
-      const examRecord = yearRecord.exams.find(e => e.term === term && e.examType === examType);
-  
-      console.log('Found document:', examRecord);
-      console.log('PDF buffer length:', examRecord.pdf ? examRecord.pdf.length : 'No PDF found');
-    } catch (error) {
-      console.error('Error fetching document:', error);
-    }
+  // Split pdfUpdates into chunks of batchSize
+  const chunks = [];
+  for (let i = 0; i < pdfUpdates.length; i += batchSize) {
+    chunks.push(pdfUpdates.slice(i, i + batchSize));
   }
 
-module.exports = updateStudentPdf;
+  // Process chunks concurrently
+  const processChunk = async (chunk) => {
+    await updateBatch(chunk);
+  };
+
+  const chunkBatches = [];
+  for (let i = 0; i < chunks.length; i += concurrency) {
+    chunkBatches.push(chunks.slice(i, i + concurrency));
+  }
+
+  for (const chunkBatch of chunkBatches) {
+    await Promise.all(chunkBatch.map(processChunk));
+  }
+};
+
+module.exports = { updateStudentPdfs };

@@ -49,6 +49,7 @@ const fetchStudentsMarks = async (stream, term, year, examType) => {
                                         totalMarks: 0, // Placeholder, will be calculated
                                         totalGrade: '',
                                         classRank: null, // This will be updated
+                                        streamRank: null, // This will be updated
                                     }
                                 ]
                             }
@@ -70,22 +71,22 @@ const calculateGradesAndPoints = (studentUnits) => {
     const gradedStudents = studentUnits.map(student => {
         student.years.forEach(yearData => {
             yearData.exams.forEach(exam => {
-                // Calculate marks and points for each unit
+                // Process each unit
                 exam.units = exam.units.map(unit => {
                     let totalMarks = 0;
 
                     if (['4East', '4West', '3East', '3West'].includes(student.stream)) {
                         if (['Chem', 'Bio', 'Phys'].includes(unit.subject)) {
-                            totalMarks = Math.round(((unit.P1 || 0) + (unit.P2 || 0)) / 160 * 60 + (unit.P3 || 0));
+                            totalMarks = Math.round(((unit.P1 || 1) + (unit.P2 || 1)) / 160 * 60 + (unit.P3 || 1));
                         } else if (['Math', 'Agri', 'Busn', 'Hist', 'CRE', 'Geo'].includes(unit.subject)) {
-                            totalMarks = Math.round(((unit.P1 || 0) + (unit.P2 || 0)) / 2);
+                            totalMarks = Math.round(((unit.P1 || 1) + (unit.P2 || 1)) / 2);
                         } else if (['Eng', 'Kisw'].includes(unit.subject)) {
-                            totalMarks = Math.round(((unit.P1 || 0) + (unit.P2 || 0)) / 2 + (unit.P3 || 0));
+                            totalMarks = Math.round(((unit.P1 || 1) + (unit.P2 || 1)) / 2 + (unit.P3 || 1));
                         } else {
-                            totalMarks = Math.round(unit.P1 || 0);
+                            totalMarks = Math.round(unit.P1 || 1);
                         }
                     } else {
-                        totalMarks = Math.round(unit.P1 || 0);
+                        totalMarks = Math.round(unit.P1 || 1);
                     }
 
                     let points;
@@ -136,31 +137,23 @@ const calculateGradesAndPoints = (studentUnits) => {
                     };
                 });
 
-                // Abbreviate unit names
+                // Abbreviate subject names
                 exam.units.forEach(unit => {
                     unit.subject = abbreviateSubject(unit.subject);
                 });
 
-                // Gather all units in a single array
-                let allUnits = [...exam.units];
-
-                // Ensure compulsory subjects are included and award 1 point if missing
+                // Add compulsory subjects if missing
                 const compulsorySubjects = ['Eng', 'Kisw', 'Math'];
+                const allUnits = [...exam.units];
                 compulsorySubjects.forEach(subject => {
                     if (!allUnits.some(unit => unit.subject === subject)) {
                         allUnits.push({ subject, points: 1, grade: 'E', totalMarks: 0 });
                     }
                 });
 
-                // Sort units by points descending
                 allUnits.sort((a, b) => b.points - a.points);
 
-                // Ensure at least 2 sciences and 1 humanity are included
                 const minimumSubjects = (units, subjectList, count) => {
-                    if (!units || !Array.isArray(units)) {
-                        console.error(`Invalid units array: ${units}`);
-                        return [];
-                    }
                     const selected = units.filter(unit => subjectList.includes(unit.subject)).slice(0, count);
                     while (selected.length < count) {
                         selected.push({ subject: `${subjectList[0]} Placeholder`, points: 1, grade: 'E', totalMarks: 0 });
@@ -172,12 +165,7 @@ const calculateGradesAndPoints = (studentUnits) => {
                 let selectedSciences = minimumSubjects(allUnits, ['Chem', 'Bio', 'Phys'], 2);
                 let selectedHumanities = minimumSubjects(allUnits, ['Hist', 'Geo', 'CRE'], 1);
 
-                // Create combinations based on the rules
                 const createCombination = (languages, sciences, humanities, technicials, allUnits) => {
-                    if (!Array.isArray(languages) || !Array.isArray(sciences) || !Array.isArray(humanities) || !Array.isArray(technicials) || !Array.isArray(allUnits)) {
-                        console.error(`Invalid combination arrays: ${JSON.stringify({ languages, sciences, humanities, technicials, allUnits })}`);
-                        return [];
-                    }
                     return [...languages, ...sciences, ...humanities, ...technicials].concat(
                         allUnits.filter(unit => ![...languages, ...sciences, ...humanities, ...technicials].includes(unit)).slice(0, 7 - (languages.length + sciences.length + humanities.length + technicials.length))
                     );
@@ -204,7 +192,6 @@ const calculateGradesAndPoints = (studentUnits) => {
                             allUnits
                         )
                     },
-                    
                     {
                         rule: '3-2-2-0',
                         units: createCombination(
@@ -222,24 +209,17 @@ const calculateGradesAndPoints = (studentUnits) => {
                     combination.totalPoints = combination.units.reduce((sum, unit) => sum + unit.points, 0);
                 });
 
-                // Select the combination with the highest total points
+                // Select the best combination based on total points
                 let bestCombination = combinations.reduce((best, current) => current.totalPoints > best.totalPoints ? current : best);
 
-                // Sort selected units by the desired order
+                // Sort the selected units according to a desired order
                 const desiredOrder = ['Eng', 'Kisw', 'Math', 'Chem', 'Bio', 'Phys', 'Geo', 'Hist', 'Agri', 'Busn', 'CRE', 'Comp'];
                 bestCombination.units.sort((a, b) => desiredOrder.indexOf(a.subject) - desiredOrder.indexOf(b.subject));
-
+                //console.log(bestCombination)
+                // Calculate total marks from the best chosen combination
                 exam.totalPoints = bestCombination.totalPoints;
                 exam.totalMarks = bestCombination.units.reduce((sum, unit) => sum + unit.totalMarks, 0);
                 exam.totalGrade = calculateTotalGrade(exam.totalPoints);
-
-                // Debug log
-               // console.log('Student:', student.studentName);
-               // console.log('Units used for aggregation:', bestCombination.units);
-                //console.log('Total Marks:', exam.totalMarks);
-                //console.log('Total Points:', exam.totalPoints);
-                //console.log('Total Grade:', exam.totalGrade);
-               // console.log('Combination Rule Used:', bestCombination.rule);
             });
         });
 
@@ -249,6 +229,7 @@ const calculateGradesAndPoints = (studentUnits) => {
     return gradedStudents;
 };
 
+// Ensure that the abbreviation function and total grade calculation are present
 const abbreviateSubject = (subject) => {
     const abbreviations = {
         'English': 'Eng',
@@ -297,34 +278,79 @@ const calculateTotalGrade = (totalPoints) => {
 };
 
 const sortAndRankStudents = (gradedStudents) => {
-    // Calculate total points for each student and add it to the student object
-    const studentsWithTotalPoints = gradedStudents.map(student => {
-        const totalPoints = student.years.reduce((sum, year) => 
-            sum + year.exams.reduce((sumExams, exam) => sumExams + exam.totalPoints, 0), 0);
-        return { ...student, totalPoints };
-    });
+    // Assign overall class rank
+    gradedStudents.sort((a, b) => b.years[0].exams[0].totalPoints - a.years[0].exams[0].totalPoints);
 
-    // Sort the students by total points in descending order
-    studentsWithTotalPoints.sort((a, b) => b.totalPoints - a.totalPoints);
-
-    // Assign class ranks based on sorted order with ties handled
     let currentRank = 1;
-    const totalStudents = studentsWithTotalPoints.length;
+    const totalStudents = gradedStudents.length;
 
-    for (let i = 0; i < studentsWithTotalPoints.length; i++) {
-        if (i > 0 && studentsWithTotalPoints[i].totalPoints < studentsWithTotalPoints[i - 1].totalPoints) {
+    for (let i = 0; i < gradedStudents.length; i++) {
+        if (i > 0 && gradedStudents[i].years[0].exams[0].totalPoints < gradedStudents[i - 1].years[0].exams[0].totalPoints) {
             currentRank = i + 1;
         }
 
-        studentsWithTotalPoints[i].years.forEach(year => {
+        gradedStudents[i].years.forEach(year => {
             year.exams.forEach(exam => {
                 exam.classRank = `${currentRank} out of ${totalStudents}`;
             });
         });
+
+        // Adjust the current rank for the next iteration
+        while (i + 1 < gradedStudents.length && gradedStudents[i + 1].years[0].exams[0].totalPoints === gradedStudents[i].years[0].exams[0].totalPoints) {
+            i++;
+            gradedStudents[i].years.forEach(year => {
+                year.exams.forEach(exam => {
+                    exam.classRank = `${currentRank} out of ${totalStudents}`;
+                });
+            });
+        }
+        currentRank = i + 2;
     }
 
-    return studentsWithTotalPoints;
+    // Group students by stream and rank within each stream
+    const studentsByStream = gradedStudents.reduce((acc, student) => {
+        if (!acc[student.stream]) {
+            acc[student.stream] = [];
+        }
+        acc[student.stream].push(student);
+        return acc;
+    }, {});
+
+    Object.keys(studentsByStream).forEach(stream => {
+        const streamStudents = studentsByStream[stream];
+
+        // Sort the students by total points in descending order
+        streamStudents.sort((a, b) => b.years[0].exams[0].totalPoints - a.years[0].exams[0].totalPoints);
+
+        let currentStreamRank = 1;
+
+        for (let i = 0; i < streamStudents.length; i++) {
+            if (i > 0 && streamStudents[i].years[0].exams[0].totalPoints < streamStudents[i - 1].years[0].exams[0].totalPoints) {
+                currentStreamRank = i + 1;
+            }
+
+            streamStudents[i].years.forEach(year => {
+                year.exams.forEach(exam => {
+                    exam.streamRank = `${currentStreamRank} out of ${streamStudents.length}`;
+                });
+            });
+
+            // Adjust the current stream rank for the next iteration
+            while (i + 1 < streamStudents.length && streamStudents[i + 1].years[0].exams[0].totalPoints === streamStudents[i].years[0].exams[0].totalPoints) {
+                i++;
+                streamStudents[i].years.forEach(year => {
+                    year.exams.forEach(exam => {
+                        exam.streamRank = `${currentStreamRank} out of ${streamStudents.length}`;
+                    });
+                });
+            }
+            currentStreamRank = i + 2;
+        }
+    });
+
+    return gradedStudents;
 };
+
 
 const calculateMeans = (gradedStudents) => {
     const units = {};
@@ -345,7 +371,6 @@ const calculateMeans = (gradedStudents) => {
                         units[unit.subject].count++;
                     }
                 });
-                student.classRank = student.years[0].exams[0].classRank;
             });
         });
     });
@@ -358,4 +383,5 @@ const calculateMeans = (gradedStudents) => {
     return unitMeans;
 };
 
-module.exports = { fetchStudentsMarks, calculateGradesAndPoints, calculateMeans, sortAndRankStudents };
+
+module.exports = { fetchStudentsMarks, calculateMeans, sortAndRankStudents ,calculateGradesAndPoints};
