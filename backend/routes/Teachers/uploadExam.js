@@ -1,30 +1,79 @@
 const express = require('express');
 const multer = require('multer');
-const path = require('path');
+const mongoose = require('mongoose');
+const { GridFSBucket } = require('mongodb');
+const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
-const router = express.Router();
 const Exam = require('../../public/models/examsPdf');
-const secretKey = 'aOpJFUXdhe4Nt5i5RAKzbuStAPCLK5joDSqqUlfdtZg='; // Replace with your actual secret key
 
-// Set up multer for file uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
+dotenv.config();
+
+const router = express.Router();
+const secretKey = 'aOpJFUXdhe4Nt5i5RAKzbuStAPCLK5joDSqqUlfdtZg=';
+
+// MongoDB URI
+const mongoURI = process.env.MONGO_URL;
+
+// Create mongo connection
+mongoose.connect(mongoURI);
+const conn = mongoose.connection;
+
+let bucket;
+conn.once('open', () => {
+  bucket = new GridFSBucket(conn.db, {
+    bucketName: 'uploads'
+  });
+  console.log('GridFS Bucket initialized.');
 });
-const upload = multer({ storage: storage });
 
-router.post('/exams/uploadFile', upload.single('file'), (req, res) => {
+// Create storage engine
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+// Upload file route
+router.post('/uploadFile', upload.single('file'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'No file uploaded' });
   }
-  res.status(200).json({ filePath: req.file.path });
+
+  try {
+    const uploadStream = bucket.openUploadStream(req.file.originalname, {
+      contentType: req.file.mimetype
+    });
+
+    uploadStream.end(req.file.buffer);
+
+    uploadStream.on('finish', async () => {
+      console.log('GridFS upload successful');
+
+      try {
+        const files = await bucket.find({ filename: req.file.originalname }).toArray();
+        if (!files || files.length === 0) {
+          console.error('Error fetching file details: No files found');
+          return res.status(500).json({ message: 'Error fetching file details' });
+        }
+
+        const uploadedFile = files[0];
+        console.log('Uploaded file details:', uploadedFile);
+        res.status(200).json({ fileId: uploadedFile._id });  // Return fileId here
+      } catch (err) {
+        console.error('Error fetching file details:', err);
+        res.status(500).json({ message: 'Error fetching file details' });
+      }
+    });
+
+    uploadStream.on('error', (err) => {
+      console.error('GridFS upload error:', err);
+      res.status(500).json({ message: 'GridFS upload error' });
+    });
+  } catch (err) {
+    console.error('Error during file upload:', err);
+    res.status(500).json({ message: 'Error during file upload' });
+  }
 });
 
-router.post('/exams/upload', async (req, res) => {
+// Route to handle exam uploads
+router.post('/upload', async (req, res) => {
   try {
     const token = req.body.token;
     if (!token) return res.status(403).json({ message: 'No token provided' });
@@ -36,7 +85,12 @@ router.post('/exams/upload', async (req, res) => {
       }
 
       const { name } = decoded;
-      const { className, section, subject, dueDate, notification, filePath } = req.body;
+      const { className, section, subject, dueDate, notification, fileId } = req.body;
+
+      if (!fileId) {
+        console.error('No file ID provided');
+        return res.status(400).json({ message: 'No file ID provided' });
+      }
 
       const newExam = new Exam({
         teacherName: name,
@@ -45,9 +99,9 @@ router.post('/exams/upload', async (req, res) => {
         subject,
         dueDate,
         notification,
-        fileUrl: filePath,
+        fileUrl: fileId,
         uploadedAt: new Date(),
-        printed: false
+        printed: false,
       });
 
       await newExam.save();

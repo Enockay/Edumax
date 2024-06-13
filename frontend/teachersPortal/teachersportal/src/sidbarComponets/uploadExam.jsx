@@ -27,7 +27,7 @@ const FileUpload = () => {
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await fetch('http://localhost:3000/exams/uploadFile', {
+    const response = await fetch('https://edumax.fly.dev/exams/uploadFile', {
       method: 'POST',
       body: formData
     });
@@ -36,7 +36,7 @@ const FileUpload = () => {
     if (!response.ok) {
       throw new Error(result.message || 'Failed to upload file');
     }
-    return result.filePath;
+    return result.fileId;  // Return fileId
   };
 
   const handleSubmit = async (e) => {
@@ -51,7 +51,7 @@ const FileUpload = () => {
     setIsLoading(true);
 
     try {
-      const filePath = await handleFileUpload();
+      const fileId = await handleFileUpload();  // Get fileId
 
       const data = {
         className,
@@ -60,11 +60,11 @@ const FileUpload = () => {
         subject,
         dueDate,
         notification,
-        filePath,
+        fileId,  // Use fileId
         token
       };
 
-      const response = await fetch('http://localhost:3000/exams/upload', {
+      const response = await fetch('https://edumax.fly.dev/exams/upload', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -80,6 +80,7 @@ const FileUpload = () => {
         setError('');
       } else {
         setError(`Failed to upload file: ${result.message}`);
+        setSuccessMessage('');
       }
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -91,14 +92,7 @@ const FileUpload = () => {
   return (
     <div className="file-upload-container">
       <h2 className="file-upload-title">Upload Exam File</h2>
-      {isLoading && (
-        <div className="spinner-container">
-          <ClipLoader color="#007bff" loading={isLoading} size={50} />
-          <p className="spinner-text">Uploading...</p>
-        </div>
-      )}
-      {error && <div className="error-message">{error}</div>}
-      {successMessage && <div className="success-message">{successMessage}</div>}
+
       <form className="file-upload-form" onSubmit={handleSubmit}>
         <div className="form-lft">
           <div className="form-gp">
@@ -174,7 +168,17 @@ const FileUpload = () => {
           <button className="form-btn" type="submit" disabled={isLoading}>Upload</button>
         </div>
       </form>
-    </div>
+      <center>
+      {isLoading && (
+        <div className="spinner-container">
+          <ClipLoader color="#007bff" loading={isLoading} size={20} />
+          <p className="spinner-text">Uploading...</p>
+        </div>
+      )}
+      {error && <div className="error-message">{error}</div>}
+      {successMessage && <div className="success-message">{successMessage}</div>}
+      </center>
+     </div>
   );
 };
 

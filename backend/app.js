@@ -101,8 +101,8 @@ app.get("/api/aggregate",schoolAggregate);
 app.post('/generate/reportForms',reportform);
 app.get("/download-report",reportForms);
 app.get("/fetchFeesReports",feesReport);
-app.use("/ip",exam);
-app.post("/exams/uploadFile",uploadExam);
+app.use("/ip/api/",exam);
+app.use("/exams",uploadExam);
 app.use("/Records",fetchFeesRecords);
 app.post("/CorrectionSheet",correctionSheets)
 
