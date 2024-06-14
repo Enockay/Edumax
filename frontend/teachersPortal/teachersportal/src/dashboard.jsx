@@ -9,9 +9,13 @@ import FeedMarks from "./sidbarComponets/FeedMarks";
 import AssUnits from "./sidbarComponets/AssUnits";
 import UpdateStudentMarks from "./sidbarComponets/UpdateMarks";
 import FileUpload from "./sidbarComponets/uploadExam";
-
+import StudentSearch from "./sidbarComponets/SearchStudent";
+import AttendanceSheet from "./sidbarComponets/Attendancs";
+import ViewStream from "./sidbarComponets/viewStream"
+import Documents from "./sidbarComponets/Docs";
+ 
 const Dashboard = () => {
-    const [selectedItem, setSelectedItem] = useState("");
+    const [selectedItem, setSelectedItem] = useState("Dashboard");
 
     const handleItemClick = (item) => {
         setSelectedItem(item);
@@ -22,20 +26,28 @@ const Dashboard = () => {
         switch(selectedItem){
             case "Dashboard":
                 return <MainDashboard />;
-            case "Classes" :
-                return <Classes/>
+            case "Classes":
+                return <Classes />;
             case "Assignments":
-                return <Assignment/>
+                return <Assignment />;
             case "Feed-Student-Marks":
-                return <FeedMarks/>
+                return <FeedMarks />;
             case "Assigned-Units":
-                return <AssUnits/>
+                return <AssUnits />;
             case "Update Student Marks":
-                return <UpdateStudentMarks/>
+                return <UpdateStudentMarks />;
             case "Upload-Exams":
-                return <FileUpload/>
+                return <FileUpload />;
+            case "Search Student":
+                return <StudentSearch/>
+            case "Attendance" : 
+               return <AttendanceSheet/>
+            case "View Stream" :
+                return <ViewStream/>
+            case "Documents" : 
+               return <Documents/>
             default:
-                return <MainDashboard/>
+                return <MainDashboard />;
         }
     };
 

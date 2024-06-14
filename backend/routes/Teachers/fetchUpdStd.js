@@ -8,36 +8,39 @@ updateStudent.get('/student/UpdMark', async (req, res) => {
   const { year, examType, stream, subject } = req.query;
 
   if (!year || !examType || !stream || !subject) {
-    return res.status(202).send('Missing required query parameters: year, examType, stream, subject');
+    return res.status(400).json({ message: 'Missing required query parameters: year, examType, stream, subject' });
   }
 
   try {
     const students = await StudentMarks.find({ stream });
 
     const result = students.map(student => {
-      const unit = student.units[subject];
-      if (unit) {
-        const exam = unit.exams.find(exam => exam.year === year && exam.examType === examType);
+      const yearData = student.years.find(yearData => yearData.year === year);
+      if (yearData) {
+        const exam = yearData.exams.find(exam => exam.examType === examType);
         if (exam) {
-          return {
-            _id: student._id,
-            studentAdmission: student.studentAdmission,
-            studentName: student.studentName,
-            marks: exam.marks
-          };
+          const unit = exam.units.find(unit => unit.subject === subject);
+          if (unit) {
+            return {
+              _id: student._id,
+              studentAdmission: student.studentAdmission,
+              studentName: student.studentName,
+              marks: unit.marks
+            };
+          }
         }
       }
       return null;
     }).filter(student => student !== null);
 
     if (result.length === 0) {
-      return res.status(201).send('No marks found for the given criteria');
+      return res.status(404).json({ message: 'No marks found for the given criteria' });
     }
 
     res.status(200).json(result);
   } catch (error) {
     console.error('Error fetching marks:', error);
-    res.status(500).send('Error fetching marks, please try again.');
+    res.status(500).json({ message: 'Error fetching marks, please try again.' });
   }
 });
 
@@ -47,16 +50,17 @@ updateStudent.put('/student/putMark', async (req, res) => {
     const updates = req.body;
 
     const bulkOps = updates.map(update => {
-      const { id, unit, examType, year, marks } = update;
+      const { id, year, examType, unit, marks } = update;
 
       return {
         updateOne: {
-          filter: { _id: id, [`years[0].year`]: year, [`years[0].year[0].exams.examType`]: examType },
+          filter: { _id: id, 'years.year': year, 'years.exams.examType': examType, 'years.exams.units.subject': unit },
           update: {
             $set: {
-              [`units.${unit}.$.marks`]: marks
+              'years.$.exams.$[outer].units.$[inner].marks': marks
             }
           },
+          arrayFilters: [{ 'outer.examType': examType }, { 'inner.subject': unit }],
           upsert: true
         }
       };

@@ -9,7 +9,7 @@ const ExamList = () => {
   useEffect(() => {
     const fetchExams = async () => {
       try {
-        const response = await fetch('http://localhost:3000/ip/api/exams');
+        const response = await fetch('https://edumax.fly.dev/ip/api/exams');
         const data = await response.json();
         setExams(data);
         setLoading(false);
@@ -26,7 +26,7 @@ const ExamList = () => {
     window.open(`https://edumax.fly.dev/ip/api/exams/${examId}/print`, '_blank');
 
     try {
-      await fetch(`https://edumax.fly.dev/ip/api/exams/${examId}/print`, { method: 'POST' });
+      await fetch(`/ip/api/exams/${examId}/print`, { method: 'POST' });
       setExams((prevExams) =>
         prevExams.map((exam) =>
           exam._id === examId ? { ...exam, printed: true } : exam
@@ -76,9 +76,6 @@ const ExamList = () => {
               <td>{exam.notification}</td>
               <td>{new Date(exam.uploadedAt).toLocaleDateString()}</td>
               <td>
-                <button className="btn" onClick={() => handlePrint(exam._id)}>
-                  Print
-                </button>
                 <a
                   className="link"
                   href={`https://edumax.fly.dev/ip/api/file/${exam.fileUrl}`}

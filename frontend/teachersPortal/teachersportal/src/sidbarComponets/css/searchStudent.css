@@ -1,0 +1,110 @@
+.student-search-container {
+  padding: 20px;
+  width: 80%;
+  height: 500px;
+  margin: 0 auto;
+  box-shadow: 0 0 10px gainsboro;
+  border-radius: 0.6rem;
+}
+
+.student-search-title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.student-search-form {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.student-search-input {
+  width: 70%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.student-search-button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.student-search-button:hover {
+  background-color: #0056b3;
+}
+
+.feedback {
+  text-align: center;
+  margin-top: 20px;
+  color: red;
+}
+
+.spinner {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 20px;
+  color: #007bff;
+}
+
+.student-cards-container {
+  margin-top: 5rem;
+  display: flex;
+  height: 10rem;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.student-card {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 20px;
+  width: 300px;
+  background-color: #f9f9f9;
+}
+
+.student-card h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.student-card p {
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .student-search-input {
+    width: 60%;
+  }
+
+  .student-search-button {
+    padding: 10px 15px;
+  }
+  .student-search-container{
+    height: 40vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .student-card {
+    padding: 10px;
+    width: 100%;
+  }
+
+  .student-card h3 {
+    font-size: 18px;
+  }
+
+  .student-card p {
+    font-size: 14px;
+  }
+}

@@ -20,8 +20,8 @@ WORKDIR /app
 # Copy application files
 COPY . .
 
-# Install Node.js dependencies
-RUN npm install
+# Install Node.js dependencies with legacy-peer-deps flag
+RUN npm install --legacy-peer-deps
 
 # Copy the entrypoint script
 COPY entrypoint.sh /entrypoint.sh

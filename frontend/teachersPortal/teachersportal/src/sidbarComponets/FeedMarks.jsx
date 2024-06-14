@@ -70,9 +70,9 @@ const FeedMarks = () => {
             return;
         }
         const fullUnitName = subjectMapping[selectedUnit]
-        console.log(fullUnitName);
+        //console.log(fullUnitName);
        
-        console.log(extractedStream)
+        //console.log(extractedStream)
         const uri = 'https://edumax.fly.dev/students/';
         setIsLoading(true);
         setUpdate('');

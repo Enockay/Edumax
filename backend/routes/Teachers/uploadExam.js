@@ -23,7 +23,7 @@ conn.once('open', () => {
   bucket = new GridFSBucket(conn.db, {
     bucketName: 'uploads'
   });
-  console.log('GridFS Bucket initialized.');
+ // console.log('GridFS Bucket initialized.');
 });
 
 // Create storage engine
@@ -44,26 +44,26 @@ router.post('/uploadFile', upload.single('file'), async (req, res) => {
     uploadStream.end(req.file.buffer);
 
     uploadStream.on('finish', async () => {
-      console.log('GridFS upload successful');
+     // console.log('GridFS upload successful');
 
       try {
         const files = await bucket.find({ filename: req.file.originalname }).toArray();
         if (!files || files.length === 0) {
-          console.error('Error fetching file details: No files found');
+          //console.error('Error fetching file details: No files found');
           return res.status(500).json({ message: 'Error fetching file details' });
         }
 
         const uploadedFile = files[0];
-        console.log('Uploaded file details:', uploadedFile);
+       // console.log('Uploaded file details:', uploadedFile);
         res.status(200).json({ fileId: uploadedFile._id });  // Return fileId here
       } catch (err) {
-        console.error('Error fetching file details:', err);
+        //console.error('Error fetching file details:', err);
         res.status(500).json({ message: 'Error fetching file details' });
       }
     });
 
     uploadStream.on('error', (err) => {
-      console.error('GridFS upload error:', err);
+     // console.error('GridFS upload error:', err);
       res.status(500).json({ message: 'GridFS upload error' });
     });
   } catch (err) {
@@ -80,8 +80,8 @@ router.post('/upload', async (req, res) => {
 
     jwt.verify(token, secretKey, async (err, decoded) => {
       if (err) {
-        console.error('Token verification failed:', err);
-        return res.status(500).json({ message: 'Failed to authenticate token' });
+       // console.error('Token verification failed:', err);
+        return res.status(400).json({ message: 'your token is expired login again' });
       }
 
       const { name } = decoded;

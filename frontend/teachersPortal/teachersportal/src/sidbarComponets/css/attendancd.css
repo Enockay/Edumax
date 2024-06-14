@@ -1,0 +1,101 @@
+.attendance-container {
+    padding: 20px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.setup-form-container {
+    padding: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.setup-form-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.setup-form-container label {
+    margin-bottom: 10px;
+}
+
+.setup-form-container input {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.setup-form-container button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.week-navigation {
+    margin-bottom: 20px;
+}
+
+.week-navigation button {
+    margin-right: 5px;
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.week-navigation button.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+.attendance-sheet {
+    overflow-x: auto;
+}
+
+.attendance-sheet table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.attendance-sheet th, .attendance-sheet td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.attendance-sheet td.present {
+    background-color: #d4edda;
+}
+
+.attendance-sheet td.absent {
+    background-color: #f8d7da;
+}
+
+.submit-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .attendance-sheet table {
+        display: block;
+        width: 100%;
+    }
+
+    .attendance-sheet th, .attendance-sheet td {
+        display: block;
+        width: 100%;
+    }
+
+    .attendance-sheet td {
+        text-align: left;
+    }
+}

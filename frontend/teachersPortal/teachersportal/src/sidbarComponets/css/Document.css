@@ -1,0 +1,127 @@
+/* Document.css */
+
+.document-container {
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+    background: #ffffff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  header h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #28a745;
+  }
+  
+  .intro p {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1em;
+    color: #666;
+  }
+  
+  .doc-list ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .doc-list li {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    border-radius: 5px;
+    background: #f9f9f9;
+    flex: 1 1 calc(33.333% - 1rem); /* 3 columns on large screens */
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .doc-list li:hover {
+    background: #e9e9e9;
+  }
+  
+  .doc-list li h5 {
+    margin: 0;
+    color: #666;
+  }
+  
+  .feedback, .error {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .feedback {
+    color: #888;
+  }
+  
+  .error {
+    color: #dc3545;
+  }
+  
+  .view-items {
+    margin-top: 20px;
+  }
+  
+  .view-title {
+    display: block;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: #333;
+  }
+  
+  .view-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .view-table th, .view-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+  }
+  
+  .view-table th {
+    background: #f4f4f4;
+    text-align: left;
+    font-weight: bold;
+  }
+  
+  .close-button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .close-button:hover {
+    background: #0056b3;
+  }
+  
+  .spinner {
+    text-align: center;
+    font-size: 1.2em;
+    color: #007bff;
+    margin-top: 20px;
+  }
+  
+  /* Responsive Design */
+  
+  @media (max-width: 768px) {
+    .doc-list li {
+      flex: 1 1 100%; /* 1 column on small screens */
+    }
+  }
+  

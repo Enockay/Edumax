@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import ClipLoader from 'react-spinners/ClipLoader';
 import './css/FileUpload.css';
 
 const FileUpload = () => {
   const [className, setClassName] = useState('');
-  const [section, setSection] = useState('');
+  const [department, setDepartment] = useState('');
   const [teacherName, setTeacherName] = useState('');
   const [subject, setSubject] = useState('');
   const [dueDate, setDueDate] = useState('');
@@ -29,14 +29,14 @@ const FileUpload = () => {
 
     const response = await fetch('https://edumax.fly.dev/exams/uploadFile', {
       method: 'POST',
-      body: formData
+      body: formData,
     });
 
     const result = await response.json();
     if (!response.ok) {
       throw new Error(result.message || 'Failed to upload file');
     }
-    return result.fileId;  // Return fileId
+    return result.fileId; // Return fileId
   };
 
   const handleSubmit = async (e) => {
@@ -51,25 +51,25 @@ const FileUpload = () => {
     setIsLoading(true);
 
     try {
-      const fileId = await handleFileUpload();  // Get fileId
+      const fileId = await handleFileUpload(); // Get fileId
 
       const data = {
         className,
-        section,
+        department,
         teacherName,
         subject,
         dueDate,
         notification,
-        fileId,  // Use fileId
-        token
+        fileId, // Use fileId
+        token,
       };
 
       const response = await fetch('https://edumax.fly.dev/exams/upload', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
 
       const result = await response.json();
@@ -100,26 +100,33 @@ const FileUpload = () => {
             <input
               className="form-in"
               type="text"
+              placeholder="Enter class name"
               value={className}
               onChange={(e) => setClassName(e.target.value)}
               required
             />
           </div>
           <div className="form-gp">
-            <label className="form-labeel">Section:</label>
-            <input
+            <label className="form-labeel">Department:</label>
+            <select
               className="form-in"
-              type="text"
-              value={section}
-              onChange={(e) => setSection(e.target.value)}
+              value={department}
+              onChange={(e) => setDepartment(e.target.value)}
               required
-            />
+            >
+              <option value="">Select department</option>
+              <option value="Science">Science</option>
+              <option value="Humanities">Humanities</option>
+              <option value="Technicals">Technicals</option>
+              <option value="Arts">Arts</option>
+            </select>
           </div>
           <div className="form-gp">
             <label className="form-labeel">Teacher's Name:</label>
             <input
               className="form-input"
               type="text"
+              placeholder="Enter teacher's name"
               value={teacherName}
               readOnly
             />
@@ -129,6 +136,7 @@ const FileUpload = () => {
             <input
               className="form-in"
               type="text"
+              placeholder="Enter subject"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               required
@@ -159,26 +167,31 @@ const FileUpload = () => {
             <label className="form-labeel">Notification:</label>
             <textarea
               className="form-txtarea"
+              placeholder="Enter notification (optional)"
               value={notification}
               onChange={(e) => setNotification(e.target.value)}
             ></textarea>
           </div>
         </div>
         <div className="form-foot">
-          <button className="form-btn" type="submit" disabled={isLoading}>Upload</button>
+          <center>
+            <button className="form-btn" type="submit" disabled={isLoading}>
+              Upload
+            </button>
+          </center>
         </div>
       </form>
       <center>
-      {isLoading && (
-        <div className="spinner-container">
-          <ClipLoader color="#007bff" loading={isLoading} size={20} />
-          <p className="spinner-text">Uploading...</p>
-        </div>
-      )}
-      {error && <div className="error-message">{error}</div>}
-      {successMessage && <div className="success-message">{successMessage}</div>}
+        {isLoading && (
+          <div className="spinner-container">
+            <ClipLoader color="#007bff" loading={isLoading} size={20} />
+            <p className="spinner-text">Uploading...</p>
+          </div>
+        )}
+        {error && <div className="error-message">{error}</div>}
+        {successMessage && <div className="success-message">{successMessage}</div>}
       </center>
-     </div>
+    </div>
   );
 };
 

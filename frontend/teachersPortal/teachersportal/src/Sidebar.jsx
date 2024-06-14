@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import {
     faTachometerAlt,
     faChalkboardTeacher,
@@ -13,106 +15,144 @@ import {
     faBookOpen,
     faBell,
     faBars,
+    faCalendarAlt,
+    faEnvelope,
+    faFileAlt,
+    faLifeRing,
+    faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./css/Sidebar.css";
 
 const Sidebar = ({ onItemClick }) => {
+    const navgate = useNavigate();
+
     const [academicsOpen, setAcademicsOpen] = useState(false);
     const [studentsOpen, setStudentsOpen] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [activeItem, setActiveItem] = useState("Dashboard");
 
     const toggleAcademics = () => setAcademicsOpen(!academicsOpen);
     const toggleStudents = () => setStudentsOpen(!studentsOpen);
     const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
     const handleItemClick = (item) => {
+        setActiveItem(item);
         onItemClick(item);
         setSidebarOpen(false); // Hide sidebar after item click on small screens
     };
 
+    const logout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+        localStorage.set("isLoggedIn",false)
+        navgate("/login");
+        
+    }
     return (
-        <div className="items">
-            <button className="sidebar-button" onClick={toggleSidebar}>
+        <div className="sidebar-container">
+            <button className="sidebar-button" onClick={toggleSidebar} aria-label="Toggle sidebar">
                 <FontAwesomeIcon icon={faBars} />
             </button>
             <div className={`sidebar-items ${sidebarOpen ? 'open' : 'closed'}`}>
                 <ul>
-                    <li className="active">
+                    <li className={activeItem === "Dashboard" ? "active" : ""} onClick={() => handleItemClick("Dashboard")}>
                         <FontAwesomeIcon icon={faTachometerAlt} />
-                        <span onClick={() => handleItemClick("Dashboard")}>Dashboard</span>
+                        <span>Dashboard</span>
                     </li>
-                    <li>
+                    {/*<li className={activeItem === "Classes" ? "active" : ""} onClick={() => handleItemClick("Classes")}>
                         <FontAwesomeIcon icon={faChalkboardTeacher} />
-                        <span onClick={() => handleItemClick("Classes")}>Classes</span>
-                    </li>
-                    <li>
+                        <span>Classes</span>
+                    </li>**/}
+                    <li className={activeItem === "Assignments" ? "active" : ""} onClick={() => handleItemClick("Assignments")}>
                         <FontAwesomeIcon icon={faClipboardList} />
-                        <span onClick={() => handleItemClick("Assignments")}>Assignments</span>
+                        <span>Assignments</span>
                     </li>
-                    <li onClick={toggleAcademics}>
+                    <li onClick={toggleAcademics} aria-expanded={academicsOpen}>
                         <FontAwesomeIcon icon={faGraduationCap} />
                         <span>Academics</span>
                         <FontAwesomeIcon icon={academicsOpen ? faChevronUp : faChevronDown} className="dropdown-icon" />
                     </li>
                     {academicsOpen && (
                         <ul className="dropdown">
-                            <li>
+                            <li className={activeItem === "Feed-Student-Marks" ? "active" : ""} onClick={() => handleItemClick("Feed-Student-Marks")}>
                                 <FontAwesomeIcon icon={faBookOpen} />
-                                <span onClick={() => handleItemClick("Feed-Student-Marks")}>Feed  Marks</span>
+                                <span>Feed Marks</span>
                             </li>
-                            <li>
+                            <li className={activeItem === "Assigned-Units" ? "active" : ""} onClick={() => handleItemClick("Assigned-Units")}>
                                 <FontAwesomeIcon icon={faBookOpen} />
-                                <span onClick={() => handleItemClick("Assigned-Units")}>Assigned Units</span>
+                                <span>Assigned Units</span>
                             </li>
-                            <li>
+                            <li className={activeItem === "Update Student Marks" ? "active" : ""} onClick={() => handleItemClick("Update Student Marks")}>
                                 <FontAwesomeIcon icon={faBookOpen} />
-                                <span onClick={() => handleItemClick("Update Student Marks")}>Update  Marks</span>
+                                <span>Update Marks</span>
                             </li>
-                            <li>
+                            <li className={activeItem === "Upload-Exams" ? "active" : ""} onClick={() => handleItemClick("Upload-Exams")}>
                                 <FontAwesomeIcon icon={faBookOpen} />
-                                <span onClick={() => handleItemClick("Upload-Exams")}>Upload Exams</span>
+                                <span>Upload Exams</span>
                             </li>
                             <hr />
                         </ul>
                     )}
-                    <li onClick={toggleStudents}>
+                    <li onClick={toggleStudents} aria-expanded={studentsOpen}>
                         <FontAwesomeIcon icon={faUserGraduate} />
                         <span>Students</span>
                         <FontAwesomeIcon icon={studentsOpen ? faChevronUp : faChevronDown} className="dropdown-icon" />
                     </li>
                     {studentsOpen && (
                         <ul className="dropdown">
-                            <li>
+                            <li className={activeItem === "View Stream" ? "active" : ""} onClick={() => handleItemClick("View Stream")}>
                                 <FontAwesomeIcon icon={faBookOpen} />
-                                <span onClick={() => handleItemClick("View Stream")}>View Stream</span>
+                                <span>Documentary</span>
                             </li>
-                            <li>
+                            <li className={activeItem === "Search Student" ? "active" : ""} onClick={() => handleItemClick("Search Student")}>
                                 <FontAwesomeIcon icon={faBookOpen} />
-                                <span onClick={() => handleItemClick("Search Student")}>Search Student</span>
+                                <span>Search Student</span>
                             </li>
-                            <li>
-                                <FontAwesomeIcon icon={faBookOpen} />
-                                <span onClick={() => handleItemClick("Other")}>Other</span>
+                            <li className={activeItem === "Set-Attendance" ? "active" : ""} onClick={() => handleItemClick("Set-Attendance")}>
+                                <FontAwesomeIcon icon={faUsers} />
+                               <span>Initialize signing sheet</span>
                             </li>
+                            <li className={activeItem === "Attendance" ? "active" : ""} onClick={() => handleItemClick("Attendance")}>
+                                 <FontAwesomeIcon icon={faUsers} />
+                               <span>Attendance</span>
+                             </li>
+
                             <hr />
                         </ul>
                     )}
-                    <li>
-                        <FontAwesomeIcon icon={faUser} />
-                        <span onClick={() => handleItemClick("Profile")}>Profile</span>
+                    
+                    <li className={activeItem === "Documents" ? "active" : ""} onClick={() => handleItemClick("Documents")}>
+                        <FontAwesomeIcon icon={faFileAlt} />
+                        <span>Documents</span>
                     </li>
-                    <li>
+                    <li className={activeItem === "Calendar" ? "active" : ""} onClick={() => handleItemClick("Calendar")}>
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                        <span>Calendar</span>
+                    </li>
+                    <li className={activeItem === "Resources" ? "active" : ""} onClick={() => handleItemClick("Resources")}>
+                        <FontAwesomeIcon icon={faBookOpen} />
+                        <span>Resources</span>
+                    </li>
+                    <li className={activeItem === "Support" ? "active" : ""} onClick={() => handleItemClick("Support")}>
+                        <FontAwesomeIcon icon={faLifeRing} />
+                        <span>Support</span>
+                    </li>
+                    <li className={activeItem === "Notifications" ? "active" : ""} onClick={() => handleItemClick("Notifications")}>
                         <FontAwesomeIcon icon={faBell} />
-                        <span onClick={() => handleItemClick("Notifications")}>Notifications</span>
+                        <span>Notifications</span>
                     </li>
-                    <li>
+                    <li className={activeItem === "Profile" ? "active" : ""} onClick={() => handleItemClick("Profile")}>
+                        <FontAwesomeIcon icon={faUser} />
+                        <span>Profile</span>
+                    </li>
+                    <li className={activeItem === "Settings" ? "active" : ""} onClick={() => handleItemClick("Settings")}>
                         <FontAwesomeIcon icon={faCog} />
-                        <span onClick={() => handleItemClick("Settings")}>Settings</span>
+                        <span>Settings</span>
                     </li>
-                    <li className="logout">
+                    <li className="logout" onClick={logout}>
                         <FontAwesomeIcon icon={faSignOutAlt} />
-                        <span onClick={() => handleItemClick("Logout")}>Logout</span>
+                        <span>Logout</span>
                     </li>
                 </ul>
             </div>
@@ -121,4 +161,8 @@ const Sidebar = ({ onItemClick }) => {
 };
 
 
-export default Sidebar
+Sidebar.propTypes = {
+    onItemClick: PropTypes.func.isRequired,
+};
+
+export default Sidebar;

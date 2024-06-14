@@ -6,12 +6,14 @@ import ProtectedRoute from './ProtectedRoute';
 import LoginPage from './login/login.jsx';
 import RegisterPage from './login/Register.jsx';
 import Dashboard from './dashboard.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const App = () => {
     return (
         <AuthProvider>
             <Router>
                 <Routes>
+                    <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
                     <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
