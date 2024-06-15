@@ -88,7 +88,7 @@ const Documents = () => {
       <header>
         <h3>Saved Documents</h3>
         <div className="intro">
-          <p>All the documentaries you have added will display here. To view a document, simply double-click on the document name. You can retrieve and use them in various ways.</p>
+          <p>All the documentaries you have added will display here. To view a document, simply double-click on the document name to see the content in.</p>
         </div>
       </header>
       {loadingDocuments ? (

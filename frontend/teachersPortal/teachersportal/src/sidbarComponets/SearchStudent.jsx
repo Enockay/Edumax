@@ -36,24 +36,28 @@ const StudentSearch = () => {
 
   return (
     <div className="student-search-container">
-      <h2 className="student-search-title">Search Student</h2>
+      <h2 style={{margin:0}}className="student-search-title">Search Student</h2>
+      <div className='doc'>
+        <p className='p'>You can try search student based on any clue you have about the student ie lastname,admission,firstname etc</p>
+      </div>
       <div className="student-search-form">
         <input
           className="student-search-input"
           type="text"
           placeholder="Enter student admission number or name"
           value={searchQuery}
+          style={{width:"50%"}}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         <button className="student-search-button" onClick={handleSearch}>
           Search
         </button>
       </div>
+      {loading && <div className="spinner"></div>}
       <div className='feedback'>
-      {loading && <div className="spinner"></div>
-      }
       {feedback && !loading && <div className="feedback">{feedback}</div>}
       </div>
+      <div className='display-students'>
       {students.length > 0 && !loading && (
         <div className="student-cards-container">
           {students.map(student => (
@@ -68,6 +72,7 @@ const StudentSearch = () => {
           ))}
         </div>
       )}
+      </div> 
     </div>
   );
 };

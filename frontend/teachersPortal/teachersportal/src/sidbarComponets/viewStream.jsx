@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './css/Viewstream.css'
+import './css/Viewstream.css';
 import {jwtDecode} from 'jwt-decode';
 
 const streams = ['1East', '1West', '2East', '2West', '3East', '3West', '4East', '4West'];
@@ -13,11 +13,10 @@ const ViewStream = () => {
   const [tally, setTally] = useState('');
   const [docName, setDocName] = useState('');
   const [teacherName, setTeacherName] = useState('');
-  const [success , setSuccess] = useState('');
-  
-  const handleStreamChange = (event) => {
-    setSelectedStream(event.target.value);
-  };
+  const [success, setSuccess] = useState('');
+  const [savedDocs, setSavedDocs] = useState([]);
+  const [selectedDoc, setSelectedDoc] = useState('');
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     const retrieveToken = async () => {
@@ -26,10 +25,29 @@ const ViewStream = () => {
         const decoded = jwtDecode(token);
         const teacherName = decoded.name;
         setTeacherName(teacherName);
+        await retrieveDocs(teacherName);
       }
     };
     retrieveToken();
   }, []);
+
+  const retrieveDocs = async (teacherName) => {
+    try {
+      const response = await fetch(`https://edumax.fly.dev/docs/savedDoc/${teacherName}`);
+      const result = await response.json();
+      if (result.success) {
+        setSavedDocs(result.message);
+      } else {
+        setFeedback('Error fetching documents');
+      }
+    } catch (error) {
+      setFeedback('An error occurred while fetching documents');
+    }
+  };
+
+  const handleStreamChange = (event) => {
+    setSelectedStream(event.target.value);
+  };
 
   const fetchStudents = async () => {
     if (selectedStream) {
@@ -49,12 +67,10 @@ const ViewStream = () => {
           setTally(sortedStudents.length);
           setUniqueItems(sortedStudents.map(() => ''));
           setFeedback(sortedStudents.length ? '' : 'No students found in this stream.');
-
         } else {
           setFeedback('Error fetching students, please try again.');
         }
       } catch (error) {
-        console.error('Error fetching students:', error);
         setLoading(false);
         setFeedback('Error fetching students, please try again.');
       }
@@ -69,11 +85,8 @@ const ViewStream = () => {
     setUniqueItems(newUniqueItems);
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
-
   const saveDocs = async () => {
+    setFeedback("");
     const unifiedStudents = students.map((student, index) => ({
       admissionNumber: student.admissionNumber,
       fullName: student.fullName,
@@ -91,6 +104,56 @@ const ViewStream = () => {
     const feedback = await response.json();
     if (feedback.success) {
       setSuccess(feedback.message);
+      setStudents([]);
+    }
+  };
+
+  const fetchSavedDocDetails = async (docId) => {
+    setLoading(true);
+    setFeedback("");
+    setSelectedDoc(docId);
+    try {
+      const response = await fetch(`https://edumax.fly.dev/docs/${docId}`);
+      const result = await response.json();
+      setLoading(false);
+
+      if (result.success) {
+        const doc = result.message;
+        setSelectedStream(doc.stream);
+        setDocName(doc.documentaryName);
+        setUpdating(true);
+        const sortedStudents = doc.students.sort((a, b) => a.admissionNumber - b.admissionNumber);
+        setStudents(sortedStudents);
+        setTally(sortedStudents.length);
+        setUniqueItems(sortedStudents.map(student => student.uniqueItem));
+      } else {
+        setFeedback('Error fetching document details, please try again.');
+      }
+    } catch (error) {
+      setLoading(false);
+      setFeedback('Error fetching document details, please try again.');
+    }
+  };
+
+  const updateDocs = async () => {
+    const unifiedStudents = students.map((student, index) => ({
+      admissionNumber: student.admissionNumber,
+      fullName: student.fullName,
+      uniqueItem: uniqueItems[index],
+    }));
+
+    const url = `https://edumax.fly.dev/docs/updateDocs/${selectedDoc}`;
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ students: unifiedStudents, stream: selectedStream, docName, teacherName })
+    });
+    const feedback = await response.json();
+    if (feedback.success) {
+      setSuccess(feedback.message);
+      setFeedback("");
       setStudents([]);
     }
   };
@@ -114,6 +177,21 @@ const ViewStream = () => {
       {loading && <div className="spinner"></div>}
       {feedback && !loading && <div className="feedback">{feedback}</div>}
       {success && !loading && <div className='success'>{success}</div>}
+      {savedDocs.length > 0 &&
+        <div className='update-doc'>
+          <div className='select-doc'>
+            <center>
+              <h5 style={{ margin: 0 }}>Update Document</h5>
+              <select value={selectedDoc} onChange={(e) => fetchSavedDocDetails(e.target.value)}>
+                <option value="">Select Doc</option>
+                {savedDocs.map((item) => (
+                  <option key={item._id} value={item._id}>{item.documentaryName}</option>
+                ))}
+              </select>
+            </center>
+          </div>
+        </div>
+      }
       {students.length > 0 && !loading && (
         <>
           <div className='tally'>Stream has {tally} Students</div>
@@ -122,7 +200,11 @@ const ViewStream = () => {
               Documentary Name
               <input value={docName} onChange={(e) => setDocName(e.target.value)} className='docName' />
             </label>
-            <button className="submit-unique-items-button" onClick={saveDocs}>Save Doc</button>
+            {updating ? (
+              <button className="submit-unique-items-button" onClick={updateDocs}>Update Doc</button>
+            ) : (
+              <button className="submit-unique-items-button" onClick={saveDocs}>Save Doc</button>
+            )}
           </div>
           <table className="students-table">
             <thead>

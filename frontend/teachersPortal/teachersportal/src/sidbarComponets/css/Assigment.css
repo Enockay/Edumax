@@ -7,14 +7,11 @@
 .assignment-form-card,
 .assignment-list-card {
     background-color: #f9f9f9;
-    border: 1px solid #ddd;
+    border: 1px solid #f7f4f4;
     border-radius: 5px;
     padding: 20px;
     margin: 10px;
-    width: 100%;
-    min-width: 60%;
     max-width: 500px;
-    min-height: 40%;
     height: fit-content;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -54,7 +51,7 @@
     border-radius: 5px;
     padding: 20px;
     margin: 10px;
-    width: 100%;
+    width: 90%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -62,7 +59,7 @@
     .assignment-card,
     .assignment-form-card,
     .assignment-list-card {
-        width: 100%;
+        width: 90%;
         margin: 5px 0;
         padding: auto;
     }

@@ -38,7 +38,9 @@
     padding: 15px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
     border-radius: 5px;
-    background: #f9f9f9;
+    max-width:fit-content;
+    color: green;
+    background: #9dbdc5;
     flex: 1 1 calc(33.333% - 1rem); /* 3 columns on large screens */
     box-sizing: border-box;
     cursor: pointer;

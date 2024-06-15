@@ -66,7 +66,13 @@
     border-left: 5px solid #e03131;
     background-color: #ee9797;
   }
-  
+  .select-doc{
+    display: block;
+  }
+  .select-doc select{
+    padding: 0.4rem;
+    border-radius: 0.2rem;
+  }
   .success{
     background-color: #9bca43;
     padding: 0.5rem;

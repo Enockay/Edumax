@@ -1,7 +1,7 @@
 .student-search-container {
   padding: 20px;
-  width: 80%;
-  height: 500px;
+  max-width: 800px;
+  max-height: 100vh;
   margin: 0 auto;
   box-shadow: 0 0 10px gainsboro;
   border-radius: 0.6rem;
@@ -9,7 +9,8 @@
 
 .student-search-title {
   text-align: center;
-  font-size: 24px;
+  font-size: 1.2rem;
+  color: darkblue;
   margin-bottom: 20px;
 }
 
@@ -36,7 +37,10 @@
   border-radius: 4px;
   cursor: pointer;
 }
-
+.display-students{
+  display: flex;
+ 
+}
 .student-search-button:hover {
   background-color: #0056b3;
 }
@@ -55,10 +59,8 @@
 }
 
 .student-cards-container {
-  margin-top: 5rem;
   display: flex;
-  height: 10rem;
-  flex-wrap: wrap;
+  height: fit-content;
   gap: 20px;
   justify-content: center;
 }
@@ -68,7 +70,7 @@
   border-radius: 4px;
   padding: 20px;
   width: 300px;
-  background-color: #f9f9f9;
+  background-color: #c8ccdb;
 }
 
 .student-card h3 {
@@ -86,18 +88,20 @@
   .student-search-input {
     width: 60%;
   }
-
+.student-cards-container{
+ flex-direction: column;
+}
   .student-search-button {
     padding: 10px 15px;
   }
   .student-search-container{
-    height: 40vh;
+    max-width: 90%;
     display: flex;
     flex-direction: column;
   }
   .student-card {
     padding: 10px;
-    width: 100%;
+    width: 92%;
   }
 
   .student-card h3 {
