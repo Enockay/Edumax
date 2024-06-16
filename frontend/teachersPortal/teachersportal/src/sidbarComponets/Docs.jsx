@@ -11,6 +11,7 @@ const Documents = () => {
   const [loadingDocuments, setLoadingDocuments] = useState(false);
   const [loadingViewItems, setLoadingViewItems] = useState(false);
   const [documentaryName, setDocumentaryName] = useState('');
+  const [availableDoc,setavailableDoc] = useState('')
 
   const getDocumentaries = async (name) => {
     try {
@@ -22,6 +23,7 @@ const Documents = () => {
       if (result.success) {
         if (result.message.length > 0) {
           setDocuments(result.message);
+          setavailableDoc(result.message);
           setViewItems([]);
           setFeedback("");
         } else {
@@ -63,8 +65,10 @@ const Documents = () => {
       });
 
       const feedback = await response.json();
+      
       if (feedback.success) {
-        setViewItems(feedback.message.students);
+        setViewItems(feedback.message[0].students);
+        console.log(feedback.message[0].students);
         setDocumentaryName(documentaryName);
         setFeedback("");
         setDocuments([]);
@@ -80,7 +84,7 @@ const Documents = () => {
 
   const closeDocument = () => {
     setViewItems([]);
-    setDocuments(prevDocuments => prevDocuments);
+    setDocuments(availableDoc);
   };
 
   return (

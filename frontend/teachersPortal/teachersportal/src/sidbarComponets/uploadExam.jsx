@@ -122,9 +122,9 @@ const FileUpload = () => {
             </select>
           </div>
           <div className="form-gp">
-            <label className="form-labeel">Teacher's Name:</label>
+            <label className="form-label">Teacher's Name:</label>
             <input
-              className="form-input"
+              className="form-input-teacher"
               type="text"
               placeholder="Enter teacher's name"
               value={teacherName}

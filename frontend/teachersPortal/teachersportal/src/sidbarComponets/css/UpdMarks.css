@@ -38,7 +38,7 @@ h3 {
     border: 1px solid #ccc;
 }
 
-.button {
+.button-update {
     padding: 10px 15px;
     background-color: #007BFF;
     color: white;
@@ -48,6 +48,14 @@ h3 {
     font-size: 16px;
     align-self: center;
     transition: background-color 0.3s;
+}
+.form-gp{
+ margin-top: 0.6rem;
+ color: #211f41;
+}
+
+.form-labeel{
+ color: #211f41;
 }
 
 .button:hover {

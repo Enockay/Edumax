@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const saveDocs = require("../../public/models/documentary");
+const model = require("../../public/models/admitStudentSchema")
 
 // Route to get students by stream
 router.get('/stream/:id', async (req, res) => {
@@ -16,6 +17,23 @@ router.get('/stream/:id', async (req, res) => {
   }
 });
 
+router.post('/view',async(req,res) =>{
+  try{
+    const { documentaryName, teacherName } = req.body;
+
+    const query = {documentaryName, teacherName };
+
+    const  students = await  saveDocs.find(query);
+    if(students.length > 0){
+      //console.log(students)
+      res.status(200).json({success:true,message:students})
+    }
+  }catch(error){
+    res.status(304).json({success:true,message:"error occured"})
+  }
+ 
+
+})
 router.post('/saveDocs', async (req, res) => {
   const { students, stream, docName, teacherName } = req.body;
 

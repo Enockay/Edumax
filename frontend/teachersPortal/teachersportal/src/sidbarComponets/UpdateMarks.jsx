@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './css/UpdMarks.css';
+import { jwtDecode } from 'jwt-decode';
 
 const UpdateStudentMarks = () => {
-    const [streams] = useState(['4East', '4West', '3East', '3West', '2East', '2West', '1East', '1West']);
-    const [units] = useState(['Eng', 'Kisw', 'Maths', 'Chem', 'Bio', 'Phy', 'Agri', 'Busn', 'Hist', 'Geo', 'Cre']);
+    const [streams, setStreams] = useState([]);
+    const [units, setUnits] = useState([]);
     const [terms] = useState(['Term 1', 'Term 2', 'Term 3']);
     const [examTypes] = useState(['CAT', 'Midterm', 'Endterm', 'TestExam']);
     const [years] = useState(['2024', '2023', '2022', '2021']);
@@ -19,6 +20,7 @@ const UpdateStudentMarks = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
     const [updateMessage, setUpdateMessage] = useState('');
+    const [empty, setEmpty] = useState('');
 
     const subjectMapping = {
         'Eng': 'English',
@@ -35,6 +37,38 @@ const UpdateStudentMarks = () => {
     };
     const fullUnitName = subjectMapping[selectedUnit];
 
+    useEffect(() => {
+        const decodeData = () => {
+            const token = localStorage.getItem('token');
+            const decodedToken = jwtDecode(token);
+            return decodedToken.name;
+        };
+        const teacherName = decodeData();
+
+        // Fetch assigned units from the backend
+        const uri = `https://edumax.fly.dev/classes/assigned-units/${teacherName}`;
+        axios.get(uri)
+            .then(response => {
+                const data = response.data;
+                if (data.length > 0) {
+                    // Combine streams and units without duplicates
+                    const uniqueStreams = [...new Set(data.map(item => item.stream))];
+                    const uniqueUnits = [...new Set(data.flatMap(item => item.units))];
+
+                    setStreams(uniqueStreams);
+                    setUnits(uniqueUnits);
+
+                    console.log('Streams:', uniqueStreams);
+                    console.log('Units:', uniqueUnits);
+                } else {
+                    setEmpty("No Units Allocated Yet");
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching assigned units:', error);
+            });
+    }, []);
+
     const fetchStudentsAndMarks = () => {
         setIsLoading(true);
         setMarks({});
@@ -48,34 +82,34 @@ const UpdateStudentMarks = () => {
                 subject: fullUnitName
             }
         })
-        .then(response => {
-            setIsLoading(false);
-            const data = response.data;
-            if(response.status === 202){
-                setNotification(data);
-            }else if(response.status === 200){
-                // Sort students based on admission number in ascending order
-                const sortedData = data.sort((a, b) => a.studentAdmission.localeCompare(b.studentAdmission));
+            .then(response => {
+                setIsLoading(false);
+                const data = response.data;
+                if (response.status === 202) {
+                    setNotification(data);
+                } else if (response.status === 200) {
+                    // Sort students based on admission number in ascending order
+                    const sortedData = data.sort((a, b) => a.studentAdmission.localeCompare(b.studentAdmission));
 
-                setStudents(sortedData);
-                setNotification('');
-                setUpdateMessage('');
-                const marksData = {};
-                sortedData.forEach(student => {
-                    marksData[student._id] = student.marks;
-                });
-                setMarks(marksData);
-            }else if (response.status === 201){
-                setNotification("No Data yet in the database");
-            }else{
-                setNotification(data);
-            }
-        })
-        .catch(error => {
-            setIsLoading(false);
-            setNotification('Error fetching data');
-            console.error('Error fetching data:', error);
-        });
+                    setStudents(sortedData);
+                    setNotification('');
+                    setUpdateMessage('');
+                    const marksData = {};
+                    sortedData.forEach(student => {
+                        marksData[student._id] = student.marks;
+                    });
+                    setMarks(marksData);
+                } else if (response.status === 201) {
+                    setNotification("No Data yet in the database");
+                } else {
+                    setNotification(data);
+                }
+            })
+            .catch(error => {
+                setIsLoading(false);
+                setNotification('Error fetching data');
+                console.error('Error fetching data:', error);
+            });
     };
 
     const handleMarkChange = (studentId, paper, value) => {
@@ -196,35 +230,37 @@ const UpdateStudentMarks = () => {
                 return (
                     <>
                         <th className='th th-p1'>P1</th>
+
                         <th className='th th-p2'>P2</th>
                     </>
                 );
             }
         } else if (['2East', '2West', '1East', '1West'].includes(selectedStream)) {
-            return <th className='th th-p1'>P1</th>;
+            return (
+                <th className='th th-p1'>P1</th>
+            );
         }
         return null;
     };
 
     return (
         <div className="update-marks-container">
-            <h3>Update Student Marks</h3>
             <div className="form-update">
                 <div className="form-control">
                     <label>Stream</label>
                     <select value={selectedStream} onChange={(e) => setSelectedStream(e.target.value)}>
                         <option value="">Select Stream</option>
-                        {streams.map(stream => (
-                            <option key={stream} value={stream}>{stream}</option>
+                        {streams.map((stream, index) => (
+                            <option key={index} value={stream}>{stream}</option>
                         ))}
                     </select>
                 </div>
                 <div className="form-control">
-                    <label>Subject</label>
+                    <label>Unit</label>
                     <select value={selectedUnit} onChange={(e) => setSelectedUnit(e.target.value)}>
-                        <option value="">Select Subject</option>
-                        {units.map(unit => (
-                            <option key={unit} value={unit}>{unit}</option>
+                        <option value="">Select Unit</option>
+                        {units.map((unit, index) => (
+                            <option key={index} value={unit}>{unit}</option>
                         ))}
                     </select>
                 </div>
@@ -232,8 +268,8 @@ const UpdateStudentMarks = () => {
                     <label>Term</label>
                     <select value={selectedTerm} onChange={(e) => setSelectedTerm(e.target.value)}>
                         <option value="">Select Term</option>
-                        {terms.map(term => (
-                            <option key={term} value={term}>{term}</option>
+                        {terms.map((term, index) => (
+                            <option key={index} value={term}>{term}</option>
                         ))}
                     </select>
                 </div>
@@ -241,8 +277,8 @@ const UpdateStudentMarks = () => {
                     <label>Exam Type</label>
                     <select value={selectedExamType} onChange={(e) => setSelectedExamType(e.target.value)}>
                         <option value="">Select Exam Type</option>
-                        {examTypes.map(type => (
-                            <option key={type} value={type}>{type}</option>
+                        {examTypes.map((examType, index) => (
+                            <option key={index} value={examType}>{examType}</option>
                         ))}
                     </select>
                 </div>
@@ -250,45 +286,48 @@ const UpdateStudentMarks = () => {
                     <label>Year</label>
                     <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
                         <option value="">Select Year</option>
-                        {years.map(year => (
-                            <option key={year} value={year}>{year}</option>
+                        {years.map((year, index) => (
+                            <option key={index} value={year}>{year}</option>
                         ))}
                     </select>
                 </div>
-                <button className="button" onClick={fetchStudentsAndMarks}>
-                    {isLoading ? 'Loading...' : 'Fetch Marks'}
-                </button>
             </div>
-            {notification && <p className="notification">{notification}</p>}
-
+            <div>
+                <center><button className="button-update" onClick={fetchStudentsAndMarks}>Fetch Students and Marks</button>
+                <div className='feedback'>
+                {empty && <p>{empty}</p>}
+                {notification && <p>{notification}</p>}
+                {isLoading && <p>Loading...</p>}
+                </div>
+                </center>
+                
+            </div>
             {students.length > 0 && (
                 <>
-                    <table className="marks-table">
+                    <table className="students-table">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Admission No</th>
-                                <th>Name</th>
+                                <th className='th th-adm'>Admission Number</th>
+                                <th className='th th-name'>Name</th>
                                 {renderTableHeaders()}
                             </tr>
                         </thead>
                         <tbody>
-                            {students.map((student, index) => (
+                            {students.map(student => (
                                 <tr key={student._id}>
-                                    <td>{index + 1}</td>
-                                    <td>{student.studentAdmission}</td>
-                                    <td>{student.studentName}</td>
+                                    <td className='td td-adm'>{student.studentAdmission}</td>
+                                    <td className='td td-name'>{student.studentName}</td>
                                     {renderPaperFields(student)}
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-                    <center>  
-                        <button className="btn" onClick={handleSubmit}>
-                            {isLoadingUpdate ? 'Updating...' : 'Update Marks'}
-                        </button>
-                    </center>
-                    {updateMessage && <p className="notification">{updateMessage}</p>}
+                    <div>
+                        <button className="button-update " onClick={handleSubmit}>Update Marks</button>
+                        {isLoadingUpdate && <p>Updating...</p>}
+                        {updateMessage && <p>{updateMessage}</p>}
+                    </div>
+
                 </>
             )}
         </div>

@@ -11,7 +11,8 @@
   /* Title styling */
   .file-upload-title {
     text-align: center;
-    font-size: 24px;
+    font-size: 1.5rem;
+    color: #05315f;
     margin-bottom: 20px;
     color: #333;
   }
@@ -28,10 +29,19 @@
     flex: 1 1 45%;
     min-width: 300px;
   }
-  
+  .form-input-teacher{
+    padding: 0.5rem;
+    border-collapse: collapse;
+    border-radius: 0.3rem;
+    text-align: center;
+    width: 80%;
+    margin: 0.3rem;
+    background-color: #f7efef;
+  }
   /* Form group styling */
   .form-gp {
     margin-bottom: 15px;
+    display: block;
   }
   
   .form-labeel {
@@ -94,6 +104,9 @@
   
     .form-btn {
       grid-column: span 1;
+    }
+    .file-upload-container{
+      padding:0.5rem;
     }
   }
   

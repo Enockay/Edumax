@@ -57,7 +57,7 @@ const ViewStream = () => {
       setUniqueItems([]);
 
       try {
-        const response = await fetch(`https://edumax.fly.dev/docs/stream/${selectedStream}`);
+        const response = await fetch(`http://localhost:3000/docs/stream/${selectedStream}`);
         const result = await response.json();
         setLoading(false);
 
