@@ -2,10 +2,12 @@
     position: absolute;
     background: none;
     border: none;
-    top: 20px;
-    left: 0;
+    top: 0;
+    left: 5px;
+    border: 1px solid blue;
     display: none;
     max-width: 10%;
+    font-size: 1rem;
     color: #ecf0f1;
     font-size: 1.5rem;
     cursor: pointer;
@@ -15,16 +17,16 @@
 .sidebar-items {
     width: 200px;
     height: fit-content;
-    max-height: fit-content;
     background-color: #2c3e50;
     padding: 20px;
     box-sizing: border-box;
-    transition: transform 0.3s ease-in-out;
+    left: 0;
 }
 
 .sidebar-items ul {
     list-style-type: none;
     padding: 0;
+    margin: 0;
 }
 
 .sidebar-items li {
@@ -75,15 +77,15 @@
 
 .dropdown {
     list-style-type: none;
-    
     margin: 0;
+    padding-left: 20px; /* Indentation for dropdown items */
 }
 
 .dropdown li {
     display: flex;
     align-items: center;
     padding: 5px 0;
-    margin-left:15%;
+    margin-left: 15%;
     color: #07be81;
     font-size: 0.8rem;
     cursor: pointer;
@@ -101,13 +103,19 @@
 @media (max-width: 768px) {
     .sidebar-items.closed {
         width: 0;
+        transform: translateX(-100%); /* Hidden state */
         display: none;
-       
     }
 
     .sidebar-items.open {
         transform: translateX(0);
-        width:-100% ;
+        width: 200px;
+    }
+    .sidebar-items{
+        transition: transform 0.3s ease-in-out;
+        overflow-y: auto; /* Enable vertical scrolling */
+        position: fixed; /* Fixes the sidebar to the viewport */
+        top: 5rem;
     }
 
     .sidebar-button {

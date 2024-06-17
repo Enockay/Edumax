@@ -6,14 +6,17 @@ const updateStudent = express.Router();
 // Fetch Marks Endpoint
 updateStudent.get('/student/UpdMark', async (req, res) => {
   const { year, examType, stream, subject } = req.query;
-
+  console.log(req.query)
   if (!year || !examType || !stream || !subject) {
     return res.status(400).json({ message: 'Missing required query parameters: year, examType, stream, subject' });
   }
 
+  
+//console.log(newStream);
+
   try {
     const students = await StudentMarks.find({ stream });
-
+  // console.log(students)
     const result = students.map(student => {
       const yearData = student.years.find(yearData => yearData.year === year);
       if (yearData) {
@@ -34,9 +37,9 @@ updateStudent.get('/student/UpdMark', async (req, res) => {
     }).filter(student => student !== null);
 
     if (result.length === 0) {
-      return res.status(404).json({ message: 'No marks found for the given criteria' });
+      return res.status(400).json({ message: 'No marks found for the given criteria' });
     }
-
+    console.log(result)
     res.status(200).json(result);
   } catch (error) {
     console.error('Error fetching marks:', error);

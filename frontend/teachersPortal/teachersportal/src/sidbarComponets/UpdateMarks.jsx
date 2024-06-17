@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import {jwtDecode} from 'jwt-decode';
 import './css/UpdMarks.css';
-import { jwtDecode } from 'jwt-decode';
 
 const UpdateStudentMarks = () => {
     const [streams, setStreams] = useState([]);
@@ -20,12 +20,14 @@ const UpdateStudentMarks = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
     const [updateMessage, setUpdateMessage] = useState('');
+    const [messageType, setMessageType] = useState(''); // 'success' or 'error'
     const [empty, setEmpty] = useState('');
+    const [newStream, setNewStream] = useState('');
 
     const subjectMapping = {
         'Eng': 'English',
         'Kisw': 'Kiswahili',
-        'Maths': 'Mathematics',
+        'Math': 'Mathematics',
         'Chem': 'Chemistry',
         'Bio': 'Biology',
         'Phy': 'Physics',
@@ -49,25 +51,36 @@ const UpdateStudentMarks = () => {
         const uri = `https://edumax.fly.dev/classes/assigned-units/${teacherName}`;
         axios.get(uri)
             .then(response => {
-                const data = response.data;
+                const data = response.data[0].teachingSubjects;
                 if (data.length > 0) {
                     // Combine streams and units without duplicates
                     const uniqueStreams = [...new Set(data.map(item => item.stream))];
-                    const uniqueUnits = [...new Set(data.flatMap(item => item.units))];
+                    const uniqueUnits = [...new Set(data.flatMap(item => item.units[0].name))];
 
                     setStreams(uniqueStreams);
                     setUnits(uniqueUnits);
-
-                    console.log('Streams:', uniqueStreams);
-                    console.log('Units:', uniqueUnits);
                 } else {
                     setEmpty("No Units Allocated Yet");
                 }
             })
             .catch(error => {
+                setMessageType('error');
+                setNotification('Error fetching assigned units');
                 console.error('Error fetching assigned units:', error);
             });
-    }, []);
+
+        if (selectedStream.length > 0) {
+            const trimStream = (stream) => {
+                const parts = stream.split(" ");
+                const number = parts[1];
+                const name = parts.slice(2).join("");
+                return `${number}${name}`;
+            };
+            const stream = trimStream(selectedStream);
+            console.log(stream)
+            setNewStream(stream);
+        }
+    }, [selectedStream]);
 
     const fetchStudentsAndMarks = () => {
         setIsLoading(true);
@@ -78,7 +91,7 @@ const UpdateStudentMarks = () => {
             params: {
                 year: selectedYear,
                 examType: selectedExamType,
-                stream: selectedStream,
+                stream: newStream,
                 subject: fullUnitName
             }
         })
@@ -88,9 +101,7 @@ const UpdateStudentMarks = () => {
                 if (response.status === 202) {
                     setNotification(data);
                 } else if (response.status === 200) {
-                    // Sort students based on admission number in ascending order
                     const sortedData = data.sort((a, b) => a.studentAdmission.localeCompare(b.studentAdmission));
-
                     setStudents(sortedData);
                     setNotification('');
                     setUpdateMessage('');
@@ -107,6 +118,7 @@ const UpdateStudentMarks = () => {
             })
             .catch(error => {
                 setIsLoading(false);
+                setMessageType('error');
                 setNotification('Error fetching data');
                 console.error('Error fetching data:', error);
             });
@@ -136,6 +148,7 @@ const UpdateStudentMarks = () => {
         axios.put(uri, updates)
             .then(response => {
                 setIsLoadingUpdate(false);
+                setMessageType('success');
                 setUpdateMessage('Marks updated successfully!');
                 setStudents([]);
                 setMarks({});
@@ -143,13 +156,14 @@ const UpdateStudentMarks = () => {
             })
             .catch(error => {
                 setIsLoadingUpdate(false);
+                setMessageType('error');
                 setUpdateMessage('Error updating marks, please try again.');
                 console.error('Error updating marks:', error);
             });
     };
 
     const renderPaperFields = (student) => {
-        if (['3East', '3West', '4East', '4West'].includes(selectedStream)) {
+        if (['3East', '3West', '4East', '4West'].includes(newStream)) {
             if (['Chem', 'Bio', 'Phy', 'Eng', 'Kisw'].includes(selectedUnit)) {
                 return (
                     <>
@@ -201,7 +215,7 @@ const UpdateStudentMarks = () => {
                     </>
                 );
             }
-        } else if (['2East', '2West', '1East', '1West'].includes(selectedStream)) {
+        } else if (['2East', '2West', '1East', '1West'].includes(newStream)) {
             return (
                 <td>
                     <input
@@ -217,7 +231,7 @@ const UpdateStudentMarks = () => {
     };
 
     const renderTableHeaders = () => {
-        if (['3East', '3West', '4East', '4West'].includes(selectedStream)) {
+        if (['3East', '3West', '4East', '4West'].includes(newStream)) {
             if (['Chem', 'Bio', 'Phy', 'Eng', 'Kisw'].includes(selectedUnit)) {
                 return (
                     <>
@@ -230,12 +244,11 @@ const UpdateStudentMarks = () => {
                 return (
                     <>
                         <th className='th th-p1'>P1</th>
-
                         <th className='th th-p2'>P2</th>
                     </>
                 );
             }
-        } else if (['2East', '2West', '1East', '1West'].includes(selectedStream)) {
+        } else if (['2East', '2West', '1East', '1West'].includes(newStream)) {
             return (
                 <th className='th th-p1'>P1</th>
             );
@@ -245,6 +258,7 @@ const UpdateStudentMarks = () => {
 
     return (
         <div className="update-marks-container">
+            <center><h4>Update Student Marks</h4></center>
             <div className="form-update">
                 <div className="form-control">
                     <label>Stream</label>
@@ -293,21 +307,21 @@ const UpdateStudentMarks = () => {
                 </div>
             </div>
             <div>
-                <center><button className="button-update" onClick={fetchStudentsAndMarks}>Fetch Students and Marks</button>
-                <div className='feedback'>
-                {empty && <p>{empty}</p>}
-                {notification && <p>{notification}</p>}
-                {isLoading && <p>Loading...</p>}
-                </div>
+                <center>
+                    <button className="button-update" onClick={fetchStudentsAndMarks}>Fetch Students and Marks</button>
+                    <div className='feedback'>
+                        {empty && <p>{empty}</p>}
+                        {notification && <p>{notification}</p>}
+                        {isLoading && <p>Loading...</p>}
+                    </div>
                 </center>
-                
             </div>
             {students.length > 0 && (
                 <>
                     <table className="students-table">
                         <thead>
                             <tr>
-                                <th className='th th-adm'>Admission Number</th>
+                                <th className='th th-adm'>ADM</th>
                                 <th className='th th-name'>Name</th>
                                 {renderTableHeaders()}
                             </tr>
@@ -323,11 +337,16 @@ const UpdateStudentMarks = () => {
                         </tbody>
                     </table>
                     <div>
-                        <button className="button-update " onClick={handleSubmit}>Update Marks</button>
-                        {isLoadingUpdate && <p>Updating...</p>}
-                        {updateMessage && <p>{updateMessage}</p>}
+                        <center>
+                            <button className="button-update" onClick={handleSubmit}>Update Marks</button>
+                            {isLoadingUpdate && <p>Updating...</p>}
+                            {updateMessage && (
+                                <p style={{ color: messageType === 'success' ? 'green' : 'red' }}>
+                                    {updateMessage}
+                                </p>
+                            )}
+                        </center>
                     </div>
-
                 </>
             )}
         </div>

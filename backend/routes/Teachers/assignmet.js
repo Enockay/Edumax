@@ -8,9 +8,9 @@ assign.get('/api/assignments/:id', async (req, res) => {
     try {
         const assignments = await Assignment.find({ teacherName: teacherName });
         if(assignments.length > 0){
-            res.status(200).json(assignments);
+            res.status(200).json({success:true,message:assignments});
         }else{
-            res.status(210).send("<p>No saved Assignment yet</p>")
+            res.status(210).json({message:"No saved Assignment yet"})
         }
         
     } catch (error) {
@@ -48,5 +48,21 @@ assign.delete('/api/assignments/cleanup/:id', async (req, res) => {
         res.status(500).send('Error cleaning up assignments');
     }
 });
+
+assign.delete('/api/assignments/:teacherName/:assignmentId', async (req, res) => {
+    const { teacherName, assignmentId } = req.params;
+    try {
+        const result = await Assignment.deleteOne({ _id: assignmentId, teacherName: teacherName });
+        if (result.deletedCount === 1) {
+            res.status(200).send('Assignment deleted successfully');
+        } else {
+            res.status(404).send('Assignment not found');
+        }
+    } catch (error) {
+        console.error('Error deleting assignment:', error);
+        res.status(500).send('Error deleting assignment');
+    }
+});
+
 
 module.exports = assign;

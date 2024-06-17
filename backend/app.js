@@ -37,6 +37,7 @@ var fetchFeesRecords = require("./routes/Dashboard/Records");
 var correctionSheets = require("./routes/Dashboard/correction");
 var studentSearch = require("./routes/Teachers/searchStudent");
 var viewStream = require("./routes/Teachers/viewStream");
+var notification = require('./routes/Teachers/notfication');
 
 var app = express();
 var uri = process.env.MONGO_URL;
@@ -108,7 +109,9 @@ app.use("/exams",uploadExam);
 app.use("/Records",fetchFeesRecords);
 app.post("/CorrectionSheet",correctionSheets);
 app.get("/students/search",studentSearch);
-app.use("/docs",viewStream)
+app.use("/docs",viewStream);
+app.use("/noti",notification)
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

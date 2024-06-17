@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import "./css/Dashboard.css";
 import {jwtDecode} from "jwt-decode";
+import "./css/Dashboard.css";
 
 const MainDashboard = () => {
   const [profileData, setProfileData] = useState({
@@ -59,7 +59,7 @@ const MainDashboard = () => {
 
   const fetchNotifications = async () => {
     try {
-      const response = await fetch("https://edumax.fly.dev/notifications");
+      const response = await fetch("https://edumax.fly.dev/noti/get/notifications");
       const data = await response.json();
       setNotifications(data);
       setLoadingNotifications(false);
@@ -93,10 +93,18 @@ const MainDashboard = () => {
               <div className="spinner"></div>
             ) : (
               <div className="card-content">
-                <p className="card-item">Name: <span className="card-value">{profileData.name}</span></p>
-                <p className="card-item">Email: <span className="card-value">{profileData.email}</span></p>
-                <p className="card-item">Username: <span className="card-value">{profileData.username}</span></p>
-                <p className="card-item">Gender: <span className="card-value">{profileData.gender}</span></p>
+                <p className="card-item">
+                  Name: <span className="card-value">{profileData.name}</span>
+                </p>
+                <p className="card-item">
+                  Email: <span className="card-value">{profileData.email}</span>
+                </p>
+                <p className="card-item">
+                  Username: <span className="card-value">{profileData.username}</span>
+                </p>
+                <p className="card-item">
+                  Gender: <span className="card-value">{profileData.gender}</span>
+                </p>
               </div>
             )}
           </div>
@@ -137,25 +145,29 @@ const MainDashboard = () => {
               </table>
             )}
             {assignedUnits.length > 4 && (
-             <center>
-                  <p className="more-units-message">
-                more on assigned units
-              </p>
-             </center> 
-            )}
-          </div>
-          <div className="card">
-            <h2 className="card-title">Staff Notifications</h2>
-            {loadingNotifications ? (
-              <div className="spinner"></div>
-            ) : (
-              notifications.map((notification, index) => (
-                <p key={index}>{notification.text}</p>
-              ))
+              <center>
+                <p className="more-units-message">more on assigned units</p>
+              </center>
             )}
           </div>
         </div>
         {error && <p className="error-message">{error}</p>}
+      </div>
+      <div className="notification-panel">
+        <h2 className="notification-title">Recent Notifications</h2>
+        {loadingNotifications ? (
+          <div className="spinner"></div>
+        ) : (
+          <div className="notification-list">
+            {notifications.map((notification, index) => (
+              <div key={index} className="notification-card">
+                <p><strong>Message:</strong> {notification.message}</p>
+                <p><strong>Due Date:</strong> {new Date(notification.dueDate).toLocaleDateString()}</p>
+                <p><strong>Created At:</strong> {new Date(notification.createdAt).toLocaleString()}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

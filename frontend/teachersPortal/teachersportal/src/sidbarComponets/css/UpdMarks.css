@@ -1,9 +1,11 @@
+/* UpdMarks.css */
+
 .update-marks-container {
     padding: 20px;
     max-width: 800px;
     margin: 0 auto;
     font-family: Arial, sans-serif;
-    box-shadow: 0 0 15px #f0f2f5;;
+    box-shadow: 0 0 15px #f0f2f5;
 }
 
 h3 {
@@ -49,13 +51,14 @@ h3 {
     align-self: center;
     transition: background-color 0.3s;
 }
-.form-gp{
- margin-top: 0.6rem;
- color: #211f41;
+
+.form-gp {
+    margin-top: 0.6rem;
+    color: #211f41;
 }
 
-.form-labeel{
- color: #211f41;
+.form-labeel {
+    color: #211f41;
 }
 
 .button:hover {
@@ -117,4 +120,36 @@ h3 {
         width: 100%;
         padding: 12px;
     }
+}
+
+/* Additional CSS for success and error feedback */
+.feedback {
+    margin-top: 10px;
+}
+
+.feedback p {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.feedback p.success {
+    color: green;
+}
+
+.feedback p.error {
+    color: red;
+}
+
+.update-marks-container .update-message {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.update-marks-container .update-message.success {
+    color: green;
+}
+
+.update-marks-container .update-message.error {
+    color: red;
 }

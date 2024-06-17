@@ -13,7 +13,10 @@ import StudentSearch from "./sidbarComponets/SearchStudent";
 import AttendanceSheet from "./sidbarComponets/Attendancs";
 import ViewStream from "./sidbarComponets/viewStream"
 import Documents from "./sidbarComponets/Docs";
- 
+import Notification from "./sidbarComponets/Notification";
+import CalendarComponent from "./sidbarComponets/calender";
+import SettingsProfile from "./sidbarComponets/Settings";
+
 const Dashboard = () => {
     const [selectedItem, setSelectedItem] = useState("Dashboard");
 
@@ -46,6 +49,12 @@ const Dashboard = () => {
                 return <ViewStream/>
             case "Documents" : 
                return <Documents/>
+            case "Notifications" :
+                return <Notification/>
+            case "Calendar":
+                return<CalendarComponent/>
+            case "Settings":
+                return <SettingsProfile/>
             default:
                 return <MainDashboard />;
         }

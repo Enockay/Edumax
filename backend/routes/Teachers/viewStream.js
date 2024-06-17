@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const saveDocs = require("../../public/models/documentary");
-const model = require("../../public/models/admitStudentSchema")
+const model = require("../../public/models/admitStudentSchema");
 
 // Route to get students by stream
 router.get('/stream/:id', async (req, res) => {
@@ -17,23 +17,22 @@ router.get('/stream/:id', async (req, res) => {
   }
 });
 
-router.post('/view',async(req,res) =>{
-  try{
+router.post('/view', async (req, res) => {
+  try {
     const { documentaryName, teacherName } = req.body;
+    const query = { documentaryName, teacherName };
+    const students = await saveDocs.find(query);
 
-    const query = {documentaryName, teacherName };
-
-    const  students = await  saveDocs.find(query);
-    if(students.length > 0){
-      //console.log(students)
-      res.status(200).json({success:true,message:students})
+    if (students.length > 0) {
+      res.status(200).json({ success: true, message: students });
+    } else {
+      res.status(404).json({ success: false, message: "Document not found" });
     }
-  }catch(error){
-    res.status(304).json({success:true,message:"error occured"})
+  } catch (error) {
+    res.status(500).json({ success: false, message: "An error occurred" });
   }
- 
+});
 
-})
 router.post('/saveDocs', async (req, res) => {
   const { students, stream, docName, teacherName } = req.body;
 
@@ -61,7 +60,7 @@ router.get("/savedDoc/:id", async (req, res) => {
     if (findDocuments.length > 0) {
       res.status(200).json({ success: true, message: findDocuments });
     } else {
-      res.status(304).json({ success: false });
+      res.status(404).json({ success: false, message: "Your documentary is empty" });
     }
   } catch (error) {
     console.log("error occurred", error);
@@ -86,7 +85,7 @@ router.get("/:id", async (req, res) => {
 
 router.put("/updateDocs/:id", async (req, res) => {
   const { students, stream, docName, teacherName } = req.body;
-  console.log("am triggerd")
+
   try {
     const docId = req.params.id;
     const updatedDocumentary = await saveDocs.findByIdAndUpdate(docId, {

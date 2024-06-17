@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";  // Fix the import statement
 import './css/Document.css';
 
 const Documents = () => {
@@ -11,7 +11,7 @@ const Documents = () => {
   const [loadingDocuments, setLoadingDocuments] = useState(false);
   const [loadingViewItems, setLoadingViewItems] = useState(false);
   const [documentaryName, setDocumentaryName] = useState('');
-  const [availableDoc,setavailableDoc] = useState('')
+  const [availableDoc, setAvailableDoc] = useState([]);
 
   const getDocumentaries = async (name) => {
     try {
@@ -21,16 +21,14 @@ const Documents = () => {
       const result = await response.json();
 
       if (result.success) {
-        if (result.message.length > 0) {
-          setDocuments(result.message);
-          setavailableDoc(result.message);
-          setViewItems([]);
-          setFeedback("");
-        } else {
-          setFeedback("Your documentary is empty");
-        }
+        setDocuments(result.message);
+        setAvailableDoc(result.message);
+        setViewItems([]);
+        setFeedback('');
       } else {
-        setError('Failed to retrieve documents');
+        setDocuments([]);
+        setAvailableDoc([]);
+        setFeedback('Your documentary is empty');
       }
     } catch (error) {
       setError('Error occurred while retrieving documents');
@@ -65,18 +63,17 @@ const Documents = () => {
       });
 
       const feedback = await response.json();
-      
+
       if (feedback.success) {
         setViewItems(feedback.message[0].students);
-        console.log(feedback.message[0].students);
         setDocumentaryName(documentaryName);
-        setFeedback("");
+        setFeedback('');
         setDocuments([]);
       } else {
-        setError("Document not found");
+        setError('Document not found');
       }
     } catch (error) {
-      setError("An error occurred. Please try again.");
+      setError('An error occurred. Please try again.');
     } finally {
       setLoadingViewItems(false);
     }

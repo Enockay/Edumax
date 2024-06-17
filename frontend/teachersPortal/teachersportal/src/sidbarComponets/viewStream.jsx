@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import {jwtDecode} from 'jwt-decode'; // Corrected import statement
 import './css/Viewstream.css';
-import {jwtDecode} from 'jwt-decode';
 
 const streams = ['1East', '1West', '2East', '2West', '3East', '3West', '4East', '4West'];
 
@@ -57,7 +57,7 @@ const ViewStream = () => {
       setUniqueItems([]);
 
       try {
-        const response = await fetch(`http://localhost:3000/docs/stream/${selectedStream}`);
+        const response = await fetch(`https://edumax.fly.dev/docs/stream/${selectedStream}`);
         const result = await response.json();
         setLoading(false);
 
@@ -86,18 +86,18 @@ const ViewStream = () => {
   };
 
   const saveDocs = async () => {
-    setFeedback("");
+    setFeedback('');
     const unifiedStudents = students.map((student, index) => ({
       admissionNumber: student.admissionNumber,
       fullName: student.fullName,
       uniqueItem: uniqueItems[index],
     }));
 
-    const url = "https://edumax.fly.dev/docs/saveDocs";
+    const url = 'https://edumax.fly.dev/docs/saveDocs';
     const response = await fetch(url, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({ students: unifiedStudents, stream: selectedStream, docName, teacherName })
     });
@@ -110,7 +110,7 @@ const ViewStream = () => {
 
   const fetchSavedDocDetails = async (docId) => {
     setLoading(true);
-    setFeedback("");
+    setFeedback('');
     setSelectedDoc(docId);
     try {
       const response = await fetch(`https://edumax.fly.dev/docs/${docId}`);
@@ -144,16 +144,16 @@ const ViewStream = () => {
 
     const url = `https://edumax.fly.dev/docs/updateDocs/${selectedDoc}`;
     const response = await fetch(url, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({ students: unifiedStudents, stream: selectedStream, docName, teacherName })
     });
     const feedback = await response.json();
     if (feedback.success) {
       setSuccess(feedback.message);
-      setFeedback("");
+      setFeedback('');
       setStudents([]);
     }
   };

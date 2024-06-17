@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import {
     faTachometerAlt,
-    faChalkboardTeacher,
     faClipboardList,
     faGraduationCap,
     faCog,
@@ -16,7 +15,6 @@ import {
     faBell,
     faBars,
     faCalendarAlt,
-    faEnvelope,
     faFileAlt,
     faLifeRing,
     faUsers,
@@ -25,7 +23,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./css/Sidebar.css";
 
 const Sidebar = ({ onItemClick }) => {
-    const navgate = useNavigate();
+    const navigate = useNavigate();
 
     const [academicsOpen, setAcademicsOpen] = useState(false);
     const [studentsOpen, setStudentsOpen] = useState(false);
@@ -45,10 +43,10 @@ const Sidebar = ({ onItemClick }) => {
     const logout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("username");
-        localStorage.set("isLoggedIn",false)
-        navgate("/login");
-        
-    }
+        localStorage.setItem("isLoggedIn", false);
+        navigate("/");
+    };
+
     return (
         <div className="sidebar-container">
             <button className="sidebar-button" onClick={toggleSidebar} aria-label="Toggle sidebar">
@@ -60,10 +58,6 @@ const Sidebar = ({ onItemClick }) => {
                         <FontAwesomeIcon icon={faTachometerAlt} />
                         <span>Dashboard</span>
                     </li>
-                    {/*<li className={activeItem === "Classes" ? "active" : ""} onClick={() => handleItemClick("Classes")}>
-                        <FontAwesomeIcon icon={faChalkboardTeacher} />
-                        <span>Classes</span>
-                    </li>**/}
                     <li className={activeItem === "Assignments" ? "active" : ""} onClick={() => handleItemClick("Assignments")}>
                         <FontAwesomeIcon icon={faClipboardList} />
                         <span>Assignments</span>
@@ -96,10 +90,8 @@ const Sidebar = ({ onItemClick }) => {
                     )}
                     <li onClick={toggleStudents} aria-expanded={studentsOpen}>
                         <FontAwesomeIcon icon={faUserGraduate} />
-                        <span>Students</span>
-                        <FontAwesomeIcon icon={studentsOpen ? faChevronUp : faChevronDown} className="dropdown-icon" />
+                        <span>Student Center</span>
                     </li>
-                    {studentsOpen && (
                         <ul className="dropdown">
                             <li className={activeItem === "View Stream" ? "active" : ""} onClick={() => handleItemClick("View Stream")}>
                                 <FontAwesomeIcon icon={faBookOpen} />
@@ -117,26 +109,11 @@ const Sidebar = ({ onItemClick }) => {
                                  <FontAwesomeIcon icon={faUsers} />
                                <span>Attendance</span>
                              </li>
-
                             <hr />
                         </ul>
-                    )}
-                    
                     <li className={activeItem === "Documents" ? "active" : ""} onClick={() => handleItemClick("Documents")}>
                         <FontAwesomeIcon icon={faFileAlt} />
                         <span>Documents</span>
-                    </li>
-                    <li className={activeItem === "Calendar" ? "active" : ""} onClick={() => handleItemClick("Calendar")}>
-                        <FontAwesomeIcon icon={faCalendarAlt} />
-                        <span>Calendar</span>
-                    </li>
-                    <li className={activeItem === "Resources" ? "active" : ""} onClick={() => handleItemClick("Resources")}>
-                        <FontAwesomeIcon icon={faBookOpen} />
-                        <span>Resources</span>
-                    </li>
-                    <li className={activeItem === "Support" ? "active" : ""} onClick={() => handleItemClick("Support")}>
-                        <FontAwesomeIcon icon={faLifeRing} />
-                        <span>Support</span>
                     </li>
                     <li className={activeItem === "Notifications" ? "active" : ""} onClick={() => handleItemClick("Notifications")}>
                         <FontAwesomeIcon icon={faBell} />
@@ -159,7 +136,6 @@ const Sidebar = ({ onItemClick }) => {
         </div>
     );
 };
-
 
 Sidebar.propTypes = {
     onItemClick: PropTypes.func.isRequired,
