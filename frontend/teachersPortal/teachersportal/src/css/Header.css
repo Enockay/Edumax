@@ -84,7 +84,7 @@
 @media (max-width: 768px) {
   .heading {
     align-items: flex-start;
-    padding: 2px;
+    padding: 5px;
   }
 
   .menu-search, .teacher-info {
