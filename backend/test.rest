@@ -60,3 +60,5 @@ Content-Type: application/json
 }
 
 ###
+GET http://localhost:3000/attend/students?stream=1West
+Content-Type: application/json

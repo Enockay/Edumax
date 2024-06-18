@@ -38,6 +38,7 @@ var correctionSheets = require("./routes/Dashboard/correction");
 var studentSearch = require("./routes/Teachers/searchStudent");
 var viewStream = require("./routes/Teachers/viewStream");
 var notification = require('./routes/Teachers/notfication');
+var attendance = require('./routes/Teachers/Attendance');
 
 var app = express();
 var uri = process.env.MONGO_URL;
@@ -110,7 +111,8 @@ app.use("/Records",fetchFeesRecords);
 app.post("/CorrectionSheet",correctionSheets);
 app.get("/students/search",studentSearch);
 app.use("/docs",viewStream);
-app.use("/noti",notification)
+app.use("/noti",notification);
+app.use("/attend",attendance);
 
 
 // catch 404 and forward to error handler

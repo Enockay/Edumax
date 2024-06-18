@@ -14,7 +14,7 @@ const Notification = () => {
         const token = localStorage.getItem('token');
         if (token) {
             const decodedToken = jwtDecode(token);
-            setUserRole('');
+            setUserRole('deputy');
         }
         fetchNotifications();
     }, []);

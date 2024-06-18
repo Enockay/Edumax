@@ -103,7 +103,7 @@ const Sidebar = ({ onItemClick }) => {
                             </li>
                             <li className={activeItem === "Set-Attendance" ? "active" : ""} onClick={() => handleItemClick("Set-Attendance")}>
                                 <FontAwesomeIcon icon={faUsers} />
-                               <span>Initialize signing sheet</span>
+                               <span>Set Attendance</span>
                             </li>
                             <li className={activeItem === "Attendance" ? "active" : ""} onClick={() => handleItemClick("Attendance")}>
                                  <FontAwesomeIcon icon={faUsers} />

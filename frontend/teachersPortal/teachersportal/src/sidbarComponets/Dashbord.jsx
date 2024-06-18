@@ -86,30 +86,30 @@ const MainDashboard = () => {
     <div className="dashboard">
       <div className="dashboard-items">
         <DashboardHeader />
-        <div className="card-container">
-          <div className="card">
-            <h2 className="card-title">Profile Information</h2>
+        <div className="Dash-card-container">
+          <div className="Dash-card">
+            <h2 className="Dash-card-title">Profile Information</h2>
             {loadingProfile ? (
               <div className="spinner"></div>
             ) : (
-              <div className="card-content">
-                <p className="card-item">
-                  Name: <span className="card-value">{profileData.name}</span>
+              <div className="Dash-card-content">
+                <p className="Dash-card-item">
+                  Name: <span className="Dash-card-value">{profileData.name}</span>
                 </p>
-                <p className="card-item">
-                  Email: <span className="card-value">{profileData.email}</span>
+                <p className="Dash-card-item">
+                  Email: <span className="Dash-card-value">{profileData.email}</span>
                 </p>
-                <p className="card-item">
-                  Username: <span className="card-value">{profileData.username}</span>
+                <p className="Dash-card-item">
+                  Username: <span className="Dash-card-value">{profileData.username}</span>
                 </p>
-                <p className="card-item">
-                  Gender: <span className="card-value">{profileData.gender}</span>
+                <p className="Dash-card-item">
+                  Gender: <span className="Dash-card-value">{profileData.gender}</span>
                 </p>
               </div>
             )}
           </div>
-          <div className="card">
-            <h2 className="card-title">Classes Assigned</h2>
+          <div className="Dash-card">
+            <h2 className="Dash-card-title">Classes Assigned</h2>
             {loadingUnits ? (
               <div className="spinner"></div>
             ) : (

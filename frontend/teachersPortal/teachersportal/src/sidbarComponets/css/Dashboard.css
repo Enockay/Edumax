@@ -45,20 +45,20 @@ body {
   margin-bottom: 20px;
 }
 
-.card-container {
+.Dash-card-container {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.card {
+.Dash-card {
   background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
 }
 
-.card-title {
+.Dash-card-title {
   background-color: #007bff;
   color: #fff;
   padding: 10px;
@@ -67,15 +67,15 @@ body {
   font-size: 0.9rem;
 }
 
-.card-content {
+.Dash-card-content {
   font-size: 16px;
 }
 
-.card-item {
+.Dash-card-item {
   margin-bottom: 10px;
 }
 
-.card-value {
+.Dash-card-value {
   font-weight: bold;
 }
 
@@ -147,7 +147,7 @@ body {
   }
 
   .notification-panel {
-    height: 20vh;
+    min-height: 35vh;
     margin-top: 20px;
   }
 

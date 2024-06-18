@@ -16,6 +16,7 @@ import Documents from "./sidbarComponets/Docs";
 import Notification from "./sidbarComponets/Notification";
 import CalendarComponent from "./sidbarComponets/calender";
 import SettingsProfile from "./sidbarComponets/Settings";
+import SetupAttendance from "./sidbarComponets/setUpAttend";
 
 const Dashboard = () => {
     const [selectedItem, setSelectedItem] = useState("Dashboard");
@@ -55,6 +56,8 @@ const Dashboard = () => {
                 return<CalendarComponent/>
             case "Settings":
                 return <SettingsProfile/>
+            case "Set-Attendance":
+                return <SetupAttendance/>
             default:
                 return <MainDashboard />;
         }

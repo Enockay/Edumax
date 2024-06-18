@@ -9,21 +9,22 @@ body {
   
   .assignment-container {
     display: flex;
-    height: 100vh;
+    min-height: 80vh;
     width: 90vw;
     background-color: #ece5dd;
-    overflow: hidden;
+    overflow: auto;
   }
   
   .assignment-form-card,
   .assignment-list-card {
     flex: 1;
     padding: 20px;
-    background-color: #ffffff;
+    background-color: #757474;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    border-radius: 0.9rem;
   }
   
   .assignment-form-card {
@@ -32,7 +33,7 @@ body {
   
   .assignment-title {
     font-size: 1.1rem;
-    color: blue;
+    color: rgb(10, 10, 10);
     margin-bottom: 20px;
   }
   
@@ -46,7 +47,9 @@ body {
     border: 1px solid #ccc;
     border-radius: 5px;
   }
-  
+  .assignment-form textarea{
+    min-height: 15vh;
+  }
   .assignment-form button {
     background-color: #007bff;
     color: #fff;

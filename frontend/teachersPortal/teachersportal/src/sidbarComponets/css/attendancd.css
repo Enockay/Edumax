@@ -1,101 +1,157 @@
 .attendance-container {
     padding: 20px;
-    max-width: 100%;
+    font-family: Arial, sans-serif;
+    max-width: 100vw; /* Slightly larger to fit the screen */
     margin: 0 auto;
+    overflow-x: auto; /* Allow horizontal scroll if needed */
+    overflow-y: auto; /* Allow vertical scroll if needed */
+    max-height: 80vh; /* Minimum height for better display */
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
 }
 
-.setup-form-container {
-    padding: 20px;
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-.setup-form-container form {
-    display: flex;
-    flex-direction: column;
-}
-
-.setup-form-container label {
-    margin-bottom: 10px;
-}
-
-.setup-form-container input {
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.setup-form-container button {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-.week-navigation {
+.fetch-form, .table-container {
     margin-bottom: 20px;
 }
 
-.week-navigation button {
-    margin-right: 5px;
-    padding: 10px 20px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    cursor: pointer;
+.fetch-form label {
+    display: block;
+    margin-bottom: 5px;
 }
 
-.week-navigation button.active {
-    background-color: #007bff;
-    color: #fff;
-    border-color: #007bff;
+.fetch-form select, .fetch-form input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
 }
 
-.attendance-sheet {
+.table-container {
     overflow-x: auto;
+    margin-bottom: 20px;
 }
 
-.attendance-sheet table {
+table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.attendance-sheet th, .attendance-sheet td {
+th, td {
     padding: 10px;
-    text-align: center;
     border: 1px solid #ddd;
+    text-align: center;
 }
 
-.attendance-sheet td.present {
+.present {
     background-color: #d4edda;
+    color: #155724;
 }
 
-.attendance-sheet td.absent {
+.absent {
     background-color: #f8d7da;
+    color: #721c24;
+}
+
+.week-navigation {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap; /* Adjust buttons to fit into available space */
+}
+
+.week-navigation button {
+    margin-right: 5px;
+    padding: 10px;
+    cursor: pointer;
+    flex: 1 0 20%; /* Flexible buttons */
+    min-width: 60px; /* Minimum width for smaller screens */
+    margin-bottom: 5px; /* Space between rows on small screens */
+}
+
+.week-navigation .active {
+    background-color: #007bff;
+    color: white;
 }
 
 .submit-button {
-    margin-top: 20px;
     padding: 10px 20px;
     background-color: #28a745;
-    color: #fff;
+    color: white;
     border: none;
     cursor: pointer;
+    width: 100%;
+    max-width: 200px; /* Max width for large screens */
+    margin: 0 auto;
 }
 
-@media (max-width: 600px) {
-    .attendance-sheet table {
-        display: block;
-        width: 100%;
+.submit-button:hover {
+    background-color: #218838;
+}
+
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.message {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .attendance-container {
+        padding: 10px;
+        max-width: 95vw;
+        min-height: 50vh;
     }
 
-    .attendance-sheet th, .attendance-sheet td {
-        display: block;
-        width: 100%;
+    .fetch-form select, .fetch-form input, .submit-button {
+        width: 90%;
+        padding: 10px;
     }
 
-    .attendance-sheet td {
-        text-align: left;
+    table {
+        font-size: 14px; /* Slightly smaller font for better fit */
+    }
+
+    th, td {
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .attendance-container {
+        padding: 5px;
+        max-width: 93vw;
+        min-height: 50vh;
+    }
+
+    .fetch-form select, .fetch-form input, .submit-button {
+        width: 95%;
+        padding: 8px;
+    }
+
+    table {
+        font-size: 12px; /* Smaller font for better fit */
+    }
+
+    th, td {
+        padding: 6px;
+    }
+
+    .week-navigation button {
+        flex: 1 0 40%; /* Larger buttons for smaller screens */
     }
 }

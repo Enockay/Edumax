@@ -162,6 +162,7 @@
     .card-container{
         flex-direction: column;
         width: 95%;
+        overflow-y: auto;
     }
     .container{
         width: 90%;
