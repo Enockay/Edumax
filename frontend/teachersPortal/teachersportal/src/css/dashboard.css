@@ -4,9 +4,7 @@ body{
 }
 
 .footer-left{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    left: 0;
 }
 .main{
     display: flex;
@@ -15,6 +13,16 @@ body{
     max-width: 100vw;
     overflow-x: auto;
     overflow-y: auto;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888; /* Color of the scrollbar handle */
+    border-radius: 3rem; /* Make it rounded */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #140303; /* Darker color on hover */
 }
 
 .main-content{

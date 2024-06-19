@@ -36,7 +36,6 @@ table {
 }
 
 thead {
-    position: sticky;
     top: 0;
     background-color: #0f0d7a;
 }

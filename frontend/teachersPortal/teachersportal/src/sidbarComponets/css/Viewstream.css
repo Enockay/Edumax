@@ -1,6 +1,8 @@
 .view-stream-container {
     padding: 20px;
-    max-width: 800px;
+    max-width: 100vw;
+    max-height: 90vh;
+    overflow-y:auto ;
     margin: 0 ;
     box-shadow: 0  0 10px rgb(174, 174, 177);
     border-radius: 0.9rem;
@@ -28,6 +30,7 @@
     justify-content: space-evenly;
     margin-bottom: 20px;
   }
+  
   .docName{
     width: 50%;
     padding: 0.3rem;

@@ -27,7 +27,7 @@ const Dashboard = () => {
 
     // Function to render content based on selected item
     const renderContent = () => {
-        switch(selectedItem){
+        switch (selectedItem) {
             case "Dashboard":
                 return <MainDashboard />;
             case "Classes":
@@ -43,21 +43,21 @@ const Dashboard = () => {
             case "Upload-Exams":
                 return <FileUpload />;
             case "Search Student":
-                return <StudentSearch/>
-            case "Attendance" : 
-               return <AttendanceSheet/>
-            case "View Stream" :
-                return <ViewStream/>
-            case "Documents" : 
-               return <Documents/>
-            case "Notifications" :
-                return <Notification/>
+                return <StudentSearch />
+            case "Attendance":
+                return <AttendanceSheet />
+            case "View Stream":
+                return <ViewStream />
+            case "Documents":
+                return <Documents />
+            case "Notifications":
+                return <Notification />
             case "Calendar":
-                return<CalendarComponent/>
+                return <CalendarComponent />
             case "Settings":
-                return <SettingsProfile/>
+                return <SettingsProfile />
             case "Set-Attendance":
-                return <SetupAttendance/>
+                return <SetupAttendance />
             default:
                 return <MainDashboard />;
         }
@@ -78,14 +78,17 @@ const Dashboard = () => {
                     {renderContent()}
                 </div>
             </div>
-            <center>
-                <hr className="footer-hr" style={{ background: "blue" }}></hr>
-            </center>
-            <div className="footer-left">
-                <p>
-                    <a href="">Systems Developed by Blackie-networks</a>
-                </p>
-            </div>
+                <div className="footer-left" style={{ padding: "15px", backgroundColor: "#f8f9fa", borderTop: "1px solid #e7e7e7", textAlign: "center" }}>
+                    <h4 style={{ margin: "0", fontSize: "0.9rem", color: "#343a40" }}>
+                        Systems Developed by Blackie-networks
+                    </h4>
+                    <p style={{ margin: "5px 0 0 0", fontSize: "14px", color: "#6c757d" }}>
+                        © {new Date().getFullYear()} Blackie-networks. All rights reserved.
+                    </p>
+                    <p style={{ margin: "5px 0 0 0", fontSize: "14px", color: "#6c757d" }}>
+                        Contact: <a href="mailto:support@blackie-networks.com" style={{ color: "#007bff", textDecoration: "none" }}>support@blackie-networks.com</a>
+                    </p>
+                </div>
         </>
     );
 };

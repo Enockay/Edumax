@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import ClipLoader from 'react-spinners/ClipLoader';
 import './css/FileUpload.css';
 
@@ -94,11 +94,11 @@ const FileUpload = () => {
       <h2 className="file-upload-title">Upload Exam File</h2>
 
       <form className="file-upload-form" onSubmit={handleSubmit}>
-        <div className="form-lft">
-          <div className="form-gp">
-            <label className="form-labeel">Class Name:</label>
+        <div className="form-left">
+          <div className="form-group">
+            <label className="form-label">Class Name:</label>
             <input
-              className="form-in"
+              className="form-input"
               type="text"
               placeholder="Enter class name"
               value={className}
@@ -106,10 +106,10 @@ const FileUpload = () => {
               required
             />
           </div>
-          <div className="form-gp">
-            <label className="form-labeel">Department:</label>
+          <div className="form-group">
+            <label className="form-label">Department:</label>
             <select
-              className="form-in"
+              className="form-input"
               value={department}
               onChange={(e) => setDepartment(e.target.value)}
               required
@@ -121,20 +121,20 @@ const FileUpload = () => {
               <option value="Arts">Arts</option>
             </select>
           </div>
-          <div className="form-gp">
+          <div className="form-group">
             <label className="form-label">Teacher's Name:</label>
             <input
-              className="form-input-teacher"
+              className="form-input"
               type="text"
               placeholder="Enter teacher's name"
               value={teacherName}
               readOnly
             />
           </div>
-          <div className="form-gp">
-            <label className="form-labeel">Subject:</label>
+          <div className="form-group">
+            <label className="form-label">Subject:</label>
             <input
-              className="form-in"
+              className="form-input"
               type="text"
               placeholder="Enter subject"
               value={subject}
@@ -142,40 +142,40 @@ const FileUpload = () => {
               required
             />
           </div>
-          <div className="form-g">
-            <label className="form-labeel">Due Date:</label>
+          <div className="form-group">
+            <label className="form-label">Due Date:</label>
             <input
-              className="form-in"
+              className="form-input"
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
               required
             />
           </div>
-          <div className="form-gp">
-            <label className="form-labeel">File:</label>
+          <div className="form-group">
+            <label className="form-label">File:</label>
             <input
-              className="form-in"
+              className="form-input"
               type="file"
               onChange={(e) => setFile(e.target.files[0])}
               required
             />
           </div>
         </div>
-        <div className="form-rit">
-          <div className="form-gp">
-            <label className="form-labeel">Notification:</label>
+        <div className="form-right">
+          <div className="form-group">
+            <label className="form-label">message:</label>
             <textarea
-              className="form-txtarea"
+              className="form-textarea"
               placeholder="Enter notification (optional)"
               value={notification}
               onChange={(e) => setNotification(e.target.value)}
             ></textarea>
           </div>
         </div>
-        <div className="form-foot">
+        <div className="form-footer">
           <center>
-            <button className="form-btn" type="submit" disabled={isLoading}>
+            <button className="form-button" type="submit" disabled={isLoading}>
               Upload
             </button>
           </center>

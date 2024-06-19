@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import {jwtDecode} from "jwt-decode";  // Fix the import statement
+import React, { useEffect, useState } from "react";
+import {jwtDecode} from "jwt-decode";
 import './css/Document.css';
 
 const Documents = () => {
@@ -8,53 +8,42 @@ const Documents = () => {
   const [error, setError] = useState('');
   const [feedback, setFeedback] = useState('');
   const [viewItems, setViewItems] = useState([]);
-  const [loadingDocuments, setLoadingDocuments] = useState(false);
-  const [loadingViewItems, setLoadingViewItems] = useState(false);
+  const [loading, setLoading] = useState({ documents: false, viewItems: false });
   const [documentaryName, setDocumentaryName] = useState('');
   const [availableDoc, setAvailableDoc] = useState([]);
 
   const getDocumentaries = async (name) => {
     try {
-      setLoadingDocuments(true);
-      const url = `https://edumax.fly.dev/docs/savedDoc/${name}`;
-      const response = await fetch(url);
+      setLoading((prevState) => ({ ...prevState, documents: true }));
+      const response = await fetch(`https://edumax.fly.dev/docs/savedDoc/${name}`);
       const result = await response.json();
-
       if (result.success) {
         setDocuments(result.message);
         setAvailableDoc(result.message);
-        setViewItems([]);
         setFeedback('');
       } else {
-        setDocuments([]);
-        setAvailableDoc([]);
         setFeedback('Your documentary is empty');
       }
     } catch (error) {
       setError('Error occurred while retrieving documents');
     } finally {
-      setLoadingDocuments(false);
+      setLoading((prevState) => ({ ...prevState, documents: false }));
     }
   };
 
   useEffect(() => {
-    const retrieveToken = async () => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        const decoded = jwtDecode(token);
-        setTeacherName(decoded.name);
-        getDocumentaries(decoded.name);
-      }
-    };
-
-    retrieveToken();
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded = jwtDecode(token);
+      setTeacherName(decoded.name);
+      getDocumentaries(decoded.name);
+    }
   }, []);
 
   const viewDocument = async (documentaryName) => {
     try {
-      setLoadingViewItems(true);
-      const url = "https://edumax.fly.dev/docs/view";
-      const response = await fetch(url, {
+      setLoading((prevState) => ({ ...prevState, viewItems: true }));
+      const response = await fetch("https://edumax.fly.dev/docs/view", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -63,11 +52,9 @@ const Documents = () => {
       });
 
       const feedback = await response.json();
-
       if (feedback.success) {
         setViewItems(feedback.message[0].students);
         setDocumentaryName(documentaryName);
-        setFeedback('');
         setDocuments([]);
       } else {
         setError('Document not found');
@@ -75,7 +62,7 @@ const Documents = () => {
     } catch (error) {
       setError('An error occurred. Please try again.');
     } finally {
-      setLoadingViewItems(false);
+      setLoading((prevState) => ({ ...prevState, viewItems: false }));
     }
   };
 
@@ -89,10 +76,10 @@ const Documents = () => {
       <header>
         <h3>Saved Documents</h3>
         <div className="intro">
-          <p>All the documentaries you have added will display here. To view a document, simply double-click on the document name to see the content in.</p>
+          <p>All the documentaries you have added will display here. To view a document, simply double-click on the document name to see the content.</p>
         </div>
       </header>
-      {loadingDocuments ? (
+      {loading.documents ? (
         <div className="spinner"></div>
       ) : (
         <>
@@ -114,21 +101,20 @@ const Documents = () => {
         </>
       )}
       {error && <div className="error">{error}</div>}
-      {loadingViewItems ? (
+      {loading.viewItems ? (
         <div className="spinner"></div>
       ) : (
         viewItems.length > 0 && (
           <div className="view-items">
             <center><p>{documentaryName}</p></center>
             <button className="close-button" onClick={closeDocument}>Close</button>
-            <label className="view-title">{viewItems[0].documentaryName}</label>
             <table className="view-table">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>ADM NO</th>
-                  <th>Student Name</th>
-                  <th>Item Id</th>
+                  <th id="th">#</th>
+                  <th id="th">ADM NO</th>
+                  <th id="th">Student Name</th>
+                  <th id="th">Item Id</th>
                 </tr>
               </thead>
               <tbody>
