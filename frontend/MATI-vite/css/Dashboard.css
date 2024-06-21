@@ -14,6 +14,8 @@ body {
     grid-template-columns: 200px 1fr;
     grid-template-rows: 60px 1fr 70px;
     min-height: 100vh;
+    max-height: 100vh;
+    overflow-y: auto;
     height: fit-content;
   }
   
@@ -34,6 +36,8 @@ body {
   
   .sidebar {
     grid-area: sidebar;
+    max-height: 100vh;
+    overflow-y: auto;
     background-color: gainsboro;
     color: #030303;
     padding: 0.2rem;

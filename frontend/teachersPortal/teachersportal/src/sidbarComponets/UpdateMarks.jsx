@@ -110,7 +110,7 @@ const UpdateStudentMarks = () => {
                         marksData[student._id] = student.marks;
                     });
                     setMarks(marksData);
-                } else if (response.status === 201) {
+                } else if (response.status === 310) {
                     setNotification("No Data yet in the database");
                 } else {
                     setNotification(data);

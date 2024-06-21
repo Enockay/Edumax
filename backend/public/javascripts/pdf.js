@@ -11,7 +11,7 @@ const logoDataUrl = `data:image/png;base64,${logoBase64}`;
 
 // Function to generate PDF
 const generateClassRankingPdf = async (year,stream,term,Teacher,gradedStudents, unitMeans, Mean, fileName,exams) => {
-    console.log(fileName)
+    //console.log(fileName)
     const browser = await launchPuppeteer();
     const page = await browser.newPage();
 

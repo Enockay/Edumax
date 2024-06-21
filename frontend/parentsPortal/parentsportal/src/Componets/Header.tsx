@@ -10,7 +10,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, toggleSidebar }) => {
     <header className="bg-green-700 text-white p-4 shadow-md flex justify-between items-center">
       <h1 className="text-2xl hidden md:block">ParentsPortal</h1>
       <button onClick={toggleSidebar} className="md:hidden p-2 bg-gray-700 rounded">
-        {sidebarOpen ? 'C-Menu' : 'O-Menu'}
+        {sidebarOpen ? 'Close Menu' : 'Open Menu'}
       </button>
       <div className="flex items-center">
         <span className="mr-4">User</span>

@@ -43,7 +43,7 @@ router.post('/generatePDF', async (req, res) => {
         const browser = await launchPuppeteer();
         const page = await browser.newPage();
 
-        // Construct HTML content
+        // Construct HTML content to resemble the uploaded PDF structure
         const htmlContent = `
             <html>
             <head>
@@ -51,12 +51,8 @@ router.post('/generatePDF', async (req, res) => {
                     /* Custom styles */
                     body {
                         font-family: Arial, sans-serif;
-                        margin: 15px;
+                        margin: 0;
                         padding: 0;
-                        display:flex;
-                        flex-direction :column;
-                        justify-content:center;
-                        align-items:center;
                         background-color: white;
                     }
                     .container {
@@ -66,30 +62,23 @@ router.post('/generatePDF', async (req, res) => {
                         border: 2px solid #333;
                         background-color: #fff;
                     }
-                    .header {
-                        margin-bottom: 20px;
-                        border: 1px solid #ccc;
-                        padding: 10px;
+                    .header, .footer {
+                        text-align: center;
                         margin: 20px;
                     }
-                    .heading {
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                    }
-                    .school-logo {
+                    .header img {
                         max-width: 150px;
                     }
-                    .title {
+                    .header h1 {
                         font-size: 24px;
                         font-weight: bold;
-                        margin: 0;
-                        text-align: center;
-                        flex-grow: 1;
+                        margin: 10px 0;
                     }
                     .statement-info {
-                        text-align: center;
                         margin-bottom: 20px;
+                    }
+                    .statement-info p {
+                        margin: 5px 0;
                     }
                     .table {
                         width: 100%;
@@ -105,60 +94,42 @@ router.post('/generatePDF', async (req, res) => {
                         background-color: #f2f2f2;
                         font-weight: bold;
                     }
-                    .footer {
-                        text-align: center;
-                        margin-top: 0;
-                        font-size: 14px;
-                    }
-                    .border-frame {
-                        border: 1px solid #000;
-                        padding: 10px;
-                        margin: 20px;
-                    }
                 </style>
             </head>
             <body>
                 <div class="container">
-                    
-                    <div class="border-frame">
-                        <div class="statement-info">
-                        <div class="header">
-                        <div class="heading">
-                        <img src="school-logo.png" alt="School Logo" class="school-logo">
-                        <h1 class="title">Fee Payment Records</h1>
-                        </div>
-                        <p><strong>Student Name:</strong> ${feeRecords.fullName}</p>
+                    <div class="header">
+                        <img src="school-logo.png" alt="School Logo">
+                        <h1>Fee Payment Records</h1>
+                    </div>
+                    <div class="statement-info">
+                        <p><strong>Reg No.:</strong> ${admissionNumber}</p>
+                        <p><strong>Name:</strong> ${feeRecords.fullName}</p>
                         <p><strong>Stream:</strong> ${stream}</p>
                         <p><strong>Year:</strong> ${year}</p>
-                         </div>
-                            
-                        </div>
-                        <table class="table">
-                            <tr>
-                                <th>Date</th>
-                                <th>Term</th>
-                                <th>Levy</th>
-                                <th>Mode</th>
-                                <th>Amount</th>
-                            </tr>
-                            ${feeRecords.feesRecord.map(term => term.payments.map(payment => `
-                                <tr>
-                                    <td>${new Date(payment.date).toLocaleDateString()}</td>
-                                    <td>${term.term}</td>
-                                    <td>${payment.levi}</td>
-                                    <td>${payment.mode}</td>
-                                    <td>${payment.amount}</td>
-                                </tr>
-                            `).join('')).join('')}
-                            <tr>
-                                <td colspan="4" style="text-align: right;"><strong>Total Balance:</strong></td>
-                                <td><strong>${feeRecords.feesRecord.reduce((total, term) => total + term.totalTuitionToBePaid + term.totalUniformFeesToBePaid + term.totalLunchFeesToBePaid - term.payments.reduce((total, payment) => total + payment.amount, 0), 0)}</strong></td>
-                            </tr>
-                        </table>
                     </div>
-                    <p class="footer">Fees Statement for Admission ${admissionNumber} generated by Matinyani Mixed Finance Office</p>
+                    <table class="table">
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                        </tr>
+                        ${feeRecords.feesRecord.map(term => term.payments.map(payment => `
+                            <tr>
+                                <td>${new Date(payment.date).toLocaleDateString()}</td>
+                                <td>${payment.levi}</td>
+                                <td>${payment.amount}</td>
+                            </tr>
+                        `).join('')).join('')}
+                        <tr>
+                            <td colspan="2" style="text-align: right;"><strong>Total Balance:</strong></td>
+                            <td><strong>${feeRecords.feesRecord.reduce((total, term) => total + term.totalTuitionToBePaid + term.totalUniformFeesToBePaid + term.totalLunchFeesToBePaid - term.payments.reduce((total, payment) => total + payment.amount, 0), 0)}</strong></td>
+                        </tr>
+                    </table>
+                    <div class="footer">
+                        <p>Produced by Finance, Mantinyani Mixed Secondary</p>
+                    </div>
                 </div>
-                <p class="footer">Produced by Finance, Mantinyani Mixed Secondary</p>
             </body>
             </html>
         `;
@@ -169,7 +140,11 @@ router.post('/generatePDF', async (req, res) => {
 
         await browser.close();
 
+        // Set PDF file name
+        const pdfFileName = `${admissionNumber}_Report.pdf`;
+
         // Send PDF as response
+        res.setHeader('Content-Disposition', `attachment; filename=${pdfFileName}`);
         res.contentType('application/pdf');
         res.send(pdfBuffer);
     } catch (error) {

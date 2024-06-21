@@ -5,7 +5,7 @@ const ensureAuthenticated = require('./Auth');
 
 updateStudentMarks.put('/students/marks', async (req, res) => {
     const updates = req.body;
-    console.log(req.body);
+    //console.log(req.body);
     const session = await StudentMarks.startSession();
     session.startTransaction();
 

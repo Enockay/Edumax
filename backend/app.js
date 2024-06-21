@@ -40,6 +40,9 @@ var viewStream = require("./routes/Teachers/viewStream");
 var notification = require('./routes/Teachers/notfication');
 var attendance = require('./routes/Teachers/Attendance');
 
+//parents portal
+var profile = require("./routes/parents/profile");
+
 var app = express();
 var uri = process.env.MONGO_URL;
 var key = process.env.SECRET_KEY;
@@ -113,6 +116,7 @@ app.get("/students/search",studentSearch);
 app.use("/docs",viewStream);
 app.use("/noti",notification);
 app.use("/attend",attendance);
+app.post("/profile",profile)
 
 
 // catch 404 and forward to error handler

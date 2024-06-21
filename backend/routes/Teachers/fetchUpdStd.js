@@ -37,7 +37,7 @@ updateStudent.get('/student/UpdMark', async (req, res) => {
     }).filter(student => student !== null);
 
     if (result.length === 0) {
-      return res.status(400).json({ message: 'No marks found for the given criteria' });
+      return res.status(310).json({ message: 'No marks found ' });
     }
     console.log(result)
     res.status(200).json(result);
