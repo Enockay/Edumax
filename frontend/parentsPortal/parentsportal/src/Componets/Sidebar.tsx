@@ -13,7 +13,8 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   return (
-    <aside className={`fixed md:min-h:screen md:relative transform ${isOpen ? 'translate-x-0 ' : '-translate-x-full'} md:translate-x-0 w-48 bg-gray-800 text-white p-4 space-y-4 transition-transform duration-200 ease-in-out overflow-y-scroll`}>
+    <aside className={`fixed md:min-h:screen md:relative transform ${isOpen ? 'translate-x-0 ' : '-translate-x-full'} md:translate-x-0 w-48 bg-gray-800 text-white p-4 space-y-4 transition-transform duration-200 ease-in-out `}>
+      <div className='max-h-screen overflow-auto' >
       <nav>
         <hr className={"m-4"}></hr>
         {/* Academics Section */}
@@ -83,6 +84,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           </ul>
         </div>
       </nav>
+      </div>
     </aside>
   );
 };

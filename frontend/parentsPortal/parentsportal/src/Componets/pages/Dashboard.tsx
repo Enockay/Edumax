@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import StudentInfo from './studentInfo';
+import Spinner from './Spinner';
+import { useUser } from '../context';
 
 interface Student {
   _id: string;
@@ -27,11 +29,12 @@ const Dashboard: React.FC = () => {
   const [studentInfo, setStudentInfo] = useState<Student | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const { userName, admissionNumber } = useUser();
 
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await axios.post('http://localhost:3000/profile/?admission=1008');
+        const response = await axios.post(`https://edumax.fly.dev/profile/?admission=${admissionNumber}`);
         const data = response.data;
 
         if (data.success) {
@@ -49,17 +52,17 @@ const Dashboard: React.FC = () => {
     };
 
     fetchStudent();
-  }, []);
+  }, [admissionNumber]);
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-blue-600 p-6 text-white shadow-md">
+    <div className="min-h-screen bg-gray-100 md:w-full">
+      <nav className="bg-purple-950 p-6 text-white shadow-md">
         <h3 className="text-2xl font-bold">Parent Dashboard</h3>
       </nav>
-      <div className="container mx-auto p-6">
-        {loading && <p className="text-center text-gray-700">Loading...</p>}
+      <div className="container mx-auto p-6 md:p-3">
+        {loading && <Spinner />}
         {error && <p className="text-center text-red-500">{error}</p>}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="flex justify-center max-h-screen overflow-auto p-2">
           {studentInfo && <StudentInfo student={studentInfo} />}
         </div>
       </div>

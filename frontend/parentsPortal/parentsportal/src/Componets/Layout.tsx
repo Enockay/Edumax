@@ -2,6 +2,8 @@ import React, { ReactNode, useState } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
+import { useUser } from './context';
+import LoginPage from './pages/Login';
 
 interface LayoutProps {
   children: ReactNode;
@@ -9,17 +11,22 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isAuthenticated, userName } = useUser();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
+  if (!isAuthenticated) {
+    return <LoginPage />;
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
-      <Header sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      <Header sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} userName={userName} />
       <div className="flex flex-1">
         <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-        <main className={`flex-1 bg-gray-200 p-4 transition-all duration-200 min-h-screen overflow-y-scroll ${sidebarOpen ? 'ml-0' : 'ml-0'}`}>
+        <main className="flex-1 bg-gray-200 p-4 transition-all duration-200">
           {children}
         </main>
       </div>
