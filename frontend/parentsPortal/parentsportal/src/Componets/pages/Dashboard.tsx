@@ -56,7 +56,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 md:w-full">
-      <nav className="bg-purple-950 p-6 text-white shadow-md">
+      <nav className="bg-purple-950 p-6 text-white shadow-md md:p-3">
         <h3 className="text-2xl font-bold">Parent Dashboard</h3>
       </nav>
       <div className="container mx-auto p-6 md:p-3">

@@ -23,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, toggleSidebar, userName })
       </button>
       <div className="flex items-center">
         <span className="mr-4">{userName}</span>
-        <div className="rounded-full bg-white text-blue-600 w-8 h-8 flex items-center justify-center">
+        <div className="rounded-full bg-white text-blue-600 w-10 h-10 flex items-center justify-center">
           {userInitials}
         </div>
       </div>
