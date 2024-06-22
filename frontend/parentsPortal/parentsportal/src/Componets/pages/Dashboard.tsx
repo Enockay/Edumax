@@ -56,13 +56,13 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 md:w-full">
-      <nav className="bg-purple-950 p-6 text-white shadow-md md:p-3">
+      <nav className=" bg-purple-950  text-white shadow-md p-3 ">
         <h3 className="text-2xl font-bold">Parent Dashboard</h3>
       </nav>
-      <div className="container mx-auto p-6 md:p-3">
+      <div className="container mx-auto md:p-3 mt-0">
         {loading && <Spinner />}
         {error && <p className="text-center text-red-500">{error}</p>}
-        <div className="flex justify-center max-h-screen overflow-auto p-2">
+        <div className="flex justify-center h-screen overflow-auto  mt-0">
           {studentInfo && <StudentInfo student={studentInfo} />}
         </div>
       </div>

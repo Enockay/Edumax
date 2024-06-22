@@ -42,6 +42,7 @@ var attendance = require('./routes/Teachers/Attendance');
 
 //parents portal
 var profile = require("./routes/parents/profile");
+var studentLogin = require("./routes/parents/login")
 
 var app = express();
 var uri = process.env.MONGO_URL;
@@ -61,7 +62,8 @@ app.use(session({
 const allowedOrigins = [
   'http://localhost:5173',
   'https://etim.vercel.app',
-  'https://teachersportal.vercel.app'
+  'https://teachersportal.vercel.app',
+  'https://parentsportal.vercel.app'
 ];
 
 const corsOptions = {
@@ -117,7 +119,7 @@ app.use("/docs",viewStream);
 app.use("/noti",notification);
 app.use("/attend",attendance);
 app.post("/profile",profile)
-
+app.post("/parent/login",studentLogin)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

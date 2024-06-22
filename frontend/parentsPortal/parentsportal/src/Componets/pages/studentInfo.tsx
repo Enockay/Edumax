@@ -29,7 +29,7 @@ interface StudentProps {
 const StudentInfo: React.FC<StudentProps> = ({ student }) => {
   return (
     <>
-    <div className="bg-white shadow-md rounded-lg p-6 mb-6  max-h-full ">
+    <div className="bg-white shadow-md rounded-lg p-6 md:p-2  h-fit ">
       <div className='flex flex-col sm:flex-row gap-4 w-full text-gray-700'>
       <div className="flex flex-col items-center sm:items-start sm:w-1/3">
         <div className="w-32 h-32 bg-gray-300 rounded-full border-2 border-blue-100 flex items-center justify-center mb-4 overflow-hidden">
@@ -65,6 +65,7 @@ const StudentInfo: React.FC<StudentProps> = ({ student }) => {
           Total Balance: ksh{student.fees.totalBalance}
         </p>
       </div>
+      
     </div>
     <div className='shadow-md rounded-lg p-4 mt-4 min-h-10'>
        <nav className='shadow'>
