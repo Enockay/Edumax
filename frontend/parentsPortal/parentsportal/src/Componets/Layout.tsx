@@ -26,7 +26,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <Header sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} userName={userName} />
       <div className="flex flex-1">
         <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-        <main className="flex-1 bg-gray-200 p-4 transition-all duration-200 max-h-screen overflow-auto">
+        <main className="flex-1 bg-gray-200 p-4 md:p-2 transition-all duration-200 max-h-screen overflow-auto">
           {children}
         </main>
       </div>

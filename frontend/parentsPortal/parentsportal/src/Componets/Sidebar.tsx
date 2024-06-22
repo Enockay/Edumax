@@ -23,7 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           <ul>
             <li className="hover:bg-gray-700 p-2 rounded flex items-center">
               <FaClipboardList className="mr-2" />
-              <Link to="/view-grades" onClick={toggleSidebar}>View Grades</Link>
+              <Link to="/Transcripts" onClick={toggleSidebar}>Transcripts</Link>
             </li>
             <li className="hover:bg-gray-700 p-2 rounded flex items-center">
               <FaCalendarCheck className="mr-2" />

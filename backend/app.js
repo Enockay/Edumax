@@ -39,7 +39,7 @@ var studentSearch = require("./routes/Teachers/searchStudent");
 var viewStream = require("./routes/Teachers/viewStream");
 var notification = require('./routes/Teachers/notfication');
 var attendance = require('./routes/Teachers/Attendance');
-
+var transcript = require('./routes/parents/Transcript');
 //parents portal
 var profile = require("./routes/parents/profile");
 var studentLogin = require("./routes/parents/login")
@@ -120,7 +120,7 @@ app.use("/noti",notification);
 app.use("/attend",attendance);
 app.post("/profile",profile)
 app.post("/parent/login",studentLogin)
-
+app.get('/transcript',transcript)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

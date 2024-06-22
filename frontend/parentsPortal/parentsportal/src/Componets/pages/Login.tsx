@@ -27,7 +27,8 @@ const LoginPage: React.FC = () => {
 
       if (data.success) {
         const userName = data.message.fullName;
-        login(userName!, admission);
+        const stream = data.message.stream;
+        login(userName!, admission, stream);
         navigate('/'); // Redirect to the dashboard upon successful login
       } else {
         setError(data.message || 'Invalid admission number or password');
