@@ -75,11 +75,11 @@ const Grades: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <nav className="bg-emerald-500 text-white shadow-md p-3">
+    <div className="min-h-screen bg-gray-100 ">
+      <nav className="bg-teal-700 text-white shadow-md p-3">
         <h4 className="text-2xl font-bold">Performance Transcripts</h4>
       </nav>
-      <div className="bg-white shadow-md rounded-lg p-4 mt-4">
+      <div className="bg-white shadow-md rounded-lg p-4 ">
         {studentData.years.map((year, index) => (
           <div key={index} className="mb-6">
             <h5 className="text-xl text-violet-500 font-semibold mb-4">Year: {year.year}</h5>
@@ -94,7 +94,7 @@ const Grades: React.FC = () => {
                     <p><strong>CRank:</strong> {exam.classRank}</p>
                   </div>
                 </div>
-                <div className="">
+                <div className="p-3">
                   <table className=" mb-4">
                     <thead>
                       <tr className="bg-gray-200 table-auto">
