@@ -45,8 +45,8 @@ const Grades: React.FC = () => {
         const data = response.data;
 
         if (data.success) {
-          console.log(data.message.student);
-          console.log(data.message);
+          //console.log(data.message.student);
+         // console.log(data.message);
           setStudentData(data.message);
         } else {
           setError('Failed to fetch grades');
@@ -77,25 +77,25 @@ const Grades: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <nav className="bg-emerald-500 text-white shadow-md p-3">
-        <h3 className="text-2xl font-bold">Performance Transcripts</h3>
+        <h4 className="text-2xl font-bold">Performance Transcripts</h4>
       </nav>
       <div className="bg-white shadow-md rounded-lg p-4 mt-4">
         {studentData.years.map((year, index) => (
           <div key={index} className="mb-6">
-            <h3 className="text-2xl font-semibold mb-4">Year: {year.year}</h3>
+            <h5 className="text-xl text-violet-500 font-semibold mb-4">Year: {year.year}</h5>
             {year.exams.map((exam, examIndex) => (
-              <div key={examIndex} className="mb-4 border rounded-lg bg-gray-50 overflow-x-auto ">
+              <div key={examIndex} className="mb-4 border rounded-lg bg-gray-50 overflow-x-auto w-full p-1">
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-xl font-bold">
+                  <h5 className=" font-bold">
                     {exam.term} - {exam.examType} Exam
-                  </h3>
+                  </h5>
                   <div className="text-right">
                     <p><strong>SRank:</strong> {exam.streamRank}</p>
                     <p><strong>CRank:</strong> {exam.classRank}</p>
                   </div>
                 </div>
                 <div className="">
-                  <table className="w-full mb-4">
+                  <table className=" mb-4">
                     <thead>
                       <tr className="bg-gray-200 table-auto">
                         <th className="px-4 py-2 left-0">Subject</th>
