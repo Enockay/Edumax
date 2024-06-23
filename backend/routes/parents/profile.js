@@ -3,6 +3,7 @@ const express = require('express');
 const student = require('../../public/models/admitStudentSchema'); // Assuming this is where your Mongoose model is defined
 const profile = express.Router();
 
+
 const streams = ["1East", "1West", "2East", "2West", "3East", "3West", "4East", "4West"];
 
 profile.post('/profile', async (req, res) => {

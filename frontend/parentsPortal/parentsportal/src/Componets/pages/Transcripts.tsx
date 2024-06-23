@@ -75,7 +75,7 @@ const Grades: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 ">
+    <div className="min-h-screen bg-gray-100 overflow-auto rounded-lg">
       <nav className="bg-teal-700 text-white shadow-md p-3">
         <h4 className="text-2xl font-bold">Performance Transcripts</h4>
       </nav>

@@ -55,7 +55,7 @@ const Dashboard: React.FC = () => {
   }, [admissionNumber]);
 
   return (
-    <div className="min-h-screen bg-gray-100 md:w-full">
+    <div className="min-h-screen bg-gray-100 md:w-full rounded-xl">
       <nav className=" bg-purple-950  text-white shadow-md p-3 ">
         <h3 className="text-2xl font-bold">Parent Dashboard</h3>
       </nav>

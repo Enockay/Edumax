@@ -114,7 +114,7 @@ teacher.post("/profile",async(req,res)=>{
     //console.log(req.body)
     const key = 'aOpJFUXdhe4Nt5i5RAKzbuStAPCLK5joDSqqUlfdtZg=';
     try{
-     const decoded = await jwt.verify(token,key);
+     const decoded = jwt.verify(token,key);
      const profile = await teacherLoginModel.find({name:decoded.name});
     
      if(profile.length > 0){

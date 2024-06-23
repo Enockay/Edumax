@@ -22,7 +22,7 @@ var updateStudent = require("./routes/Teachers/fetchUpdStd");
 var login = require('./routes/admin/login');
 var teacherAss = require("./routes/Teachers/classesRoute");
 var teacherlogin = require("./routes/Teachers/login");
-var profile = require("./routes/Teachers/getProfile");
+var teacherprofile = require("./routes/Teachers/getProfile");
 var assign = require("./routes/Teachers/assignmet");
 var staff = require("./routes/Dashboard/staffs");
 var promotionRoutes = require("./routes/Dashboard/promoteStudents");
@@ -103,7 +103,7 @@ app.use("/fees",fees);
 app.use('/ass',assign);
 app.use("/classes", teacherAss);
 app.use('/api/auth', teacherlogin);
-app.get('/profile/:id', profile);
+app.get('/profile/:id', teacherprofile);
 app.use("/staff",staff)
 app.use('/api/promotion', promotionRoutes);
 app.get("/api/aggregate",schoolAggregate);

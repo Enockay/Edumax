@@ -5,7 +5,8 @@ const ensureAuthenticated = require("./Auth");
 
 profile.get("/profile/:id",async (req,res)=>{
     try{
-    const username = req.params.id
+    const username = req.params.id;
+    //console.log(username)
     const teacherProfile = await teacherLoginModel.find({ username });
    //console.log(teacherProfile)
     res.status(200).json(teacherProfile);
